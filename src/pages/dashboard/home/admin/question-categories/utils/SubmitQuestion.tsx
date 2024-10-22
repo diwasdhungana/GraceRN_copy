@@ -6,8 +6,8 @@ import { usePostQuestion } from '@/hooks/api/questions';
 export const SubmitQuestion = ({ dataTunnel, response, setResponse }) => {
   const { mutate: postQuestion, isPending } = usePostQuestion();
   const handleSubmit = () => {
+    // console.log('submitting', dataTunnel());
     const variables = requestDataCreator(dataTunnel, setResponse);
-    console.clear();
     console.log('variables', variables);
     postQuestion(
       { variables },

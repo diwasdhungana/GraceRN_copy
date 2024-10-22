@@ -8,7 +8,7 @@ import {
 import { queryClient } from '@/api/query-client';
 import { notifications } from '@mantine/notifications';
 
-export const useGetSystems = createGetQueryHook({
-  endpoint: '/systems',
-  rQueryParams: { queryKey: ['systems'] },
+export const useGetSubjects = createGetQueryHook({
+  endpoint: '/subjects',
+  rQueryParams: { queryKey: ['subjects'] },
 });

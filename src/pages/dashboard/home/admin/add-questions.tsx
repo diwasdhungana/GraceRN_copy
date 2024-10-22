@@ -9,6 +9,7 @@ import { Settings } from '@/pages/dashboard/home/admin/question-categories/utils
 
 import { PiArrowLeft } from 'react-icons/pi';
 import { dummySubjects, dummySystems } from '@/utilities/dummysubjects';
+import { useGetSubjects, useGetSystems } from '@/hooks';
 
 const questionTypewithlabelandValue = {
   nextgen: [
@@ -29,12 +30,12 @@ const questionGen = [
   { label: 'Next Gen', value: 'nextgen' },
 ];
 const addQuestions = () => {
+  const { data: subjects, isError: subjectsError } = useGetSubjects();
+  const { data: systemsData, isError: systemsDataError } = useGetSystems();
+
   const navigate = useNavigate();
-  const subjects = dummySubjects;
-  const systems = dummySystems;
   const [selectedSubject, setSelectedSubject] = React.useState();
   const [selectedSystem, setSelectedSystem] = React.useState();
-  const [selectedCategory, setSelectedCategory] = React.useState();
   const [selectedGen, setSelectedGen] = React.useState();
   const [selectedQuestionType, setSelectedQuestionType] = React.useState(
     questionTypewithlabelandValue.traditional[0].value
@@ -75,48 +76,41 @@ const addQuestions = () => {
               </Radio.Group>
             </Group>
             <Group>
-              <Select
-                label={<Text fw="600">Choose a Subject</Text>}
-                placeholder={'Select Subjects'}
-                data={subjects.map((subject) => {
-                  return { value: subject._id, label: subject.name };
-                })}
-                onChange={(value) => setSelectedSubject(value)}
-                value={selectedSubject}
-                allowDeselect={false}
-                searchable
-                nothingFoundMessage="No such subjects."
-                maxDropdownHeight={200}
-                comboboxProps={{ withinPortal: false }}
-              />
-              <Select
-                label={<Text fw="600">Choose a System</Text>}
-                placeholder={'Select Subjects'}
-                data={systems.map((subject) => {
-                  return { value: subject._id, label: subject.name };
-                })}
-                onChange={(value) => setSelectedSystem(value)}
-                value={selectedSystem}
-                allowDeselect={false}
-                searchable
-                nothingFoundMessage="No such systems."
-                maxDropdownHeight={200}
-                comboboxProps={{ withinPortal: false }}
-              />
-              <Select
-                label={<Text fw="600">Question Category</Text>}
-                placeholder={'Select Category'}
-                data={systems.map((subject) => {
-                  return { value: subject._id, label: subject.name };
-                })}
-                onChange={(value) => setSelectedCategory(value)}
-                value={selectedCategory}
-                allowDeselect={false}
-                searchable
-                nothingFoundMessage="No such Category."
-                maxDropdownHeight={200}
-                comboboxProps={{ withinPortal: false }}
-              />
+              <Stack>
+                {subjectsError && <Text c="red">Error fetching subjects</Text>}
+                <Select
+                  label={<Text fw="600">Choose a Subject</Text>}
+                  placeholder={'Select Subjects'}
+                  data={subjects?.data?.docs?.map((subject) => {
+                    return { value: subject._id, label: subject.name };
+                  })}
+                  onChange={(value) => setSelectedSubject(value)}
+                  value={selectedSubject}
+                  allowDeselect={false}
+                  searchable
+                  nothingFoundMessage="No such subjects."
+                  maxDropdownHeight={200}
+                  comboboxProps={{ withinPortal: false }}
+                />
+              </Stack>
+              <Stack>
+                {systemsDataError && <Text c="red">Error fetching subjects</Text>}
+
+                <Select
+                  label={<Text fw="600">Choose a System</Text>}
+                  placeholder={'Select Subjects'}
+                  data={systemsData?.data?.docs?.map((subject) => {
+                    return { value: subject._id, label: subject.name };
+                  })}
+                  onChange={(value) => setSelectedSystem(value)}
+                  value={selectedSystem}
+                  allowDeselect={false}
+                  searchable
+                  nothingFoundMessage="No such systems."
+                  maxDropdownHeight={200}
+                  comboboxProps={{ withinPortal: false }}
+                />
+              </Stack>
             </Group>
             <Group>
               <Select
@@ -138,7 +132,6 @@ const addQuestions = () => {
                 selectedGen,
                 selectedSubject,
                 selectedSystem,
-                selectedCategory,
               }}
               response={response}
               setResponse={setResponse}

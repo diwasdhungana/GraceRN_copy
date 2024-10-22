@@ -88,55 +88,6 @@ const router = createBrowserRouter([
                 path: paths.dashboard.admin.addQuestions.root,
                 element: LazyPage(() => import('@/pages/dashboard/home/admin/add-questions')),
               },
-              {
-                index: true,
-                path: paths.dashboard.admin.addQuestions.category.extDropDown,
-                element: LazyPage(
-                  () => import('@/pages/dashboard/home/admin/question-categories/extDropDown')
-                ),
-              },
-              {
-                index: true,
-                path: paths.dashboard.admin.addQuestions.category.Highlight,
-                element: LazyPage(
-                  () => import('@/pages/dashboard/home/admin/question-categories/highlight')
-                ),
-              },
-              {
-                index: true,
-                path: paths.dashboard.admin.addQuestions.category.matrixNGrid,
-                element: LazyPage(
-                  () => import('@/pages/dashboard/home/admin/question-categories/matrixNGridMult')
-                ),
-              },
-              {
-                index: true,
-                path: paths.dashboard.admin.addQuestions.category.dragNDrop,
-                element: LazyPage(
-                  () => import('@/pages/dashboard/home/admin/question-categories/dragNdrop')
-                ),
-              },
-              {
-                index: true,
-                path: paths.dashboard.admin.addQuestions.category.bowTie,
-                element: LazyPage(
-                  () => import('@/pages/dashboard/home/admin/question-categories/bowTie')
-                ),
-              },
-              {
-                index: true,
-                path: paths.dashboard.admin.addQuestions.category.selectOne,
-                element: LazyPage(
-                  () => import('@/pages/dashboard/home/admin/question-categories/selectOne')
-                ),
-              },
-              {
-                index: true,
-                path: paths.dashboard.admin.addQuestions.category.mcq,
-                element: LazyPage(
-                  () => import('@/pages/dashboard/home/admin/question-categories/mcq')
-                ),
-              },
             ],
           },
         ],
@@ -213,14 +164,7 @@ const router = createBrowserRouter([
             path: paths.dashboard.requests.root,
             element: <Navigate to={paths.dashboard.requests.root} replace />,
           },
-          {
-            path: paths.dashboard.requests.loan,
-            element: LazyPage(() => import('@/pages/dashboard/requests/loan')),
-          },
-          {
-            path: paths.dashboard.requests.leave,
-            element: LazyPage(() => import('@/pages/dashboard/requests/leave')),
-          },
+
           // {
           //   path: paths.dashboard.widgets.tables,
           //   element: LazyPage(() => import('@/pages/dashboard/widgets/tables')),

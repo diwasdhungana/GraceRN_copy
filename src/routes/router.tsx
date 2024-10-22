@@ -1,0 +1,236 @@
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
+import { AuthGuard } from '@/guards/auth-guard';
+import { GuestGuard } from '@/guards/guest-guard';
+import { AuthLayout } from '@/layouts/auth';
+import { DashboardLayout } from '@/layouts/dashboard';
+import { LazyPage } from './lazy-page';
+import { paths } from './paths';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Navigate to={paths.dashboard.root} replace />,
+  },
+  {
+    path: paths.auth.root,
+    element: (
+      <GuestGuard>
+        <AuthLayout />
+      </GuestGuard>
+    ),
+    children: [
+      {
+        index: true,
+        path: paths.auth.root,
+        element: <Navigate to={paths.auth.login} replace />,
+      },
+      {
+        path: paths.auth.login,
+        element: LazyPage(() => import('@/pages/auth/login')),
+      },
+      {
+        path: paths.auth.register,
+        element: LazyPage(() => import('@/pages/auth/register')),
+      },
+      {
+        path: paths.auth.forgotPassword,
+        element: LazyPage(() => import('@/pages/auth/forgot-password')),
+      },
+      // {
+      //   path: routes.auth.resetPassword,
+      //   element: LazyPage(() => import('@/pages/auth/reset-password')),
+      // },
+      {
+        path: paths.auth.otp,
+        element: LazyPage(() => import('@/pages/auth/otp')),
+      },
+      // {
+      //   path: routes.auth.terms,
+      //   element: LazyPage(() => import('@/pages/auth/terms')),
+      // },
+      // {
+      //   path: routes.auth.privacy,
+      //   element: LazyPage(() => import('@/pages/auth/privacy')),
+      // },
+    ],
+  },
+  {
+    path: paths.dashboard.root,
+    element: (
+      // <AuthGuard>
+      <DashboardLayout />
+      // </AuthGuard>
+    ),
+    children: [
+      {
+        index: true,
+        path: paths.dashboard.root,
+        element: <Navigate to={paths.dashboard.home} replace />,
+      },
+      {
+        path: paths.dashboard.home,
+        element: LazyPage(() => import('@/pages/dashboard/home')),
+      },
+      /* ---------------------------------- ADMIN ---------------------------------- */
+      {
+        path: paths.dashboard.admin.root,
+        children: [
+          {
+            index: true,
+            path: paths.dashboard.admin.root,
+            element: LazyPage(() => import('@/pages/dashboard/home/admin/index')),
+          },
+          {
+            path: paths.dashboard.admin.addQuestions.root,
+            children: [
+              {
+                index: true,
+                path: paths.dashboard.admin.addQuestions.root,
+                element: LazyPage(() => import('@/pages/dashboard/home/admin/add-questions')),
+              },
+              {
+                index: true,
+                path: paths.dashboard.admin.addQuestions.category.extDropDown,
+                element: LazyPage(
+                  () => import('@/pages/dashboard/home/admin/question-categories/extDropDown')
+                ),
+              },
+              {
+                index: true,
+                path: paths.dashboard.admin.addQuestions.category.Highlight,
+                element: LazyPage(
+                  () => import('@/pages/dashboard/home/admin/question-categories/highlight')
+                ),
+              },
+              {
+                index: true,
+                path: paths.dashboard.admin.addQuestions.category.matrixNGrid,
+                element: LazyPage(
+                  () => import('@/pages/dashboard/home/admin/question-categories/matrixNGridMult')
+                ),
+              },
+              {
+                index: true,
+                path: paths.dashboard.admin.addQuestions.category.dragNDrop,
+                element: LazyPage(
+                  () => import('@/pages/dashboard/home/admin/question-categories/dragNdrop')
+                ),
+              },
+              {
+                index: true,
+                path: paths.dashboard.admin.addQuestions.category.bowTie,
+                element: LazyPage(
+                  () => import('@/pages/dashboard/home/admin/question-categories/bowTie')
+                ),
+              },
+              {
+                index: true,
+                path: paths.dashboard.admin.addQuestions.category.selectOne,
+                element: LazyPage(
+                  () => import('@/pages/dashboard/home/admin/question-categories/selectOne')
+                ),
+              },
+              {
+                index: true,
+                path: paths.dashboard.admin.addQuestions.category.mcq,
+                element: LazyPage(
+                  () => import('@/pages/dashboard/home/admin/question-categories/mcq')
+                ),
+              },
+            ],
+          },
+        ],
+      },
+      /* ---------------------------------- APPS ---------------------------------- */
+      {
+        path: paths.dashboard.apps.root,
+        children: [
+          {
+            index: true,
+            path: paths.dashboard.apps.root,
+            element: <Navigate to={paths.dashboard.apps.kanban} replace />,
+          },
+          {
+            path: paths.dashboard.apps.kanban,
+            element: LazyPage(() => import('@/pages/dashboard/apps/kanban')),
+          },
+        ],
+      },
+      /* ------------------------------- MANAGEMENT ------------------------------- */
+      {
+        path: paths.dashboard.management.root,
+        children: [
+          {
+            index: true,
+            path: paths.dashboard.management.root,
+            element: <Navigate to={paths.dashboard.management.customers.root} replace />,
+          },
+          {
+            path: paths.dashboard.management.customers.root,
+            children: [
+              {
+                index: true,
+                path: paths.dashboard.management.customers.root,
+                element: <Navigate to={paths.dashboard.management.customers.list} replace />,
+              },
+              {
+                path: paths.dashboard.management.customers.list,
+                element: LazyPage(() => import('@/pages/dashboard/management/customers/list')),
+              },
+            ],
+          },
+        ],
+      },
+      /* --------------------------------- WIDGETS -------------------------------- */
+      {
+        path: paths.dashboard.widgets.root,
+        children: [
+          {
+            index: true,
+            path: paths.dashboard.widgets.root,
+            element: <Navigate to={paths.dashboard.widgets.charts} replace />,
+          },
+          {
+            path: paths.dashboard.widgets.metrics,
+            element: LazyPage(() => import('@/pages/dashboard/widgets/metrics')),
+          },
+          {
+            path: paths.dashboard.widgets.charts,
+            element: LazyPage(() => import('@/pages/dashboard/widgets/charts')),
+          },
+          {
+            path: paths.dashboard.widgets.tables,
+            element: LazyPage(() => import('@/pages/dashboard/widgets/tables')),
+          },
+        ],
+      },
+      /* --------------------------------- REQUESTS -------------------------------- */
+      {
+        path: paths.dashboard.requests.root,
+        children: [
+          {
+            index: true,
+            path: paths.dashboard.requests.root,
+            element: <Navigate to={paths.dashboard.requests.root} replace />,
+          },
+          {
+            path: paths.dashboard.requests.loan,
+            element: LazyPage(() => import('@/pages/dashboard/requests/loan')),
+          },
+          {
+            path: paths.dashboard.requests.leave,
+            element: LazyPage(() => import('@/pages/dashboard/requests/leave')),
+          },
+          // {
+          //   path: paths.dashboard.widgets.tables,
+          //   element: LazyPage(() => import('@/pages/dashboard/widgets/tables')),
+          // },
+        ],
+      },
+    ],
+  },
+]);
+
+export function Router() {
+  return <RouterProvider router={router} />;
+}

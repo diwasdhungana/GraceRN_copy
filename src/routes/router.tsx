@@ -86,89 +86,22 @@ const router = createBrowserRouter([
               {
                 index: true,
                 path: paths.dashboard.admin.addQuestions.root,
-                element: LazyPage(() => import('@/pages/dashboard/home/admin/add-questions')),
+                element: LazyPage(() => import('@/pages/dashboard/home/admin/add-questions/index')),
               },
             ],
           },
-        ],
-      },
-      /* ---------------------------------- APPS ---------------------------------- */
-      {
-        path: paths.dashboard.apps.root,
-        children: [
           {
-            index: true,
-            path: paths.dashboard.apps.root,
-            element: <Navigate to={paths.dashboard.apps.kanban} replace />,
-          },
-          {
-            path: paths.dashboard.apps.kanban,
-            element: LazyPage(() => import('@/pages/dashboard/apps/kanban')),
-          },
-        ],
-      },
-      /* ------------------------------- MANAGEMENT ------------------------------- */
-      {
-        path: paths.dashboard.management.root,
-        children: [
-          {
-            index: true,
-            path: paths.dashboard.management.root,
-            element: <Navigate to={paths.dashboard.management.customers.root} replace />,
-          },
-          {
-            path: paths.dashboard.management.customers.root,
+            path: paths.dashboard.admin.viewQuestions.root,
             children: [
               {
                 index: true,
-                path: paths.dashboard.management.customers.root,
-                element: <Navigate to={paths.dashboard.management.customers.list} replace />,
-              },
-              {
-                path: paths.dashboard.management.customers.list,
-                element: LazyPage(() => import('@/pages/dashboard/management/customers/list')),
+                path: paths.dashboard.admin.viewQuestions.root,
+                element: LazyPage(
+                  () => import('@/pages/dashboard/home/admin/view-questions/index')
+                ),
               },
             ],
           },
-        ],
-      },
-      /* --------------------------------- WIDGETS -------------------------------- */
-      {
-        path: paths.dashboard.widgets.root,
-        children: [
-          {
-            index: true,
-            path: paths.dashboard.widgets.root,
-            element: <Navigate to={paths.dashboard.widgets.charts} replace />,
-          },
-          {
-            path: paths.dashboard.widgets.metrics,
-            element: LazyPage(() => import('@/pages/dashboard/widgets/metrics')),
-          },
-          {
-            path: paths.dashboard.widgets.charts,
-            element: LazyPage(() => import('@/pages/dashboard/widgets/charts')),
-          },
-          {
-            path: paths.dashboard.widgets.tables,
-            element: LazyPage(() => import('@/pages/dashboard/widgets/tables')),
-          },
-        ],
-      },
-      /* --------------------------------- REQUESTS -------------------------------- */
-      {
-        path: paths.dashboard.requests.root,
-        children: [
-          {
-            index: true,
-            path: paths.dashboard.requests.root,
-            element: <Navigate to={paths.dashboard.requests.root} replace />,
-          },
-
-          // {
-          //   path: paths.dashboard.widgets.tables,
-          //   element: LazyPage(() => import('@/pages/dashboard/widgets/tables')),
-          // },
         ],
       },
     ],

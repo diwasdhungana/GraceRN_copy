@@ -7,15 +7,26 @@ import { useNavigate } from 'react-router-dom';
 
 const index = () => {
   const navigate = useNavigate();
-  const handleGotoQuestions = () => {
-    navigate(paths.dashboard.admin.addQuestions.root);
-  };
+
   return (
     <Page title="Home" className={css.root}>
       <Title className={css.title}>This is admin page</Title>
       <Group>
-        <Button size="xl" onClick={handleGotoQuestions}>
+        <Button
+          size="xl"
+          onClick={() => {
+            navigate(paths.dashboard.admin.addQuestions.root);
+          }}
+        >
           Add Questions
+        </Button>
+        <Button
+          size="xl"
+          onClick={() => {
+            navigate(paths.dashboard.admin.viewQuestions.root);
+          }}
+        >
+          View Questions
         </Button>
       </Group>
     </Page>

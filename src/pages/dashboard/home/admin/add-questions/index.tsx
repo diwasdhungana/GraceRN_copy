@@ -5,7 +5,7 @@ import css from '@/pages/dashboard/everything.module.css';
 import { useNavigate } from 'react-router-dom';
 import { paths } from '@/routes';
 
-import { Settings } from '@/pages/dashboard/home/admin/question-categories/utils/settings';
+import { Settings } from '@/pages/dashboard/home/admin/add-questions/question-categories/utils/settings';
 
 import { PiArrowLeft } from 'react-icons/pi';
 import { dummySubjects, dummySystems } from '@/utilities/dummysubjects';
@@ -94,7 +94,7 @@ const addQuestions = () => {
                 />
               </Stack>
               <Stack>
-                {systemsDataError && <Text c="red">Error fetching subjects</Text>}
+                {systemsDataError && <Text c="red">Error fetching systems</Text>}
 
                 <Select
                   label={<Text fw="600">Choose a System</Text>}

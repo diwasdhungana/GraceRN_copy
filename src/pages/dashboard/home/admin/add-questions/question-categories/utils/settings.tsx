@@ -254,7 +254,7 @@ const renderQuestionType = (
   }
 };
 
-///this one make th whole div editable but i havenot found a way to make it save html data.
+///this one makes the whole div editable but i havenot found a way to make it save html data.
 {
   /* <div
 id="ctleditor_html"

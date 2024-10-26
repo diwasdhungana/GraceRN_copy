@@ -2,14 +2,14 @@ import {
   Button,
   Group,
   InputLabel,
-  MenuDropdown,
   Paper,
-  Select,
+  Combobox as ComboBox,
+  InputBase,
   Space,
   Stack,
-  Textarea,
   TextInput,
   Title,
+  useCombobox,
 } from '@mantine/core';
 import React, { useRef, useState } from 'react';
 import { RichTextEditorComponent } from './utils/RichTextEditorComponent';
@@ -26,23 +26,19 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
   const [title, setTitle] = useState('');
   const [explanation, setExplanation] = useState('');
   const [points, setPoints] = useState(5);
+  const [correctAnswer, setCorrectAnswer] = useState('');
 
   const handleInput = (event) => {
     const input = event.target.innerHTML;
-
-    // Update the options array without causing re-renders
     const newOptions = [...options];
     newOptions[index].value = input;
     setOptions(newOptions);
-
-    // Move caret to the end after each input
     moveCaretToEnd();
   };
 
   const moveCaretToEnd = () => {
     const selection = window.getSelection();
     const range = document.createRange();
-
     if (editorRef.current) {
       range.selectNodeContents(editorRef.current);
       range.collapse(false);
@@ -70,35 +66,38 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
       <InputLabel>Main Question (Title)</InputLabel>
       <RichTextEditorComponent
         content={title}
-        setContent={(item, index) => {
-          setTitle(item, index);
-        }}
+        setContent={(item, index) => setTitle(item, index)}
         index={0}
       />
       <Stack mt="md">
         <InputLabel>Text with dropdown</InputLabel>
-        <Group>
-          {options.map((option, index) =>
-            option.type === 'text' ? (
-              <div
-                id="ctleditor_html"
-                className={css.edit_textEditor}
-                contentEditable={true}
-                suppressContentEditableWarning={true}
-                ref={editorRef}
-                dangerouslySetInnerHTML={{ __html: option.value }}
-                onInput={handleInput}
-              />
-            ) : option.type === 'dropdown' ? (
-              <Select
-                placeholder={option.name}
-                data={option.value}
-                defaultValue="React"
-                allowDeselect={false}
-              />
-            ) : null
-          )}
-        </Group>
+        <Stack>
+          <Group>
+            {options.map((option, index) =>
+              option.type === 'text' ? (
+                <div
+                  id="ctleditor_html"
+                  className={css.edit_textEditor}
+                  contentEditable={true}
+                  suppressContentEditableWarning={true}
+                  ref={editorRef}
+                  dangerouslySetInnerHTML={{ __html: option.value }}
+                  onInput={handleInput}
+                />
+              ) : option.type === 'dropdown' ? (
+                <ComboBoxComponent
+                  key={index}
+                  option={option}
+                  setOptions={setOptions}
+                  options={options}
+                  index={index}
+                  correctAnswer={correctAnswer}
+                  setCorrectAnswer={setCorrectAnswer}
+                />
+              ) : null
+            )}
+          </Group>
+        </Stack>
         <Group justify="space-between">
           <Group>
             <Button
@@ -125,25 +124,33 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
             >
               Add Dropdown
             </Button>
+            <Button
+              size="sm"
+              onClick={() => {
+                setOptions([...options, { type: 'next-line' }]);
+              }}
+            >
+              &#9166;
+            </Button>
           </Group>
-          <Button
-            bg="red"
-            onClick={() => {
-              setOptions(options.slice(0, options.length - 1));
-              setCounter(counter + 1);
-            }}
-          >
-            Remove Last field
-          </Button>
+          {options.length > 0 && (
+            <Button
+              bg="red"
+              onClick={() => {
+                setOptions(options.slice(0, options.length - 1));
+                setCounter(counter + 1);
+              }}
+            >
+              Remove Last field
+            </Button>
+          )}
         </Group>
       </Stack>
 
       <InputLabel mt="lg">Explanation (Shown after Answer Submit.)</InputLabel>
       <RichTextEditorComponent
         content={explanation}
-        setContent={(item, index) => {
-          setExplanation(item, index);
-        }}
+        setContent={(item, index) => setExplanation(item, index)}
         index={0}
       />
       <Space h="lg" />
@@ -154,5 +161,66 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
         setResponse={setResponse}
       />
     </Paper>
+  );
+};
+
+const ComboBoxComponent = ({
+  option,
+  setOptions,
+  options,
+  index,
+  correctAnswer,
+  setCorrectAnswer,
+}) => {
+  const combobox = useCombobox({
+    onDropdownClose: () => combobox.resetSelectedOption(),
+  });
+
+  const [search, setSearch] = useState('');
+  const exactOptionMatch = option.value.some((item) => item === search);
+  const filteredOptions = exactOptionMatch
+    ? option.value
+    : option.value.filter((item) => item.toLowerCase().includes(search.toLowerCase().trim()));
+
+  const handleOptionSubmit = (val) => {
+    if (val === '$create') {
+      const newOptions = [...options];
+      newOptions[index].value = [...newOptions[index].value, search];
+      setOptions(newOptions);
+      setSearch('');
+    } else {
+      setSearch(val);
+    }
+    combobox.closeDropdown();
+  };
+
+  return (
+    <ComboBox store={combobox} withinPortal={false} onOptionSubmit={handleOptionSubmit}>
+      <ComboBox.Target>
+        <InputBase
+          rightSection={<ComboBox.Chevron />}
+          value={search}
+          onChange={(e) => {
+            setSearch(e.currentTarget.value);
+            combobox.openDropdown();
+          }}
+          placeholder={option.name}
+          rightSectionPointerEvents="none"
+        />
+      </ComboBox.Target>
+
+      <ComboBox.Dropdown>
+        <ComboBox.Options>
+          {filteredOptions.map((item) => (
+            <ComboBox.Option key={item} value={item}>
+              {item}
+            </ComboBox.Option>
+          ))}
+          {!exactOptionMatch && search.trim().length > 0 && (
+            <ComboBox.Option value="$create">+ Create {search}</ComboBox.Option>
+          )}
+        </ComboBox.Options>
+      </ComboBox.Dropdown>
+    </ComboBox>
   );
 };

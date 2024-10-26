@@ -100,6 +100,13 @@ const router = createBrowserRouter([
                   () => import('@/pages/dashboard/home/admin/view-questions/index')
                 ),
               },
+              {
+                index: true,
+                path: paths.dashboard.admin.viewQuestions.viewSpecificQuestions,
+                element: LazyPage(
+                  () => import('@/pages/dashboard/home/admin/view-questions/Specific/index')
+                ),
+              },
             ],
           },
         ],

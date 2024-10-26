@@ -19,7 +19,8 @@ export const paths = {
         root: '/dashboard/admin/add-questions',
       },
       viewQuestions: {
-        root: '/dashboard/admin/view-questions',
+        root: '/dashboard/admin/view-questions/',
+        viewSpecificQuestions: '/dashboard/admin/view-questions/:questionId',
       },
     },
   },

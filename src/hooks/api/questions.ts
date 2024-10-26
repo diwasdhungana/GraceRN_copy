@@ -12,6 +12,12 @@ export const useGetQuestions = createGetQueryHook({
   endpoint: '/questions',
   rQueryParams: { queryKey: ['questions'] },
 });
+export const useGetSpecificQuestion = createGetQueryHook({
+  endpoint: '/questions/:questionId',
+  rQueryParams: {
+    queryKey: ['specificQuestion'],
+  },
+});
 
 export const usePostQuestion = createPostMutationHook({
   endpoint: '/questions',

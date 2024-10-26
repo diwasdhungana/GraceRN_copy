@@ -1,0 +1,38 @@
+import { Page } from '@/components/page';
+import { Group, Paper, ScrollArea, Text } from '@mantine/core';
+import React, { useEffect } from 'react';
+import { AssistanceTabsView } from './tabsView';
+import QuestionViewWithModes from './question-view-category';
+
+const QuestionDisplay = ({ props }) => {
+  const { question, mode } = props;
+  useEffect(() => {
+    console.log(question);
+  }, [question]);
+  return (
+    <>
+      <Page title="Quesiton" h="80vh" bg="blue">
+        <Group h="100%" gap="3px" grow>
+          {question.data.assistanceColumn && (
+            <Paper withBorder w="0%" p="sm" h="100%">
+              <ScrollArea h="100%">
+                <div dangerouslySetInnerHTML={{ __html: question.data.assistanceColumn.title }} />
+                {question.data.assistanceColumn.tabs && (
+                  <AssistanceTabsView data={question.data.assistanceColumn.tabs} />
+                )}
+              </ScrollArea>
+            </Paper>
+          )}
+          <Paper withBorder h="100%" p="sm">
+            <ScrollArea h="100%">
+              <QuestionViewWithModes mode={mode} data={question.data} />
+            </ScrollArea>
+          </Paper>
+        </Group>
+      </Page>
+      {question.data.kind}
+    </>
+  );
+};
+
+export default QuestionDisplay;

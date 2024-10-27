@@ -107,22 +107,33 @@ const ExtDropDownwithModes = ({ data, mode }) => {
   return (
     <Stack gap="lg">
       <div dangerouslySetInnerHTML={{ __html: data.title }} />
-
-      {groupedOptions.map((group, groupIndex) => (
-        <Group key={groupIndex}>
-          {group.map((option) =>
-            option.type === 'text' ? (
-              <div dangerouslySetInnerHTML={{ __html: option.value }} key={option.id} />
-            ) : option.type === 'dropdown' ? (
-              <Select
-                data={option.value.map((o) => ({ value: o, label: o, disabled: 'true' }))}
-                key={option.id}
-                defaultValue={data.correct.find((c) => c.id === option.id).value}
-              />
-            ) : null
-          )}
-        </Group>
-      ))}
+      <Stack gap="0px">
+        {groupedOptions.map((group, groupIndex) => (
+          <Group key={groupIndex} gap="0px">
+            {group.map((option) =>
+              option.type === 'text' ? (
+                <>
+                  <div dangerouslySetInnerHTML={{ __html: option.value }} key={option.id} />
+                  &#160;
+                </>
+              ) : option.type === 'dropdown' ? (
+                <>
+                  <Select
+                    data={option.value.map((o) => ({
+                      value: o,
+                      label: o,
+                      disabled: mode == 'admin' ? true : false,
+                    }))}
+                    key={option.id}
+                    defaultValue={data.correct.find((c) => c.id === option.id).value}
+                  />
+                  &#160;&#160;
+                </>
+              ) : null
+            )}
+          </Group>
+        ))}
+      </Stack>
 
       {!showExplanation ? (
         <Group>

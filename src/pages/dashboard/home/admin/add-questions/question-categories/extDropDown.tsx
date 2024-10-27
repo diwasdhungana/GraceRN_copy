@@ -11,14 +11,14 @@ import {
   Title,
   useCombobox,
 } from '@mantine/core';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useLayoutEffect } from 'react';
 import { RichTextEditorComponent } from './utils/RichTextEditorComponent';
 import { SubmitQuestion } from './utils/SubmitQuestion';
 import css from '@/pages/dashboard/everything.module.css';
 import { generateId } from '@/utilities/uid';
 
 export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
-  const editorRefs = useRef<(HTMLDivElement | null)[]>();
+  const editorRefs = useRef(new Map());
   const [counter, setCounter] = useState(1);
   const [options, setOptions] = useState([
     { type: 'text', value: 'type..', name: 'text 0', id: generateId() },
@@ -27,30 +27,32 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
   const [title, setTitle] = useState('');
   const [explanation, setExplanation] = useState('');
   const [points, setPoints] = useState(5);
-  const [correctAnswer, setCorrectAnswer] = useState([]); //eg [{id:"sfdsidflsk", value : "option 1" }]
+  const [correctAnswer, setCorrectAnswer] = useState([]); // eg [{id:"sfdsidflsk", value : "option 1" }]
+  const [focusedId, setFocusedId] = useState(null); // Now using focusedId instead of index
 
-  const handleFocus = (index: number) => {
-    // Select the text inside the input on focus
-    console.log('index', index, editorRefs.current);
-
-    if (editorRefs.current) {
-      editorRefs.current[index].select();
-    }
+  const handleFocus = (id) => {
+    setFocusedId(id); // Update focused option by id on focus
   };
 
-  const moveCaretToEnd = () => {
+  const moveCaretToEnd = (id) => {
     const selection = window.getSelection();
     const range = document.createRange();
-    console.clear();
-    console.log('editorRefs.current', editorRefs);
-    if (editorRefs.current) {
-      range.selectNodeContents(editorRefs.current);
+    const editorElement = editorRefs.current.get(id);
 
-      range.collapse(false);
+    if (editorElement) {
+      range.selectNodeContents(editorElement);
+      range.collapse(false); // Move caret to the end
       selection.removeAllRanges();
       selection.addRange(range);
     }
   };
+
+  useLayoutEffect(() => {
+    if (focusedId) {
+      moveCaretToEnd(focusedId); // Move caret to the end of the focused element
+    }
+  }, [options, focusedId]);
+
   const groupOptions = (options) => {
     const groups = [];
     let currentGroup = [];
@@ -87,36 +89,32 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
         />
       </Group>
       <InputLabel>Main Question (Title)</InputLabel>
-      <RichTextEditorComponent
-        content={title}
-        setContent={(item, index) => setTitle(item, index)}
-        index={0}
-      />
+      <RichTextEditorComponent content={title} setContent={(item) => setTitle(item)} />
       <Stack mt="md">
         <InputLabel>Text with dropdown</InputLabel>
         <Stack>
           {groupedOptions.map((group, groupIndex) => (
             <Group key={groupIndex}>
               &#9166;
-              {group.map((option, index) =>
+              {group.map((option) =>
                 option.type === 'text' ? (
-                  <Group gap="0px">
+                  <Group gap="0px" key={option.id}>
                     ⓣ
                     <div
-                      id="ctleditor_html"
-                      className={css.edit_textEditor}
+                      key={option.id}
                       contentEditable={true}
                       suppressContentEditableWarning={true}
-                      ref={(el) => (editorRefs.current[index] = el)}
+                      ref={(el) => editorRefs.current.set(option.id, el)}
                       dangerouslySetInnerHTML={{ __html: option.value }}
-                      onFocus={() => handleFocus(index)}
+                      onFocus={() => handleFocus(option.id)}
                       onInput={(event) => {
-                        const input = (event.target as HTMLElement).innerHTML;
-                        const newOptions = options.map((opt) =>
-                          opt.id === option.id ? { ...opt, value: input } : opt
+                        const input = event.currentTarget.innerHTML;
+                        setFocusedId(option.id); // Update the focused id
+                        setOptions((prevOptions) =>
+                          prevOptions.map((opt) =>
+                            opt.id === option.id ? { ...opt, value: input } : opt
+                          )
                         );
-                        moveCaretToEnd();
-                        setOptions(newOptions);
                       }}
                     />
                   </Group>
@@ -128,6 +126,7 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
                     id={option.id}
                     correctAnswer={correctAnswer}
                     setCorrectAnswer={setCorrectAnswer}
+                    key={option.id}
                   />
                 ) : null
               )}
@@ -140,11 +139,15 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
             <Button
               size="sm"
               onClick={() => {
-                setOptions([
-                  ...options,
-                  { type: 'text', value: 'type..', name: `text ${counter}`, id: generateId() },
-                ]);
+                const newField = {
+                  type: 'text',
+                  value: '',
+                  name: `text ${counter}`,
+                  id: generateId(),
+                };
+                setOptions([...options, newField]);
                 setCounter(counter + 1);
+                setFocusedId(newField.id); // Set focus to the new field's ID
               }}
             >
               Add Text field
@@ -165,6 +168,7 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
             <Button
               size="sm"
               onClick={() => {
+                if (options[options.length - 1].type === 'next-line') return;
                 setOptions([
                   ...options,
                   { type: 'next-line', id: generateId(), value: 'next-line' },
@@ -189,11 +193,7 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
       </Stack>
 
       <InputLabel mt="lg">Explanation (Shown after Answer Submit.)</InputLabel>
-      <RichTextEditorComponent
-        content={explanation}
-        setContent={(item, index) => setExplanation(item, index)}
-        index={0}
-      />
+      <RichTextEditorComponent content={explanation} setContent={(item) => setExplanation(item)} />
       <Space h="lg" />
 
       <SubmitQuestion
@@ -204,6 +204,7 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
     </Paper>
   );
 };
+
 const ComboBoxComponent = ({
   option,
   setOptions,

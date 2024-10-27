@@ -15,37 +15,60 @@ import React, { useRef, useState } from 'react';
 import { RichTextEditorComponent } from './utils/RichTextEditorComponent';
 import { SubmitQuestion } from './utils/SubmitQuestion';
 import css from '@/pages/dashboard/everything.module.css';
+import { generateId } from '@/utilities/uid';
 
 export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
-  const editorRef = useRef(null);
-  const [counter, setCounter] = useState(2);
+  const editorRefs = useRef<(HTMLDivElement | null)[]>();
+  const [counter, setCounter] = useState(1);
   const [options, setOptions] = useState([
-    { type: 'text', value: '', name: 'text 0' },
-    { type: 'dropdown', value: [], name: 'dropdown 1' },
+    { type: 'text', value: 'type..', name: 'text 0', id: generateId() },
+    { type: 'dropdown', value: [], name: 'dropdown 0', id: generateId() },
   ]);
   const [title, setTitle] = useState('');
   const [explanation, setExplanation] = useState('');
   const [points, setPoints] = useState(5);
-  const [correctAnswer, setCorrectAnswer] = useState('');
+  const [correctAnswer, setCorrectAnswer] = useState([]); //eg [{id:"sfdsidflsk", value : "option 1" }]
 
-  const handleInput = (event) => {
-    const input = event.target.innerHTML;
-    const newOptions = [...options];
-    newOptions[index].value = input;
-    setOptions(newOptions);
-    moveCaretToEnd();
+  const handleFocus = (index: number) => {
+    // Select the text inside the input on focus
+    console.log('index', index, editorRefs.current);
+
+    if (editorRefs.current) {
+      editorRefs.current[index].select();
+    }
   };
 
   const moveCaretToEnd = () => {
     const selection = window.getSelection();
     const range = document.createRange();
-    if (editorRef.current) {
-      range.selectNodeContents(editorRef.current);
+    console.clear();
+    console.log('editorRefs.current', editorRefs);
+    if (editorRefs.current) {
+      range.selectNodeContents(editorRefs.current);
+
       range.collapse(false);
       selection.removeAllRanges();
       selection.addRange(range);
     }
   };
+  const groupOptions = (options) => {
+    const groups = [];
+    let currentGroup = [];
+
+    options.forEach((option) => {
+      if (option.type === 'next-line') {
+        if (currentGroup.length > 0) groups.push(currentGroup);
+        currentGroup = [];
+      } else {
+        currentGroup.push(option);
+      }
+    });
+
+    if (currentGroup.length > 0) groups.push(currentGroup); // Add the last group if any
+    return groups;
+  };
+
+  const groupedOptions = groupOptions(options);
 
   return (
     <Paper shadow="xs" p="lg" radius="lg" mt="sm">
@@ -72,40 +95,54 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
       <Stack mt="md">
         <InputLabel>Text with dropdown</InputLabel>
         <Stack>
-          <Group>
-            {options.map((option, index) =>
-              option.type === 'text' ? (
-                <div
-                  id="ctleditor_html"
-                  className={css.edit_textEditor}
-                  contentEditable={true}
-                  suppressContentEditableWarning={true}
-                  ref={editorRef}
-                  dangerouslySetInnerHTML={{ __html: option.value }}
-                  onInput={handleInput}
-                />
-              ) : option.type === 'dropdown' ? (
-                <ComboBoxComponent
-                  key={index}
-                  option={option}
-                  setOptions={setOptions}
-                  options={options}
-                  index={index}
-                  correctAnswer={correctAnswer}
-                  setCorrectAnswer={setCorrectAnswer}
-                />
-              ) : null
-            )}
-          </Group>
+          {groupedOptions.map((group, groupIndex) => (
+            <Group key={groupIndex}>
+              &#9166;
+              {group.map((option, index) =>
+                option.type === 'text' ? (
+                  <Group gap="0px">
+                    ⓣ
+                    <div
+                      id="ctleditor_html"
+                      className={css.edit_textEditor}
+                      contentEditable={true}
+                      suppressContentEditableWarning={true}
+                      ref={(el) => (editorRefs.current[index] = el)}
+                      dangerouslySetInnerHTML={{ __html: option.value }}
+                      onFocus={() => handleFocus(index)}
+                      onInput={(event) => {
+                        const input = (event.target as HTMLElement).innerHTML;
+                        const newOptions = options.map((opt) =>
+                          opt.id === option.id ? { ...opt, value: input } : opt
+                        );
+                        moveCaretToEnd();
+                        setOptions(newOptions);
+                      }}
+                    />
+                  </Group>
+                ) : option.type === 'dropdown' ? (
+                  <ComboBoxComponent
+                    option={option}
+                    setOptions={setOptions}
+                    options={options}
+                    id={option.id}
+                    correctAnswer={correctAnswer}
+                    setCorrectAnswer={setCorrectAnswer}
+                  />
+                ) : null
+              )}
+            </Group>
+          ))}
         </Stack>
-        <Group justify="space-between">
+
+        <Group justify="space-between" mt="md">
           <Group>
             <Button
               size="sm"
               onClick={() => {
                 setOptions([
                   ...options,
-                  { type: 'text', value: 'type here..', name: `text ${counter}` },
+                  { type: 'text', value: 'type..', name: `text ${counter}`, id: generateId() },
                 ]);
                 setCounter(counter + 1);
               }}
@@ -117,20 +154,24 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
               onClick={() => {
                 setOptions([
                   ...options,
-                  { type: 'dropdown', value: [], name: `dropdown ${counter}` },
+                  { type: 'dropdown', value: [], name: `dropdown ${counter}`, id: generateId() },
                 ]);
                 setCounter(counter + 1);
               }}
             >
               Add Dropdown
             </Button>
+
             <Button
               size="sm"
               onClick={() => {
-                setOptions([...options, { type: 'next-line' }]);
+                setOptions([
+                  ...options,
+                  { type: 'next-line', id: generateId(), value: 'next-line' },
+                ]);
               }}
             >
-              &#9166;
+              &#9166; New Line
             </Button>
           </Group>
           {options.length > 0 && (
@@ -156,21 +197,20 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
       <Space h="lg" />
 
       <SubmitQuestion
-        dataTunnel={() => ({ ...dataTunnel, options, title, points, explanation })}
+        dataTunnel={() => ({ ...dataTunnel, options, title, points, explanation, correctAnswer })}
         response={response}
         setResponse={setResponse}
       />
     </Paper>
   );
 };
-
 const ComboBoxComponent = ({
   option,
   setOptions,
   options,
-  index,
   correctAnswer,
   setCorrectAnswer,
+  id,
 }) => {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -184,12 +224,29 @@ const ComboBoxComponent = ({
 
   const handleOptionSubmit = (val) => {
     if (val === '$create') {
-      const newOptions = [...options];
-      newOptions[index].value = [...newOptions[index].value, search];
+      const newOptions = options.map((opt) =>
+        opt.id === id ? { ...opt, value: [...opt.value, search] } : opt
+      );
       setOptions(newOptions);
       setSearch('');
     } else {
       setSearch(val);
+
+      // Update the correctAnswer array with the selected value
+      setCorrectAnswer((prevCorrectAnswers) => {
+        // Check if this id already exists in correctAnswer
+        const existingAnswerIndex = prevCorrectAnswers.findIndex((answer) => answer.id === id);
+
+        if (existingAnswerIndex >= 0) {
+          // If it exists, update the value
+          const updatedAnswers = [...prevCorrectAnswers];
+          updatedAnswers[existingAnswerIndex].value = val;
+          return updatedAnswers;
+        } else {
+          // If it does not exist, add the new entry
+          return [...prevCorrectAnswers, { id, value: val }];
+        }
+      });
     }
     combobox.closeDropdown();
   };

@@ -73,7 +73,7 @@ export const mcqRequestCreator = (data, setResponse) => {
     points: data.points,
     type: 'Traditional',
     explanation: data.explanation,
-    categories: [data.selectedCategory],
+    categories: ['data.selectedCategory'],
   };
   if (data.hasAssistanceColumn) {
     variables.assistanceColumn = {
@@ -96,7 +96,7 @@ export const mcqRequestCreator = (data, setResponse) => {
     };
   });
   //set an array of indexes of correct options
-  variables.correctOptions = data.options.reduce((acc, option, index) => {
+  variables.correct = data.options.reduce((acc, option, index) => {
     if (option.checked) {
       acc.push(index);
     }
@@ -108,6 +108,37 @@ export const mcqRequestCreator = (data, setResponse) => {
 export const matrixNGridBoolRequestCreator = (data, setResponse) => {};
 export const matrixNGridMultRequestCreator = (data, setResponse) => {};
 export const highlightRequestCreator = (data, setResponse) => {};
-export const extDropDownRequestCreator = (data, setResponse) => {};
+export const extDropDownRequestCreator = (data, setResponse) => {
+  console.log('reached to the extDropDownRequestCreator');
+  const variables = {
+    title: data.title,
+    kind: 'Select all that apply',
+    subjects: [data.selectedSubject],
+    systems: [data.selectedSystem],
+    points: data.points,
+    type: 'Traditional',
+    explanation: data.explanation,
+    categories: ['data.selectedCategory'],
+    correct: data.correctAnswer,
+    options: data.options,
+  };
+  if (data.hasAssistanceColumn) {
+    variables.assistanceColumn = {
+      title: data.assistanceTitle,
+    };
+    if (data.hasTabsInAssistance) {
+      variables.assistanceColumn.tabs = data.tabsData.title.map((title, index) => {
+        return {
+          title,
+          content: data.tabsData.content[index],
+        };
+      });
+    } else {
+      variables.assistanceColumn.assistanceData = data.assistanceData;
+    }
+  }
+
+  return variables;
+};
 export const dragNDropRequestCreator = (data, setResponse) => {};
 export const bowTieRequestCreator = (data, setResponse) => {};

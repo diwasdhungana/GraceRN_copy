@@ -112,7 +112,7 @@ export const extDropDownRequestCreator = (data, setResponse) => {
   console.log('reached to the extDropDownRequestCreator');
   const variables = {
     title: data.title,
-    kind: 'Select all that apply',
+    kind: 'Extended Dropdown',
     subjects: [data.selectedSubject],
     systems: [data.selectedSystem],
     points: data.points,

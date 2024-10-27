@@ -1,4 +1,4 @@
-import { Button, Checkbox, Group, Space, Stack, Text, Title } from '@mantine/core';
+import { Button, Checkbox, Group, Select, Space, Stack, Text, Title } from '@mantine/core';
 import React, { useState } from 'react';
 
 const QuestionViewWithModes = ({ mode, data }) => {
@@ -11,7 +11,7 @@ const QuestionViewWithModes = ({ mode, data }) => {
       return <MatrixNGridMultwithModes data={data} mode={mode} />;
     case 'highlight':
       return <HighlightwithModes data={data} mode={mode} />;
-    case 'extDropDown':
+    case 'Extended Dropdown':
       return <ExtDropDownwithModes data={data} mode={mode} />;
     case 'dragNDrop':
       return <DragNDropwithModes data={data} mode={mode} />;
@@ -84,11 +84,57 @@ const HighlightwithModes = ({ data, mode }) => {
 };
 
 const ExtDropDownwithModes = ({ data, mode }) => {
+  const [showExplanation, setShowExplanation] = useState(false);
+
+  const groupOptions = (options) => {
+    const groups = [];
+    let currentGroup = [];
+
+    options.forEach((option) => {
+      if (option.type === 'next-line') {
+        if (currentGroup.length > 0) groups.push(currentGroup);
+        currentGroup = [];
+      } else {
+        currentGroup.push(option);
+      }
+    });
+
+    if (currentGroup.length > 0) groups.push(currentGroup); // Add the last group if any
+    return groups;
+  };
+  const groupedOptions = groupOptions(data.options);
+
   return (
-    <div>
-      {data.title}
-      {mode}
-    </div>
+    <Stack gap="lg">
+      <div dangerouslySetInnerHTML={{ __html: data.title }} />
+
+      {groupedOptions.map((group, groupIndex) => (
+        <Group key={groupIndex}>
+          {group.map((option) =>
+            option.type === 'text' ? (
+              <div dangerouslySetInnerHTML={{ __html: option.value }} key={option.id} />
+            ) : option.type === 'dropdown' ? (
+              <Select
+                data={option.value.map((o) => ({ value: o, label: o, disabled: 'true' }))}
+                key={option.id}
+                defaultValue={data.correct.find((c) => c.id === option.id).value}
+              />
+            ) : null
+          )}
+        </Group>
+      ))}
+
+      {!showExplanation ? (
+        <Group>
+          <Button onClick={() => setShowExplanation(!showExplanation)}>Submit</Button>
+        </Group>
+      ) : (
+        <Stack>
+          <Title order={2}> Explanation</Title>
+          <div dangerouslySetInnerHTML={{ __html: data.explanation }} />
+        </Stack>
+      )}
+    </Stack>
   );
 };
 

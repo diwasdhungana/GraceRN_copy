@@ -1,14 +1,24 @@
-import { Button, Checkbox, Group, Select, Space, Stack, Text, Title } from '@mantine/core';
+import {
+  Button,
+  Checkbox,
+  Group,
+  OptionsDropdown,
+  Radio,
+  Select,
+  Space,
+  Stack,
+  Table,
+  Text,
+  Title,
+} from '@mantine/core';
 import React, { useState } from 'react';
 
 const QuestionViewWithModes = ({ mode, data }) => {
   switch (data.kind) {
     case 'Select One':
       return <SelectOnewithModes data={data} mode={mode} />;
-    case 'matrixNGridBool':
-      return <MatrixNGridBoolwithModes data={data} mode={mode} />;
-    case 'matrixNGridMult':
-      return <MatrixNGridMultwithModes data={data} mode={mode} />;
+    case 'Grid and Matrix':
+      return <MatrixNGridwithModes data={data} mode={mode} />;
     case 'highlight':
       return <HighlightwithModes data={data} mode={mode} />;
     case 'Extended Dropdown':
@@ -56,21 +66,86 @@ const SelectOnewithModes = ({ data, mode }) => {
   );
 };
 
-const MatrixNGridBoolwithModes = ({ data, mode }) => {
+const MatrixNGridwithModes = ({ data, mode }) => {
+  const [showExplanation, setShowExplanation] = useState(false);
   return (
-    <div>
-      {data.title}
-      {mode}
-    </div>
-  );
-};
+    <Stack gap="lg">
+      <div dangerouslySetInnerHTML={{ __html: data.title }} />
 
-const MatrixNGridMultwithModes = ({ data, mode }) => {
-  return (
-    <div>
-      {data.title}
-      {mode}
-    </div>
+      <Stack gap="sm" mt="md">
+        <Table verticalSpacing="lg">
+          <Table.Thead>
+            <Table.Tr ta="center">
+              {Array.from({ length: data.options[0].length }).map((_, index) => (
+                <th key={index} style={{ textAlign: 'center' }}>
+                  <Text>{data.options[0][index].value}</Text>
+                </th>
+              ))}
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>
+            {Array.from({ length: data.options.length - 1 }).map((_, indexR) => (
+              <Table.Tr key={indexR}>
+                {Array.from({ length: data.options[0].length }).map((_, index) => (
+                  <Table.Td
+                    key={index}
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
+                    {index === 0 ? (
+                      <Text>{data.options[indexR + 1][index].value}</Text>
+                    ) : data.radio === true ? (
+                      <Group justify="center">
+                        <Radio
+                          type="radio"
+                          name={`selectOptions${indexR}`}
+                          checked={
+                            mode == 'admin'
+                              ? //see if the data.correct [[],[2],[1,3]]
+                                data.correct[indexR + 1].includes(index)
+                                ? true
+                                : false
+                              : true
+                          }
+                        />
+                      </Group>
+                    ) : (
+                      <Group justify="center">
+                        <Checkbox
+                          type="checkbox"
+                          name={`selectOptions${indexR}`}
+                          checked={
+                            mode == 'admin'
+                              ? //see if the data.correct [[],[2],[1,3]]
+                                data.correct[indexR + 1].includes(index)
+                                ? true
+                                : false
+                              : true
+                          }
+                        />
+                      </Group>
+                    )}
+                  </Table.Td>
+                ))}
+              </Table.Tr>
+            ))}
+          </Table.Tbody>
+        </Table>
+      </Stack>
+
+      {!showExplanation ? (
+        <Group>
+          <Button onClick={() => setShowExplanation(!showExplanation)}>Submit</Button>
+        </Group>
+      ) : (
+        <Stack>
+          <Title order={2}> Explanation</Title>
+          <div dangerouslySetInnerHTML={{ __html: data.explanation }} />
+        </Stack>
+      )}
+    </Stack>
   );
 };
 

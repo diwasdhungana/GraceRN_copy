@@ -110,8 +110,10 @@ export const matrixNGridRequestCreator = (data, setResponse) => {
     points: data.points,
     type: 'Next Gen',
     explanation: data.explanation,
-    // selectionType: data.selectionType,
-    options: data.options,
+    radio: data.selectionType == 'radio' ? true : false,
+    options: data.options.map((opt) => {
+      return opt.map((op) => ({ ...op, checked: false }));
+    }),
   };
   if (data.hasAssistanceColumn) {
     variables.assistanceColumn = {

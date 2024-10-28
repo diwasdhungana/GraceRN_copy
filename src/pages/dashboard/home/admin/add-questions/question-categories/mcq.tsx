@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Button,
+  Checkbox,
   Group,
   InputLabel,
   Paper,
@@ -58,9 +59,7 @@ export const Mcq = ({ dataTunnel, response, setResponse }: any) => {
         <InputLabel>Options :</InputLabel>
         {options.map((option, index) => (
           <Group gap="xs" key={index} w="100%">
-            <input
-              type="radio"
-              name="selectOptions"
+            <Checkbox
               value={option.value}
               checked={option.checked}
               onChange={(e) => {

@@ -4,10 +4,8 @@ export const requestDataCreator = (dataTunnel, setResponse) => {
   switch (selectedQuestionType) {
     case 'selectOne':
       return selectOneRequestCreator(data, setResponse);
-    case 'matrixNGridBool':
-      return matrixNGridBoolRequestCreator(data, setResponse);
-    case 'matrixNGridMult':
-      return matrixNGridMultRequestCreator(data, setResponse);
+    case 'matrixNGrid':
+      return matrixNGridRequestCreator(data, setResponse);
     case 'highlight':
       return highlightRequestCreator(data, setResponse);
     case 'extDropDown':
@@ -27,12 +25,11 @@ export const selectOneRequestCreator = (data, setResponse) => {
   const variables = {
     title: data.title,
     kind: 'Select One',
-    subjects: [data.selectedSubject],
-    systems: [data.selectedSystem],
+    subject: data.selectedSubject,
+    system: data.selectedSystem,
     points: data.points,
     type: 'Traditional',
     explanation: data.explanation,
-    categories: ['data.selectedCategory'],
   };
   if (data.hasAssistanceColumn) {
     variables.assistanceColumn = {
@@ -68,12 +65,11 @@ export const mcqRequestCreator = (data, setResponse) => {
   const variables = {
     title: data.title,
     kind: 'Select all that apply',
-    subjects: [data.selectedSubject],
-    systems: [data.selectedSystem],
+    subject: data.selectedSubject,
+    system: data.selectedSystem,
     points: data.points,
     type: 'Traditional',
     explanation: data.explanation,
-    categories: ['data.selectedCategory'],
   };
   if (data.hasAssistanceColumn) {
     variables.assistanceColumn = {
@@ -105,20 +101,56 @@ export const mcqRequestCreator = (data, setResponse) => {
   return variables;
 };
 
-export const matrixNGridBoolRequestCreator = (data, setResponse) => {};
-export const matrixNGridMultRequestCreator = (data, setResponse) => {};
+export const matrixNGridRequestCreator = (data, setResponse) => {
+  const variables = {
+    title: data.title,
+    kind: 'Grid and Matrix',
+    subject: data.selectedSubject,
+    system: data.selectedSystem,
+    points: data.points,
+    type: 'Next Gen',
+    explanation: data.explanation,
+    // selectionType: data.selectionType,
+    options: data.options,
+  };
+  if (data.hasAssistanceColumn) {
+    variables.assistanceColumn = {
+      title: data.assistanceTitle,
+    };
+    if (data.hasTabsInAssistance) {
+      variables.assistanceColumn.tabs = data.tabsData.title.map((title, index) => {
+        return {
+          title,
+          content: data.tabsData.content[index],
+        };
+      });
+    } else {
+      variables.assistanceColumn.assistanceData = data.assistanceData;
+    }
+  }
+  //option is a 2D array of options, which has a checked property in each option
+  //correct is an array of indexes of correct options
+  variables.correct = data.options.map((row) => {
+    return row.reduce((acc, option, index) => {
+      if (option.checked) {
+        acc.push(index);
+      }
+      return acc;
+    }, []);
+  });
+  return variables;
+};
 export const highlightRequestCreator = (data, setResponse) => {};
 export const extDropDownRequestCreator = (data, setResponse) => {
   console.log('reached to the extDropDownRequestCreator');
   const variables = {
     title: data.title,
     kind: 'Extended Dropdown',
-    subjects: [data.selectedSubject],
-    systems: [data.selectedSystem],
+    subject: data.selectedSubject,
+    system: data.selectedSystem,
     points: data.points,
-    type: 'Traditional',
+    type: 'Next Gen',
     explanation: data.explanation,
-    categories: ['data.selectedCategory'],
     correct: data.correctAnswer,
     options: data.options,
   };

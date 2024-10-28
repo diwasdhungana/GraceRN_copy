@@ -8,6 +8,7 @@ export const SubmitQuestion = ({ dataTunnel, response, setResponse }) => {
   const handleSubmit = () => {
     // console.log('submitting', dataTunnel());
     const variables = requestDataCreator(dataTunnel, setResponse);
+    console.clear();
     console.log('variables', variables);
     postQuestion(
       { variables },

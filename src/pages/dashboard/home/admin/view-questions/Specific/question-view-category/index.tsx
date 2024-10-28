@@ -107,7 +107,7 @@ const ExtDropDownwithModes = ({ data, mode }) => {
   return (
     <Stack gap="lg">
       <div dangerouslySetInnerHTML={{ __html: data.title }} />
-      <Stack gap="0px">
+      <Stack gap="sm">
         {groupedOptions.map((group, groupIndex) => (
           <Group key={groupIndex} gap="0px">
             {group.map((option) =>

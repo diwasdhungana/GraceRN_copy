@@ -15,8 +15,7 @@ import {
 import React from 'react';
 import JoditEditor from 'jodit-react';
 import { SelectOne } from '@/pages/dashboard/home/admin/add-questions/question-categories/selectOne';
-import { MatrixNGridBool } from '@/pages/dashboard/home/admin/add-questions/question-categories/matrixNGridBool';
-import { MatrixNGridMult } from '@/pages/dashboard/home/admin/add-questions/question-categories/matrixNGridMult';
+import { MatrixNGrid } from '@/pages/dashboard/home/admin/add-questions/question-categories/matrixNGrid';
 import { Highlight } from '@/pages/dashboard/home/admin/add-questions/question-categories/highlight';
 import { ExtDropDown } from '@/pages/dashboard/home/admin/add-questions/question-categories/extDropDown';
 import { DragNDrop } from '@/pages/dashboard/home/admin/add-questions/question-categories/dragNdrop';
@@ -231,14 +230,8 @@ const renderQuestionType = (
   switch (dataTunnel.selectedQuestionType) {
     case 'selectOne':
       return <SelectOne dataTunnel={dataTunnel} response={response} setResponse={setResponse} />;
-    case 'matrixNGridBool':
-      return (
-        <MatrixNGridBool dataTunnel={dataTunnel} response={response} setResponse={setResponse} />
-      );
-    case 'matrixNGridMult':
-      return (
-        <MatrixNGridMult dataTunnel={dataTunnel} response={response} setResponse={setResponse} />
-      );
+    case 'matrixNGrid':
+      return <MatrixNGrid dataTunnel={dataTunnel} response={response} setResponse={setResponse} />;
     case 'highlight':
       return <Highlight dataTunnel={dataTunnel} response={response} setResponse={setResponse} />;
     case 'extDropDown':

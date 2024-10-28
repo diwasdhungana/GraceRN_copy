@@ -15,8 +15,7 @@ const questionTypewithlabelandValue = {
   nextgen: [
     { label: 'Extended Drop Down', value: 'extDropDown' },
     { label: 'Highlight', value: 'Highlight' },
-    { label: 'Matrix and Grid Two values', value: 'matrixNGridBool' },
-    { label: 'Matrix and Grid Multi values', value: 'matrixNGridMult' },
+    { label: 'Matrix and Grid', value: 'matrixNGrid' },
     { label: 'Drag and Drop', value: 'dragNDrop' },
     { label: 'Bow Tie', value: 'bowTie' },
   ],

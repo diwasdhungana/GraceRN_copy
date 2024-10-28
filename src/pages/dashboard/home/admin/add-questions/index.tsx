@@ -14,7 +14,7 @@ import { useGetSubjects, useGetSystems } from '@/hooks';
 const questionTypewithlabelandValue = {
   nextgen: [
     { label: 'Extended Drop Down', value: 'extDropDown' },
-    { label: 'Highlight', value: 'Highlight' },
+    { label: 'Highlight', value: 'highlight' },
     { label: 'Matrix and Grid', value: 'matrixNGrid' },
     { label: 'Drag and Drop', value: 'dragNDrop' },
     { label: 'Bow Tie', value: 'bowTie' },

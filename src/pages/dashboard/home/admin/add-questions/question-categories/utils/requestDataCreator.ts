@@ -142,7 +142,36 @@ export const matrixNGridRequestCreator = (data, setResponse) => {
   });
   return variables;
 };
-export const highlightRequestCreator = (data, setResponse) => {};
+export const highlightRequestCreator = (data, setResponse) => {
+  const variables = {
+    title: data.title,
+    // kind: 'Highlight',
+    kind: 'Bowtie',
+    subject: data.selectedSubject,
+    system: data.selectedSystem,
+    points: data.points,
+    type: 'Next Gen',
+    explanation: data.explanation,
+    correct: data.correct,
+    options: data.options,
+  };
+  if (data.hasAssistanceColumn) {
+    variables.assistanceColumn = {
+      title: data.assistanceTitle,
+    };
+    if (data.hasTabsInAssistance) {
+      variables.assistanceColumn.tabs = data.tabsData.title.map((title, index) => {
+        return {
+          title,
+          content: data.tabsData.content[index],
+        };
+      });
+    } else {
+      variables.assistanceColumn.assistanceData = data.assistanceData;
+    }
+  }
+  return variables;
+};
 export const extDropDownRequestCreator = (data, setResponse) => {
   console.log('reached to the extDropDownRequestCreator');
   const variables = {

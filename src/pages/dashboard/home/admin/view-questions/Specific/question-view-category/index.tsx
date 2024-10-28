@@ -11,7 +11,7 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const QuestionViewWithModes = ({ mode, data }) => {
   switch (data.kind) {
@@ -19,7 +19,7 @@ const QuestionViewWithModes = ({ mode, data }) => {
       return <SelectOnewithModes data={data} mode={mode} />;
     case 'Grid and Matrix':
       return <MatrixNGridwithModes data={data} mode={mode} />;
-    case 'highlight':
+    case 'Bowtie':
       return <HighlightwithModes data={data} mode={mode} />;
     case 'Extended Dropdown':
       return <ExtDropDownwithModes data={data} mode={mode} />;
@@ -150,11 +150,68 @@ const MatrixNGridwithModes = ({ data, mode }) => {
 };
 
 const HighlightwithModes = ({ data, mode }) => {
+  const [showExplanation, setShowExplanation] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null); // To reference the content div
+
+  useEffect(() => {
+    const elements = contentRef.current.querySelectorAll('.highlight');
+    elements.forEach((element, index) => {
+      // element.onclick = () => handleClick(element.innerText, index);
+      element.style.backgroundColor = 'rgba(255, 255, 0, 0.2)';
+      element.style.display = 'inline';
+      element.style.cursor = 'pointer';
+      const found = data.correct.findIndex((item) => item.text === element.innerText);
+      if (found === -1) {
+        element.style.backgroundColor = 'yellow';
+        element.style.color = 'black';
+      }
+    });
+  });
+
+  // const handleClick = (text, index) => {
+  //   const newCorrect = correct;
+  //   const found = newCorrect.findIndex((item) => item.text === text);
+  //   if (found === -1) {
+  //     newCorrect.push({ text, index });
+  //   } else {
+  //     newCorrect.splice(found, 1);
+  //   }
+  //   setCorrect(newCorrect);
+
+  //   const elements = contentRef.current.querySelectorAll('.highlight');
+  //   elements.forEach((element, i) => {
+  //     if (newCorrect.findIndex((item) => item.index === i) !== -1) {
+  //       element.style.backgroundColor = 'yellow';
+  //       element.style.color = 'black';
+  //     } else {
+  //       // translucent yellow
+  //       element.style.backgroundColor = 'rgba(255, 255, 0, 0.2)';
+  //       element.style.color =
+  //         colorScheme === 'light' ? 'rgba(0, 0, 0, 0.85)' : 'rgba(255, 255, 255, 0.85)';
+  //     }
+  //   });
+  // };
   return (
-    <div>
-      {data.title}
-      {mode}
-    </div>
+    <Stack gap="lg">
+      <div dangerouslySetInnerHTML={{ __html: data.title }} />
+      <Group>
+        <div
+          className="content"
+          ref={contentRef}
+          dangerouslySetInnerHTML={{ __html: data.options }}
+        />
+      </Group>
+      {!showExplanation ? (
+        <Group>
+          <Button onClick={() => setShowExplanation(!showExplanation)}>Submit</Button>
+        </Group>
+      ) : (
+        <Stack>
+          <Title order={2}> Explanation</Title>
+          <div dangerouslySetInnerHTML={{ __html: data.explanation }} />
+        </Stack>
+      )}
+    </Stack>
   );
 };
 

@@ -112,14 +112,6 @@ export const Highlight = ({ dataTunnel, response, setResponse }) => {
             }}
             index={0}
           />
-          {/* <Textarea
-            value={mainText}
-            onChange={(e) => setMainText(e.target.value)}
-            placeholder="Main Text"
-            autosize
-            minRows={2}
-            w="100%"
-          /> */}
         </Stack>
         <Space h="lg" />
         <Group>

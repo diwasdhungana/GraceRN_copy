@@ -19,13 +19,13 @@ const QuestionViewWithModes = ({ mode, data }) => {
       return <SelectOnewithModes data={data} mode={mode} />;
     case 'Grid and Matrix':
       return <MatrixNGridwithModes data={data} mode={mode} />;
-    case 'Bowtie':
+    case 'Highlight':
       return <HighlightwithModes data={data} mode={mode} />;
     case 'Extended Dropdown':
       return <ExtDropDownwithModes data={data} mode={mode} />;
     case 'dragNDrop':
       return <DragNDropwithModes data={data} mode={mode} />;
-    case 'bowTie':
+    case 'BowTie':
       return <BowTiewithModes data={data} mode={mode} />;
     case 'Select all that apply':
       return <McqwithModes data={data} mode={mode} />;
@@ -161,7 +161,7 @@ const HighlightwithModes = ({ data, mode }) => {
       element.style.display = 'inline';
       element.style.cursor = 'pointer';
       const found = data.correct.findIndex((item) => item.text === element.innerText);
-      if (found === -1) {
+      if (found !== -1) {
         element.style.backgroundColor = 'yellow';
         element.style.color = 'black';
       }

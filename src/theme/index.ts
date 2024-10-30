@@ -16,4 +16,19 @@ export const theme = createTheme({
     '3xl': '120em',
     '4xl': '160em',
   },
+  colors: {
+    grace: [
+      '#ffd4b3', // lightest
+      '#ffc8a0',
+      '#ffbb8c',
+      '#ffad79',
+      '#ffa166',
+      '#ff914c', // 6th index (base shade)
+      '#e67e44',
+      '#cc6d3d',
+      '#b35d36',
+      '#994f30', // darkest
+    ],
+  },
+  primaryColor: 'grace',
 });

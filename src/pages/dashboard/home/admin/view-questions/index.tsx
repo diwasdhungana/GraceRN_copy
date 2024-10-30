@@ -1,7 +1,17 @@
 import { Page } from '@/components/page';
 import { useGetQuestions } from '@/hooks/api/questions';
 import { paths } from '@/routes';
-import { Button, Divider, Group, Pagination, Paper, Stack, Text, Title } from '@mantine/core';
+import {
+  Badge,
+  Button,
+  Divider,
+  Group,
+  Pagination,
+  Paper,
+  Stack,
+  Text,
+  Title,
+} from '@mantine/core';
 import React, { useState } from 'react';
 import { PiArrowLeft, PiTrashBold } from 'react-icons/pi';
 import { useNavigate } from 'react-router-dom';
@@ -60,16 +70,37 @@ const ViewQuesitons = () => {
                 return (
                   <Paper key={index} px="xl" radius="sm" shadow="none" withBorder>
                     <Group justify="space-between">
-                      <Group>
-                        <Text>{Questions.data.totalDocs - index - (page - 1) * limit}.</Text>
-                        <div
-                          dangerouslySetInnerHTML={{ __html: eeutaQuestion.title }}
-                          onClick={() =>
-                            navigate(paths.dashboard.admin.viewQuestions.root + eeutaQuestion._id)
-                          }
-                          style={{ cursor: 'pointer' }}
-                        />
-                      </Group>
+                      <Stack>
+                        <Group>
+                          <Text>{Questions.data.totalDocs - index - (page - 1) * limit}.</Text>
+
+                          <div
+                            dangerouslySetInnerHTML={{ __html: eeutaQuestion.title }}
+                            onClick={() =>
+                              navigate(paths.dashboard.admin.viewQuestions.root + eeutaQuestion._id)
+                            }
+                            style={{ cursor: 'pointer' }}
+                          />
+                        </Group>
+                        <Group mb="xs" justify="space-between" w="100%">
+                          <Group>
+                            <Badge color="blue" variant="light">
+                              {eeutaQuestion.type}
+                            </Badge>
+                            <Badge color="green" variant="light">
+                              {eeutaQuestion.kind}
+                            </Badge>
+                          </Group>
+                          <Group>
+                            <Badge color="red" variant="light">
+                              {eeutaQuestion.subject.name || 'subject'}
+                            </Badge>
+                            <Badge color="orange" variant="light">
+                              {eeutaQuestion.system.name || 'system'}
+                            </Badge>
+                          </Group>
+                        </Group>
+                      </Stack>
                       <Button
                         variant="subtle"
                         bg="none"

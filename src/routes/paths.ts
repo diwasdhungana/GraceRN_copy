@@ -22,6 +22,9 @@ export const paths = {
         root: '/dashboard/admin/view-questions/',
         viewSpecificQuestions: '/dashboard/admin/view-questions/:questionId',
       },
+      viewSubjectSystem: {
+        root: '/dashboard/admin/subjects-systems',
+      },
     },
   },
 };

@@ -28,6 +28,14 @@ const index = () => {
         >
           View Questions
         </Button>
+        <Button
+          size="xl"
+          onClick={() => {
+            navigate(paths.dashboard.admin.viewSubjectSystem.root);
+          }}
+        >
+          Subjects and Systems
+        </Button>
       </Group>
     </Page>
   );

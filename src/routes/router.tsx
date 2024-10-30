@@ -91,6 +91,18 @@ const router = createBrowserRouter([
             ],
           },
           {
+            path: paths.dashboard.admin.viewSubjectSystem.root,
+            children: [
+              {
+                index: true,
+                path: paths.dashboard.admin.viewSubjectSystem.root,
+                element: LazyPage(
+                  () => import('@/pages/dashboard/home/admin/systems-and-subjects/index')
+                ),
+              },
+            ],
+          },
+          {
             path: paths.dashboard.admin.viewQuestions.root,
             children: [
               {

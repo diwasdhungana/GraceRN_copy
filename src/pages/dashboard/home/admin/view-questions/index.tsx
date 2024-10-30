@@ -19,8 +19,10 @@ const ViewQuesitons = () => {
       <Stack>
         <Group gap="xl">
           <Button variant="subtle" onClick={() => navigate(-1)}>
-            <PiArrowLeft size="xl" /> {'  '}
-            <Text size="lg"></Text>
+            <PiArrowLeft size="xl" strokeWidth={10} /> {'  '}
+            <Title order={3} mx="sm">
+              Admin Page
+            </Title>
           </Button>
         </Group>
         <Title order={2}>View Questions</Title>

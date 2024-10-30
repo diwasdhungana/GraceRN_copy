@@ -24,7 +24,6 @@ export const usePostQuestion = createPostMutationHook({
   rMutationParams: {
     onSuccess: (data) => {
       queryClient.invalidateQueries('questions');
-      notifications.show({ title: 'Question Created', message: 'done.' });
     },
     onError: (error) => {
       notifications.show({ message: error.messages[0], color: 'red' });

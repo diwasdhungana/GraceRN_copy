@@ -136,6 +136,7 @@ export const Settings = ({ dataTunnel, response, setResponse }: any) => {
                           {item}
                         </EditableContainer>
                         <Button
+                          radius="xl"
                           variant="subtle"
                           onClick={() => {
                             const newTitle = [...tabsData.title];
@@ -145,7 +146,9 @@ export const Settings = ({ dataTunnel, response, setResponse }: any) => {
                             setTabsData({ title: newTitle, content: newContent });
                           }}
                         >
-                          X
+                          <Text ta="center" c="red" fw="bold">
+                            X
+                          </Text>
                         </Button>
                       </Group>
                     </Tabs.Tab>
@@ -195,6 +198,8 @@ export const Settings = ({ dataTunnel, response, setResponse }: any) => {
           </Stack>
         </Spoiler>
       )}
+      {response.assiatanceError && <Text c="red">{response.assiatanceError}</Text>}
+
       {renderQuestionType(
         dataTunnel,
         hasAssistanceColumn,

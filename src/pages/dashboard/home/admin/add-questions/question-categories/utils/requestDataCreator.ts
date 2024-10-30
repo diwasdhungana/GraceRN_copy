@@ -22,7 +22,18 @@ export const requestDataCreator = (dataTunnel, setResponse) => {
 };
 
 export const selectOneRequestCreator = (data, setResponse) => {
-  const variables = {
+  setResponse({});
+  const variables: {
+    title: any;
+    kind: string;
+    subject: any;
+    system: any;
+    points: any;
+    type: string;
+    explanation: any;
+    options?: any[];
+    correct?: number[];
+  } = {
     title: data.title,
     kind: 'Select One',
     subject: data.selectedSubject,
@@ -31,21 +42,67 @@ export const selectOneRequestCreator = (data, setResponse) => {
     type: 'Traditional',
     explanation: data.explanation,
   };
+  if (!data.title) {
+    setResponse({ titleError: 'Title is required' });
+    return { variables, valid: false };
+  }
+  if (data.options.length < 2) {
+    setResponse({ optionsError: 'At lease 2 options required.' });
+    return { variables, valid: false };
+  }
+  if (data.options.filter((opt) => opt.checked).length === 0) {
+    setResponse({ optionsError: 'At least one option must be selected' });
+    return { variables, valid: false };
+  }
+  if (data.points < 1 || data.points > 20) {
+    setResponse({ pointsError: 'Points should be between 1 and 20' });
+    return { variables, valid: false };
+  }
+  if (data.explanation.length < 10) {
+    setResponse({ explanationError: 'Explanation should be at least 10 characters long' });
+    return { variables, valid: false };
+  }
+
   if (data.hasAssistanceColumn) {
-    variables.assistanceColumn = {
-      title: data.assistanceTitle,
-    };
+    if (!data.assistanceTitle) {
+      setResponse({ assiatanceError: 'Assistance title is required' });
+      return { variables, valid: false };
+    }
+    variables.assistanceColumn = { title: data.assistanceTitle };
     if (data.hasTabsInAssistance) {
+      variables.assistanceColumn.hasTabsInAssistance = true;
+      if (!data.tabsData.title.length) {
+        setResponse({ assiatanceError: 'At least one tab is required' });
+        return { variables, valid: false };
+      }
+      if (!data.tabsData.content.length) {
+        setResponse({ assiatanceError: 'At least one tab content is required' });
+        return { variables, valid: false };
+      }
+
       variables.assistanceColumn.tabs = data.tabsData.title.map((title, index) => {
+        if (!title) {
+          setResponse({ assiatanceError: 'Tab title is required' });
+          return { variables, valid: false };
+        }
+        if (!data.tabsData.content[index]) {
+          setResponse({ assiatanceError: 'Tab content is required' });
+          return { variables, valid: false };
+        }
         return {
           title,
           content: data.tabsData.content[index],
         };
       });
     } else {
+      if (!data.assistanceData) {
+        setResponse({ assiatanceError: 'Assistance data is required' });
+        return { variables, valid: false };
+      }
       variables.assistanceColumn.assistanceData = data.assistanceData;
     }
   }
+
   variables.options = data.options.map((option) => {
     return {
       value: option.value,
@@ -58,7 +115,7 @@ export const selectOneRequestCreator = (data, setResponse) => {
     }
     return acc;
   }, []);
-  return variables;
+  return { variables, valid: true };
 };
 
 export const mcqRequestCreator = (data, setResponse) => {
@@ -71,21 +128,66 @@ export const mcqRequestCreator = (data, setResponse) => {
     type: 'Traditional',
     explanation: data.explanation,
   };
+  if (!data.title) {
+    setResponse({ titleError: 'Title is required' });
+    return { variables, valid: false };
+  }
+  if (data.options.length < 2) {
+    setResponse({ optionsError: 'At lease 2 options required.' });
+    return { variables, valid: false };
+  }
+  if (data.options.filter((opt) => opt.checked).length === 0) {
+    setResponse({ optionsError: 'At least one option must be selected' });
+    return { variables, valid: false };
+  }
+  if (data.points < 1 || data.points > 20) {
+    setResponse({ pointsError: 'Points should be between 1 and 20' });
+    return { variables, valid: false };
+  }
+  if (data.explanation.length < 10) {
+    setResponse({ explanationError: 'Explanation should be at least 10 characters long' });
+    return { variables, valid: false };
+  }
   if (data.hasAssistanceColumn) {
-    variables.assistanceColumn = {
-      title: data.assistanceTitle,
-    };
+    if (!data.assistanceTitle) {
+      setResponse({ assiatanceError: 'Assistance title is required' });
+      return { variables, valid: false };
+    }
+    variables.assistanceColumn = { title: data.assistanceTitle };
     if (data.hasTabsInAssistance) {
+      variables.assistanceColumn.hasTabsInAssistance = true;
+      if (!data.tabsData.title.length) {
+        setResponse({ assiatanceError: 'At least one tab is required' });
+        return { variables, valid: false };
+      }
+      if (!data.tabsData.content.length) {
+        setResponse({ assiatanceError: 'At least one tab content is required' });
+        return { variables, valid: false };
+      }
+
       variables.assistanceColumn.tabs = data.tabsData.title.map((title, index) => {
+        if (!title) {
+          setResponse({ assiatanceError: 'Tab title is required' });
+          return { variables, valid: false };
+        }
+        if (!data.tabsData.content[index]) {
+          setResponse({ assiatanceError: 'Tab content is required' });
+          return { variables, valid: false };
+        }
         return {
           title,
           content: data.tabsData.content[index],
         };
       });
     } else {
+      if (!data.assistanceData) {
+        setResponse({ assiatanceError: 'Assistance data is required' });
+        return { variables, valid: false };
+      }
       variables.assistanceColumn.assistanceData = data.assistanceData;
     }
   }
+
   variables.options = data.options.map((option) => {
     return {
       value: option.value,
@@ -98,7 +200,7 @@ export const mcqRequestCreator = (data, setResponse) => {
     }
     return acc;
   }, []);
-  return variables;
+  return { variables, valid: true };
 };
 
 export const matrixNGridRequestCreator = (data, setResponse) => {
@@ -116,20 +218,45 @@ export const matrixNGridRequestCreator = (data, setResponse) => {
     }),
   };
   if (data.hasAssistanceColumn) {
-    variables.assistanceColumn = {
-      title: data.assistanceTitle,
-    };
+    if (!data.assistanceTitle) {
+      setResponse({ assiatanceError: 'Assistance title is required' });
+      return { variables, valid: false };
+    }
+    variables.assistanceColumn = { title: data.assistanceTitle };
     if (data.hasTabsInAssistance) {
+      variables.assistanceColumn.hasTabsInAssistance = true;
+      if (!data.tabsData.title.length) {
+        setResponse({ assiatanceError: 'At least one tab is required' });
+        return { variables, valid: false };
+      }
+      if (!data.tabsData.content.length) {
+        setResponse({ assiatanceError: 'At least one tab content is required' });
+        return { variables, valid: false };
+      }
+
       variables.assistanceColumn.tabs = data.tabsData.title.map((title, index) => {
+        if (!title) {
+          setResponse({ assiatanceError: 'Tab title is required' });
+          return { variables, valid: false };
+        }
+        if (!data.tabsData.content[index]) {
+          setResponse({ assiatanceError: 'Tab content is required' });
+          return { variables, valid: false };
+        }
         return {
           title,
           content: data.tabsData.content[index],
         };
       });
     } else {
+      if (!data.assistanceData) {
+        setResponse({ assiatanceError: 'Assistance data is required' });
+        return { variables, valid: false };
+      }
       variables.assistanceColumn.assistanceData = data.assistanceData;
     }
   }
+
   //option is a 2D array of options, which has a checked property in each option
   //correct is an array of indexes of correct options
   variables.correct = data.options.map((row) => {
@@ -156,20 +283,45 @@ export const highlightRequestCreator = (data, setResponse) => {
     options: data.options,
   };
   if (data.hasAssistanceColumn) {
-    variables.assistanceColumn = {
-      title: data.assistanceTitle,
-    };
+    if (!data.assistanceTitle) {
+      setResponse({ assiatanceError: 'Assistance title is required' });
+      return { variables, valid: false };
+    }
+    variables.assistanceColumn = { title: data.assistanceTitle };
     if (data.hasTabsInAssistance) {
+      variables.assistanceColumn.hasTabsInAssistance = true;
+      if (!data.tabsData.title.length) {
+        setResponse({ assiatanceError: 'At least one tab is required' });
+        return { variables, valid: false };
+      }
+      if (!data.tabsData.content.length) {
+        setResponse({ assiatanceError: 'At least one tab content is required' });
+        return { variables, valid: false };
+      }
+
       variables.assistanceColumn.tabs = data.tabsData.title.map((title, index) => {
+        if (!title) {
+          setResponse({ assiatanceError: 'Tab title is required' });
+          return { variables, valid: false };
+        }
+        if (!data.tabsData.content[index]) {
+          setResponse({ assiatanceError: 'Tab content is required' });
+          return { variables, valid: false };
+        }
         return {
           title,
           content: data.tabsData.content[index],
         };
       });
     } else {
+      if (!data.assistanceData) {
+        setResponse({ assiatanceError: 'Assistance data is required' });
+        return { variables, valid: false };
+      }
       variables.assistanceColumn.assistanceData = data.assistanceData;
     }
   }
+
   return variables;
 };
 export const extDropDownRequestCreator = (data, setResponse) => {
@@ -186,17 +338,41 @@ export const extDropDownRequestCreator = (data, setResponse) => {
     options: data.options,
   };
   if (data.hasAssistanceColumn) {
-    variables.assistanceColumn = {
-      title: data.assistanceTitle,
-    };
+    if (!data.assistanceTitle) {
+      setResponse({ assiatanceError: 'Assistance title is required' });
+      return { variables, valid: false };
+    }
+    variables.assistanceColumn = { title: data.assistanceTitle };
     if (data.hasTabsInAssistance) {
+      variables.assistanceColumn.hasTabsInAssistance = true;
+      if (!data.tabsData.title.length) {
+        setResponse({ assiatanceError: 'At least one tab is required' });
+        return { variables, valid: false };
+      }
+      if (!data.tabsData.content.length) {
+        setResponse({ assiatanceError: 'At least one tab content is required' });
+        return { variables, valid: false };
+      }
+
       variables.assistanceColumn.tabs = data.tabsData.title.map((title, index) => {
+        if (!title) {
+          setResponse({ assiatanceError: 'Tab title is required' });
+          return { variables, valid: false };
+        }
+        if (!data.tabsData.content[index]) {
+          setResponse({ assiatanceError: 'Tab content is required' });
+          return { variables, valid: false };
+        }
         return {
           title,
           content: data.tabsData.content[index],
         };
       });
     } else {
+      if (!data.assistanceData) {
+        setResponse({ assiatanceError: 'Assistance data is required' });
+        return { variables, valid: false };
+      }
       variables.assistanceColumn.assistanceData = data.assistanceData;
     }
   }

@@ -1,38 +1,48 @@
-import { Button, Group, Paper } from '@mantine/core';
+import { Button, Group, Paper, Text } from '@mantine/core';
 import React from 'react';
 import { requestDataCreator } from './requestDataCreator';
 import { usePostQuestion } from '@/hooks/api/questions';
+import { notifications } from '@mantine/notifications';
+import { set } from 'date-fns';
 
 export const SubmitQuestion = ({ dataTunnel, response, setResponse }) => {
   const { mutate: postQuestion, isPending } = usePostQuestion();
+  const [attempted, setAttempted] = React.useState(false);
   const handleSubmit = () => {
     // console.log('submitting', dataTunnel());
-    const variables = requestDataCreator(dataTunnel, setResponse);
-    console.clear();
+    const { variables, valid } = requestDataCreator(dataTunnel, setResponse);
+    setAttempted(true);
     console.log('variables', variables);
-    postQuestion(
-      { variables },
-      {
-        onSuccess: (data) => {
-          console.log('Success');
-          setResponse({ status: 'success' });
-        },
-        onError: (error) => {
-          console.log('error', error);
-        },
-      }
-    );
+    valid &&
+      postQuestion(
+        { variables },
+        {
+          onSuccess: (data) => {
+            console.log('Success');
+            setResponse({ status: 'success' });
+            //reload this page to clear all data.
+            notifications.show({
+              title: 'Question Created',
+              message: `New ${dataTunnel().selectedQuestionType} question created.`,
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000);
+          },
+          onError: (error) => {
+            console.log('error', error);
+          },
+        }
+      );
   };
   return (
     <Group mt="md">
-      <Button
-        bg="green"
-        onClick={() => {
-          handleSubmit();
-        }}
-      >
+      <Button bg="green" onClick={handleSubmit} loading={isPending}>
         Submit
       </Button>
+      {response.status != 'success' && attempted && (
+        <Text c="red">Check fields above for error.</Text>
+      )}
     </Group>
   );
 };

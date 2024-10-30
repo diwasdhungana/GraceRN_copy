@@ -9,19 +9,19 @@ type AssistanceTabData = {
 
 export const AssistanceTabsView = ({ data }: { data: AssistanceTabData[] }) => {
   return (
-    <Tabs defaultValue={data[0].title}>
+    <Tabs defaultValue={data[0]?.title}>
       <Tabs.List>
-        {data.map((item, index) => (
-          <Tabs.Tab value={item.title} key={index}>
-            <Text size="sm">{item.title}</Text>
+        {data?.map((item, index) => (
+          <Tabs.Tab value={item?.title} key={index}>
+            <Text size="sm">{item?.title}</Text>
           </Tabs.Tab>
         ))}
       </Tabs.List>
 
-      {data.map((item, index) => (
-        <Tabs.Panel value={item.title} key={index}>
+      {data?.map((item, index) => (
+        <Tabs.Panel value={item?.title} key={index}>
           <Stack>
-            <div dangerouslySetInnerHTML={{ __html: item.content }} />
+            <div dangerouslySetInnerHTML={{ __html: item?.content }} />
           </Stack>
         </Tabs.Panel>
       ))}

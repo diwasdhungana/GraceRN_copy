@@ -9,27 +9,40 @@ import { TextInput } from '@/components/forms/text-input';
 import { useAuth, useLogin } from '@/hooks';
 import { paths } from '@/routes';
 import { handleFormErrors } from '@/utilities/form';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadUserid } from '@/store/interactions';
 
 interface LoginFormProps extends Omit<StackProps, 'children'> {
   onSuccess?: () => void;
 }
 
+import { Text } from '@mantine/core';
+
 export function LoginForm({ onSuccess, ...props }: LoginFormProps) {
+  const dispatch = useDispatch();
+  const provider = useSelector((state) => state.provider.user);
   const { setIsAuthenticated } = useAuth();
   const { mutate: login, isPending } = useLogin();
 
   const form = useForm({
     mode: 'uncontrolled',
     validate: zodResolver(LoginRequestSchema),
-    initialValues: { phoneNumber: 'eaadmin', password: '123456' },
+    initialValues: { phoneNumber: '', password: '' },
   });
 
   const handleSubmit = form.onSubmit((variables) => {
     login(
       { variables },
       {
-        onSuccess: () => setIsAuthenticated(true),
-        onError: (error) => handleFormErrors(form, error),
+        onSuccess: (data) => {
+          loadUserid(provider, data.user, dispatch);
+          setIsAuthenticated(true);
+        },
+        onError: (error) => {
+          console.log('error', error);
+          // Ensure the error is passed to form and displayed
+          handleFormErrors(form, error);
+        },
       }
     );
   });
@@ -39,12 +52,9 @@ export function LoginForm({ onSuccess, ...props }: LoginFormProps) {
       <Stack {...props}>
         <TextInput name="phoneNumber" label="Phone Number" required />
         <PasswordInput name="password" label="Password" required />
-        {/* <Group justify="space-between">
-          <Checkbox name="remember" label="Remember me" />
-          <Anchor size="sm" component={NavLink} to={paths.auth.forgotPassword}>
-            Forgot password?
-          </Anchor>
-        </Group> */}
+        <Text c="red" fw="600" size="sm" mt="-5px" mb="-10px">
+          {form.errors.global && form.errors.global}
+        </Text>
         <Button type="submit" loading={isPending}>
           Login
         </Button>

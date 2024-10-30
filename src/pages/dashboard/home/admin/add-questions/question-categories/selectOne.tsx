@@ -2,9 +2,11 @@ import {
   Button,
   Group,
   InputLabel,
+  NumberInput,
   Paper,
   Space,
   Stack,
+  Text,
   Textarea,
   TextInput,
   Title,
@@ -36,17 +38,17 @@ export const SelectOne = ({ dataTunnel, response, setResponse }: any) => {
         Type : Select One
       </Title>
       <Group>
-        <TextInput
+        <NumberInput
           label="Points (1-20)"
-          type="number"
           value={points}
-          onChange={(e) => setPoints(parseInt(e.target.value))}
+          onChange={(e) => setPoints(Number(e))}
           placeholder="Points"
           min={1}
           max={20}
         />
       </Group>
       <InputLabel>Main Question (Title)</InputLabel>
+      {response.titleError && <Text c="red">{response.titleError}</Text>}
       <RichTextEditorComponent
         content={title}
         setContent={(item, index) => {
@@ -54,8 +56,10 @@ export const SelectOne = ({ dataTunnel, response, setResponse }: any) => {
         }}
         index={0}
       />
+
       <Stack mt="md">
-        <InputLabel>Options :</InputLabel>
+        <InputLabel required>Options :</InputLabel>
+        {response.optionsError && <Text c="red">{response.optionsError}</Text>}
         {options.map((option, index) => (
           <Group gap="xs" key={index} width="100%">
             <input
@@ -107,7 +111,10 @@ export const SelectOne = ({ dataTunnel, response, setResponse }: any) => {
         </Group>
       </Stack>
 
-      <InputLabel mt="lg">Explanation (Shown after Answer Submit.)</InputLabel>
+      <InputLabel mt="lg" required>
+        Explanation (Shown after Answer Submit.)
+      </InputLabel>
+      {response.explanationError && <Text c="red">{response.explanationError}</Text>}
       <RichTextEditorComponent
         content={explanation}
         setContent={(item, index) => {

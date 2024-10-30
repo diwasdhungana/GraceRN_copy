@@ -20,10 +20,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   useEffect(() => {
     loadAccessToken();
-
     getAccountInfo()
       .then(() => setIsAuthenticated(true))
-      .catch(() => setIsAuthenticated(false))
+      .catch(() => {
+        console.log('Not authenticated');
+        setIsAuthenticated(false);
+      })
       .finally(() => setIsInitialized(true));
   }, []);
 

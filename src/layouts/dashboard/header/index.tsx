@@ -22,10 +22,10 @@ export function Header() {
       </div> */}
       <Group></Group>
       <Group>
-        <ColorSchemeToggler />
+        {/* <ColorSchemeToggler /> */}
 
         {/* <Notifications /> */}
-        {/* <CurrentUser /> */}
+        <CurrentUser />
       </Group>
     </StickyHeader>
   );

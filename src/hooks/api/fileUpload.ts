@@ -35,12 +35,12 @@ export const useGetDocumentsManager = createGetQueryHook({
   rQueryParams: { queryKey: ['getDocumentsMyTeam'] },
 });
 
-export const useDeleteOneDocument = createDeleteMutationHook({
-  endpoint: '/documents/:documentId',
+export const useDeleteOneQuestion = createDeleteMutationHook({
+  endpoint: '/questions/:questionId',
   rMutationParams: {
     onSuccess: (data) => {
-      queryClient.invalidateQueries('getDocument');
-      notifications.show({ title: 'Document Deleted', message: 'done.' });
+      queryClient.invalidateQueries('getQuestions');
+      notifications.show({ title: 'Question Deleted', message: 'done.' });
     },
     onError: (error) => {
       notifications.show({ message: error.messages[0], color: 'red' });

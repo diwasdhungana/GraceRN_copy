@@ -24,3 +24,30 @@
 .editableContainer {
   height: 15px;
 }
+
+.paginationControls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.paginationButton {
+  background-color: var(--mantine-color-customOrange-6);
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.paginationButton:hover {
+  background-color: var(--mantine-color-customBlue-9);
+}
+
+.paginationButton:disabled {
+  background-color: #f9f9f9;
+  color: #b0b0b0;
+  cursor: not-allowed;
+}

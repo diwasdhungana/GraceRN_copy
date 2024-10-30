@@ -1,19 +1,46 @@
 import { Page } from '@/components/page';
 import { useGetQuestions } from '@/hooks/api/questions';
 import { paths } from '@/routes';
-import { Button, Divider, Group, Paper, Stack, Text, Title } from '@mantine/core';
-import React from 'react';
-import { PiArrowLeft } from 'react-icons/pi';
+import { Button, Divider, Group, Pagination, Paper, Stack, Text, Title } from '@mantine/core';
+import React, { useState } from 'react';
+import { PiArrowLeft, PiTrashBold } from 'react-icons/pi';
 import { useNavigate } from 'react-router-dom';
 import QuestionDisplay from './Specific/QuestionDisplay';
+import CSS from '@/pages/dashboard/everything.module.css';
+import { modals } from '@mantine/modals';
+import { useDeleteOneQuestion } from '@/hooks/api/fileUpload';
 
 const ViewQuesitons = () => {
   const navigate = useNavigate();
+  const [limit] = useState(10);
+  const [page, setPage] = useState(1); // State for current page
+  const [filters, setFilters] = useState({}); // State for filters
+  const { mutate: deleteQuestionMutate, isPending: questionDeletePending } = useDeleteOneQuestion();
   const {
     data: Questions,
     isError: questionsError,
     isLoading: questionsLoading,
-  } = useGetQuestions();
+  } = useGetQuestions({
+    query: {
+      page: page.toString(), // Convert page number to string
+      limit: limit.toString(), // Convert limit to string
+      // filters,
+    },
+  });
+  const totalPages = Questions ? Math.ceil(Questions.data.totalDocs / limit) : 0;
+  const deleteQuestion = (id, name) => {
+    modals.openConfirmModal({
+      title: 'Delete selected Question?',
+      centered: true,
+      children: <Text size="sm">Are you sure you want to delete the selected question?</Text>,
+      labels: { confirm: 'Delete Question', cancel: "No don't delete it" },
+      confirmProps: { color: 'red' },
+      onCancel: () => console.log('Cancel'),
+      onConfirm: () => {
+        deleteQuestionMutate({ route: { questionId: id } });
+      },
+    });
+  };
   return (
     <Page title="Viiew Questions">
       <Stack>
@@ -26,26 +53,58 @@ const ViewQuesitons = () => {
           </Button>
         </Group>
         <Title order={2}>View Questions</Title>
-        <Paper radius="lg" shadow="md">
+        <Paper radius="lg">
           <Stack px="md">
             {Questions &&
               Questions?.data?.docs?.map((eeutaQuestion, index) => {
                 return (
                   <Paper key={index} px="xl" radius="sm" shadow="none" withBorder>
-                    <Group>
-                      <Text>{index}</Text>
-                      <div
-                        dangerouslySetInnerHTML={{ __html: eeutaQuestion.title }}
-                        onClick={() =>
-                          navigate(paths.dashboard.admin.viewQuestions.root + eeutaQuestion._id)
-                        }
-                        style={{ cursor: 'pointer' }}
-                      />
+                    <Group justify="space-between">
+                      <Group>
+                        <Text>{Questions.data.totalDocs - index - (page - 1) * limit}.</Text>
+                        <div
+                          dangerouslySetInnerHTML={{ __html: eeutaQuestion.title }}
+                          onClick={() =>
+                            navigate(paths.dashboard.admin.viewQuestions.root + eeutaQuestion._id)
+                          }
+                          style={{ cursor: 'pointer' }}
+                        />
+                      </Group>
+                      <Button
+                        variant="subtle"
+                        bg="none"
+                        size="xs"
+                        radius="10"
+                        onClick={() => {
+                          deleteQuestion(eeutaQuestion._id, eeutaQuestion.title);
+                        }}
+                      >
+                        <PiTrashBold size="30px" color="red" style={{ margin: '5px' }} />
+                      </Button>
                     </Group>
                   </Paper>
                 );
               })}
           </Stack>
+          <Group justify="center">
+            <Pagination
+              className={CSS.paginationControls}
+              value={page}
+              onChange={setPage}
+              total={totalPages}
+              size="sm"
+              style={(theme) => ({
+                item: {
+                  '&[data-active]': {
+                    backgroundColor: theme.colors.blue[6], // Custom background for active page
+                    color: theme.white, // Custom text color for active page
+                  },
+                },
+              })}
+              radius="xs"
+              mb="md"
+            />
+          </Group>
         </Paper>
       </Stack>
     </Page>

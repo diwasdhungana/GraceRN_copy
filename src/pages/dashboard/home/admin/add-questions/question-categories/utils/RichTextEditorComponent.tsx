@@ -16,6 +16,7 @@ import TableHeader from '@tiptap/extension-table-header';
 import TableRow from '@tiptap/extension-table-row';
 import Text from '@tiptap/extension-text';
 import Image from '@tiptap/extension-image';
+import { useFileUpload } from '@/hooks/api/fileUpload';
 import {
   TbTable,
   TbColumnInsertLeft,
@@ -27,8 +28,10 @@ import {
   TbTableOff,
   TbPhoto,
 } from 'react-icons/tb';
+import { notifications } from '@mantine/notifications';
 
 export function RichTextEditorComponent({ content, setContent, index }) {
+  const { mutate: uploadImage, isPending: uploadImagePending } = useFileUpload();
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -113,6 +116,23 @@ export function RichTextEditorComponent({ content, setContent, index }) {
       const formData = new FormData();
       formData.append('image', file);
 
+      uploadImage(
+        { variables: formData },
+        {
+          onSuccess: (data) => {
+            editor?.chain().focus().setImage({ src: data }).run();
+          },
+          onError: (error) => {
+            console.log('error', error);
+            if (error.messages[0]) {
+              notifications.show({ message: error.messages[0], color: 'red' });
+            } else {
+              notifications.show({ message: 'Uploads will be available soon.', color: 'red' });
+            }
+          },
+        }
+      );
+
       // try {
       //   // Replace this with your actual image upload API endpoint
       //   const response = await fetch('/api/upload-image', {
@@ -129,13 +149,6 @@ export function RichTextEditorComponent({ content, setContent, index }) {
       //   console.error('Image upload failed:', error);
       //   // Handle error (show notification, etc.)
       // }
-      editor
-        ?.chain()
-        .focus()
-        .setImage({
-          src: 'https://www.gracern.com/wp-content/themes/hello-theme/assets/img/grace.png',
-        })
-        .run();
     };
 
     input.click();
@@ -143,7 +156,7 @@ export function RichTextEditorComponent({ content, setContent, index }) {
 
   return (
     <>
-      <RichTextEditor editor={editor}>
+      <RichTextEditor editor={editor} aria-disabled={uploadImagePending}>
         <RichTextEditor.Toolbar sticky stickyOffset={60}>
           {/* Existing control groups */}
           <RichTextEditor.ControlsGroup>
@@ -241,11 +254,11 @@ export function RichTextEditorComponent({ content, setContent, index }) {
           </RichTextEditor.ControlsGroup>
 
           {/* Image Control Group */}
-          {/* <RichTextEditor.ControlsGroup>
+          <RichTextEditor.ControlsGroup>
             <RichTextEditor.Control onClick={addImage} title="Add Image">
               <TbPhoto size={16} />
             </RichTextEditor.Control>
-          </RichTextEditor.ControlsGroup> */}
+          </RichTextEditor.ControlsGroup>
 
           <RichTextEditor.ControlsGroup>
             <RichTextEditor.Undo />

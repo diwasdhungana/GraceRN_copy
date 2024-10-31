@@ -67,6 +67,18 @@
   }
 }
 
+
+.editor-image {
+  max-width: 100%;
+  height: auto;
+  margin: 1rem 0;
+  border-radius: 4px;
+  
+  &.ProseMirror-selectednode {
+    outline: 2px solid #0096ff;
+  }
+}
+
 /* Additional specific styles for the editor content area */
 .mantine-RichTextEditor-content {
   table {

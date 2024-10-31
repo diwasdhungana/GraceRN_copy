@@ -10,7 +10,7 @@ import '@mantine/spotlight/styles.layer.css';
 import '@mantine/tiptap/styles.layer.css';
 import 'mantine-datatable/styles.layer.css';
 import './global.css';
-import '@mantine/tiptap/styles.css';
+
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { HelmetProvider } from 'react-helmet-async';
@@ -21,27 +21,30 @@ import { NavigationProgress } from '@mantine/nprogress';
 import { queryClient } from '@/api/query-client';
 import { AuthProvider } from '@/providers/auth-provider';
 import { Router } from '@/routes/router';
-import { Provider } from 'react-redux';
 import { theme } from '@/theme';
-import store from '@/store/store';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from '@/store/store';
 
 export function App() {
   return (
     <HelmetProvider>
-      <Provider store={store}>
-        <QueryClientProvider client={queryClient}>
-          <ReactQueryDevtools initialIsOpen={false} />
-          <AuthProvider>
-            <MantineProvider theme={theme}>
-              <Notifications position="bottom-center" />
-              <NavigationProgress />
-              <ModalsProvider>
-                <Router />
-              </ModalsProvider>
-            </MantineProvider>
-          </AuthProvider>
-        </QueryClientProvider>
-      </Provider>
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <AuthProvider>
+              <MantineProvider theme={theme}>
+                <Notifications position="bottom-center" />
+                <NavigationProgress />
+                <ModalsProvider>
+                  <Router />
+                </ModalsProvider>
+              </MantineProvider>
+            </AuthProvider>
+          </PersistGate>
+        </Provider>
+      </QueryClientProvider>
     </HelmetProvider>
   );
 }

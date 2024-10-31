@@ -8,7 +8,6 @@ import { paths } from '@/routes';
 import { Settings } from '@/pages/dashboard/home/admin/add-questions/question-categories/utils/settings';
 
 import { PiArrowLeft } from 'react-icons/pi';
-import { dummySubjects, dummySystems } from '@/utilities/dummysubjects';
 import { useGetSubjects, useGetSystems } from '@/hooks';
 
 const questionTypewithlabelandValue = {
@@ -35,10 +34,8 @@ const addQuestions = () => {
   const navigate = useNavigate();
   const [selectedSubject, setSelectedSubject] = React.useState();
   const [selectedSystem, setSelectedSystem] = React.useState();
-  const [selectedGen, setSelectedGen] = React.useState();
-  const [selectedQuestionType, setSelectedQuestionType] = React.useState(
-    questionTypewithlabelandValue.traditional[0].value
-  );
+  const [selectedGen, setSelectedGen] = React.useState('traditional');
+  const [selectedQuestionType, setSelectedQuestionType] = React.useState();
   const [response, setResponse] = React.useState({});
 
   return (
@@ -46,8 +43,10 @@ const addQuestions = () => {
       <Stack>
         <Group gap="xl">
           <Button variant="subtle" onClick={() => navigate(-1)}>
-            <PiArrowLeft size="xl" /> {'  '}
-            <Text size="lg"></Text>
+            <PiArrowLeft size="xl" strokeWidth={10} /> {'  '}
+            <Title order={3} mx="sm">
+              Admin Page
+            </Title>
           </Button>
         </Group>
         <Paper shadow="xs" p="lg" radius="lg">
@@ -68,6 +67,7 @@ const addQuestions = () => {
                         value={gen.value}
                         label={gen.label}
                         checked={selectedGen === gen.value}
+                        disabled={gen.value === 'nextgen'}
                       />
                     );
                   })}
@@ -123,7 +123,7 @@ const addQuestions = () => {
             {/* main Page starts from here */}
           </Stack>
         </Paper>
-        {selectedQuestionType && selectedGen && selectedSubject && (
+        {selectedQuestionType && selectedGen && selectedSubject && selectedSystem && (
           <>
             <Settings
               dataTunnel={{

@@ -12,3 +12,15 @@ export const useGetSystems = createGetQueryHook({
   endpoint: '/systems',
   rQueryParams: { queryKey: ['systems'] },
 });
+
+export const usePostSystem = createPostMutationHook({
+  endpoint: '/systems',
+  rMutationParams: {
+    onSuccess: (data) => {
+      queryClient.invalidateQueries('systems');
+    },
+    onError: (error) => {
+      notifications.show({ message: error.messages[0], color: 'red' });
+    },
+  },
+});

@@ -6,16 +6,14 @@ import { createPostMutationHook } from '@/api/helpers';
 
 export const useLogin = createPostMutationHook({
   endpoint: 'auth/login',
-  bodySchema: LoginRequestSchema,
-  responseSchema: LoginResponseSchema,
   rMutationParams: {
     onSuccess: (data) => {
-      console.log(data);
       setClientAccessToken(data.accessToken);
       notifications.show({ title: 'Welcome back!', message: 'You have successfully logged in' });
+      return data;
     },
     onError: (error) => {
-      notifications.show({ message: error.message, color: 'red' });
+      notifications.show({ message: error.messages[0], color: 'red' });
     },
   },
 });

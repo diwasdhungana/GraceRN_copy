@@ -57,9 +57,9 @@ const router = createBrowserRouter([
   {
     path: paths.dashboard.root,
     element: (
-      // <AuthGuard>
-      <DashboardLayout />
-      // </AuthGuard>
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
     ),
     children: [
       {
@@ -87,6 +87,18 @@ const router = createBrowserRouter([
                 index: true,
                 path: paths.dashboard.admin.addQuestions.root,
                 element: LazyPage(() => import('@/pages/dashboard/home/admin/add-questions/index')),
+              },
+            ],
+          },
+          {
+            path: paths.dashboard.admin.viewSubjectSystem.root,
+            children: [
+              {
+                index: true,
+                path: paths.dashboard.admin.viewSubjectSystem.root,
+                element: LazyPage(
+                  () => import('@/pages/dashboard/home/admin/systems-and-subjects/index')
+                ),
               },
             ],
           },

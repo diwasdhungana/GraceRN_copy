@@ -12,9 +12,9 @@ export default function LoginPage() {
       <Stack gap="xl">
         <Stack>
           <Title order={2}>
-            Welcome back! Please{' '}
+            Welcome to{' '}
             <Text fz="inherit" fw="inherit" component="span" pos="relative">
-              Sign in
+              Grace RN
               <UnderlineShape
                 c="blue"
                 left="0"
@@ -24,7 +24,11 @@ export default function LoginPage() {
                 w="7rem"
               />
             </Text>{' '}
-            to continue.
+            <br />
+            <br />
+            <Text mt="sxl" fz="xl" fw="inherit" component="span" pos="relative">
+              Please login to continue..
+            </Text>
           </Title>
         </Stack>
 

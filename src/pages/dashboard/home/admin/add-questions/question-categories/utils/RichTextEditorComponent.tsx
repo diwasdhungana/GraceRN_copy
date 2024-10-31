@@ -241,11 +241,11 @@ export function RichTextEditorComponent({ content, setContent, index }) {
           </RichTextEditor.ControlsGroup>
 
           {/* Image Control Group */}
-          <RichTextEditor.ControlsGroup>
+          {/* <RichTextEditor.ControlsGroup>
             <RichTextEditor.Control onClick={addImage} title="Add Image">
               <TbPhoto size={16} />
             </RichTextEditor.Control>
-          </RichTextEditor.ControlsGroup>
+          </RichTextEditor.ControlsGroup> */}
 
           <RichTextEditor.ControlsGroup>
             <RichTextEditor.Undo />

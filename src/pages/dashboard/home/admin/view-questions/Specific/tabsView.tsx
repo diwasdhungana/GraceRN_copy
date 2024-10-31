@@ -1,5 +1,6 @@
 import React from 'react';
 import { Stack, Tabs, Text } from '@mantine/core';
+import './tables.css';
 
 //let's create a type for the data that we will pass to the AssistanceTabs component
 type AssistanceTabData = {
@@ -21,7 +22,10 @@ export const AssistanceTabsView = ({ data }: { data: AssistanceTabData[] }) => {
       {data?.map((item, index) => (
         <Tabs.Panel value={item?.title} key={index}>
           <Stack>
-            <div dangerouslySetInnerHTML={{ __html: item?.content }} />
+            <div
+              className="html-content-display"
+              dangerouslySetInnerHTML={{ __html: item?.content }}
+            />
           </Stack>
         </Tabs.Panel>
       ))}

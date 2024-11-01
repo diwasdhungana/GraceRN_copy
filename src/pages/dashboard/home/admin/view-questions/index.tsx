@@ -74,7 +74,7 @@ const ViewQuesitons = () => {
                 return (
                   <Paper key={index} px="xl" radius="sm" shadow="none" withBorder>
                     <Group justify="space-between">
-                      <Stack>
+                      <Stack w="95%">
                         <Group>
                           <Text>{Questions.data.totalDocs - index - (page - 1) * limit}.</Text>
 

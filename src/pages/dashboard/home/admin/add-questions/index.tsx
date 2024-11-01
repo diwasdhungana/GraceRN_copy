@@ -68,7 +68,8 @@ const addQuestions = () => {
                         value={gen.value}
                         label={gen.label}
                         checked={selectedGen === gen.value}
-                        // disabled={gen.value === 'nextgen'}
+                        disabled={gen.value === 'nextgen'}
+                        onChange={() => setSelectedQuestionType('')}
                       />
                     );
                   })}

@@ -19,12 +19,12 @@ export const useGetSpecificQuestion = createGetQueryHook({
   },
 });
 
-export const useDeleteOneQuestion = createDeleteMutationHook({
-  endpoint: '/questions/:questionId',
+export const useDeleteManyQuestions = createDeleteManyMutationHook({
+  endpoint: '/questions',
   rMutationParams: {
     onSuccess: (data) => {
       queryClient.invalidateQueries('getQuestions');
-      notifications.show({ title: 'Question Deleted', message: 'done.' });
+      notifications.show({ message: 'Question deleted successfully', color: 'green' });
     },
     onError: (error) => {
       notifications.show({ message: error.messages[0], color: 'red' });

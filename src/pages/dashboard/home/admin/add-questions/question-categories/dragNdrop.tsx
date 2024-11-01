@@ -10,8 +10,8 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { RichTextEditorComponent } from './utils/RichTextEditorComponent';
-import { SubmitQuestion } from './utils/SubmitQuestion';
+import { RichTextEditorComponent } from '../utils/RichTextEditorComponent';
+import { SubmitQuestion } from '../utils/SubmitQuestion';
 import { generateId } from '@/utilities/uid';
 import css from '@/pages/dashboard/everything.module.css';
 

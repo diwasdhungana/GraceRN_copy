@@ -168,7 +168,7 @@ const HighlightwithModes = ({ data, mode }) => {
       element.style.backgroundColor = 'rgba(255, 255, 0, 0.2)';
       element.style.display = 'inline';
       element.style.cursor = 'pointer';
-      const found = data.correct.findIndex((item) => item.text === element.innerText);
+      const found = data.correct.findIndex((item) => item.value === element.innerText);
       if (found !== -1) {
         element.style.backgroundColor = 'yellow';
         element.style.color = 'black';
@@ -201,11 +201,7 @@ const HighlightwithModes = ({ data, mode }) => {
   // };
   return (
     <Stack gap="lg">
-      <div
-        dangerouslySetInnerHTML={{ __html: data.title }}
-        className={css.htmlContentDisplay}
-        className={css.htmlContentDisplay}
-      />
+      <div dangerouslySetInnerHTML={{ __html: data.title }} className={css.htmlContentDisplay} />
       <Group>
         <div
           // className="content"

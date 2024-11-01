@@ -272,8 +272,8 @@ export const matrixNGridRequestCreator = (data, setResponse) => {
 export const highlightRequestCreator = (data, setResponse) => {
   const variables = {
     title: data.title,
-    // kind: 'Highlight',
-    kind: 'Bowtie',
+    kind: 'Highlight',
+
     subject: data.selectedSubject,
     system: data.selectedSystem,
     points: data.points,
@@ -322,7 +322,7 @@ export const highlightRequestCreator = (data, setResponse) => {
     }
   }
 
-  return variables;
+  return { variables, valid: true };
 };
 export const extDropDownRequestCreator = (data, setResponse) => {
   console.log('reached to the extDropDownRequestCreator');

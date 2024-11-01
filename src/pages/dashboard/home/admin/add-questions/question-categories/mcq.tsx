@@ -14,8 +14,8 @@ import {
   Title,
 } from '@mantine/core';
 import { useRef, useState } from 'react';
-import { RichTextEditorComponent } from './utils/RichTextEditorComponent';
-import { SubmitQuestion } from './utils/SubmitQuestion';
+import { RichTextEditorComponent } from '../utils/RichTextEditorComponent';
+import { SubmitQuestion } from '../utils/SubmitQuestion';
 
 export const Mcq = ({ dataTunnel, response, setResponse }: any) => {
   const inputRefs = useRef<any[]>([]); // To hold multiple refs

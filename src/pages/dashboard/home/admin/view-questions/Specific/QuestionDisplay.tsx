@@ -3,8 +3,9 @@ import { Group, Paper, ScrollArea, Text } from '@mantine/core';
 import React, { useEffect } from 'react';
 import { AssistanceTabsView } from './tabsView';
 import QuestionViewWithModes from './question-view-category';
+import css from '@/pages/dashboard/everything.module.css';
 
-const QuestionDisplay = ({ props }) => {
+const QuestionDisplay = ({ props }: { props: any }) => {
   const { question, mode } = props;
 
   return (
@@ -22,6 +23,7 @@ const QuestionDisplay = ({ props }) => {
                   <Text>
                     {question.data.assistanceColumn.assistanceData && (
                       <div
+                        className={css.htmlContentDisplay}
                         dangerouslySetInnerHTML={{
                           __html: question.data.assistanceColumn.assistanceData,
                         }}

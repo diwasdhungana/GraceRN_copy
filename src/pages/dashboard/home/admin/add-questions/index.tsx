@@ -20,7 +20,7 @@ const questionTypewithlabelandValue = {
   ],
   traditional: [
     { label: 'Select One', value: 'selectOne' },
-    { label: 'Multiple Choice Question', value: 'mcq' },
+    { label: 'Select All That Apply', value: 'mcq' },
   ],
 };
 const questionGen = [

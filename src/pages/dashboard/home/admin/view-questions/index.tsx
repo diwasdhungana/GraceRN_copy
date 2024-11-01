@@ -19,7 +19,7 @@ import QuestionDisplay from './Specific/QuestionDisplay';
 import CSS from '@/pages/dashboard/everything.module.css';
 import { modals } from '@mantine/modals';
 import { useDeleteOneQuestion } from '@/hooks';
-
+import css from '@/pages/dashboard/everything.module.css';
 const ViewQuesitons = () => {
   const navigate = useNavigate();
   const [limit] = useState(10);
@@ -75,6 +75,7 @@ const ViewQuesitons = () => {
                           <Text>{Questions.data.totalDocs - index - (page - 1) * limit}.</Text>
 
                           <div
+                            className={css.htmlContentDisplay}
                             dangerouslySetInnerHTML={{ __html: eeutaQuestion.title }}
                             onClick={() =>
                               navigate(paths.dashboard.admin.viewQuestions.root + eeutaQuestion._id)

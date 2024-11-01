@@ -6,9 +6,7 @@ import QuestionViewWithModes from './question-view-category';
 
 const QuestionDisplay = ({ props }) => {
   const { question, mode } = props;
-  useEffect(() => {
-    console.log(question);
-  }, [question]);
+
   return (
     <>
       <Page title="Quesiton" h="80vh" bg="blue">
@@ -20,6 +18,17 @@ const QuestionDisplay = ({ props }) => {
                 {question.data.assistanceColumn.tabs && (
                   <AssistanceTabsView data={question.data.assistanceColumn.tabs} />
                 )}
+                {
+                  <Text>
+                    {question.data.assistanceColumn.assistanceData && (
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: question.data.assistanceColumn.assistanceData,
+                        }}
+                      />
+                    )}
+                  </Text>
+                }
               </ScrollArea>
             </Paper>
           )}

@@ -20,7 +20,7 @@ const questionTypewithlabelandValue = {
   ],
   traditional: [
     { label: 'Select One', value: 'selectOne' },
-    { label: 'Multiple Choice Question', value: 'mcq' },
+    { label: 'Select all That Apply', value: 'mcq' },
   ],
 };
 const questionGen = [
@@ -34,7 +34,7 @@ const addQuestions = () => {
   const navigate = useNavigate();
   const [selectedSubject, setSelectedSubject] = React.useState();
   const [selectedSystem, setSelectedSystem] = React.useState();
-  const [selectedGen, setSelectedGen] = React.useState('traditional');
+  const [selectedGen, setSelectedGen] = React.useState();
   const [selectedQuestionType, setSelectedQuestionType] = React.useState();
   const [response, setResponse] = React.useState({});
 

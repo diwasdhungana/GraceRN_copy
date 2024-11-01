@@ -18,7 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import QuestionDisplay from './Specific/QuestionDisplay';
 import CSS from '@/pages/dashboard/everything.module.css';
 import { modals } from '@mantine/modals';
-import { useDeleteOneQuestion } from '@/hooks/api/fileUpload';
+import { useDeleteOneQuestion } from '@/hooks';
 
 const ViewQuesitons = () => {
   const navigate = useNavigate();

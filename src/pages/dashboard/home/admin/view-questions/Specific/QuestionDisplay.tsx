@@ -9,7 +9,7 @@ const QuestionDisplay = ({ props }) => {
 
   return (
     <>
-      <Page title="Quesiton" h="80vh" bg="blue">
+      <Page title="Question" h="80vh" bg="blue">
         <Group h="100%" gap="3px" grow>
           {question.data.assistanceColumn && (
             <Paper withBorder w="0%" p="sm" h="100%">

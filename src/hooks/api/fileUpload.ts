@@ -35,18 +35,6 @@ export const useGetDocumentsManager = createGetQueryHook({
   rQueryParams: { queryKey: ['getDocumentsMyTeam'] },
 });
 
-export const useDeleteOneQuestion = createDeleteMutationHook({
-  endpoint: '/questions/:questionId',
-  rMutationParams: {
-    onSuccess: (data) => {
-      queryClient.invalidateQueries('getQuestions');
-      notifications.show({ title: 'Question Deleted', message: 'done.' });
-    },
-    onError: (error) => {
-      notifications.show({ message: error.messages[0], color: 'red' });
-    },
-  },
-});
 export const useDeleteOneUser = createDeleteMutationHook({
   endpoint: '/users/:userId',
   rMutationParams: {

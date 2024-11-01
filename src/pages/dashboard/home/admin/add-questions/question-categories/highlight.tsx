@@ -14,6 +14,7 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import { RichTextEditorComponent } from './utils/RichTextEditorComponent';
 import { SubmitQuestion } from './utils/SubmitQuestion';
+import css from '@/pages/dashboard/everything.module.css';
 
 export const Highlight = ({ dataTunnel, response, setResponse }) => {
   const { colorScheme } = useMantineColorScheme();
@@ -115,7 +116,12 @@ export const Highlight = ({ dataTunnel, response, setResponse }) => {
         </Stack>
         <Space h="lg" />
         <Group>
-          <div className="content" ref={contentRef} dangerouslySetInnerHTML={{ __html: toSend }} />
+          <div
+            // className="content"
+            ref={contentRef}
+            dangerouslySetInnerHTML={{ __html: toSend }}
+            className={css.htmlContentDisplay}
+          />
         </Group>
       </Stack>
       <InputLabel mt="lg">Explanation (Shown after Answer Submit.)</InputLabel>

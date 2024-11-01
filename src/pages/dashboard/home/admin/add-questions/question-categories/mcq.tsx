@@ -58,13 +58,14 @@ export const Mcq = ({ dataTunnel, response, setResponse }: any) => {
         }}
         index={0}
       />
+
       <Stack mt="md">
         <InputLabel required>Options :</InputLabel>
         {response.optionsError && <Text c="red">{response.optionsError}</Text>}
         {options.map((option, index) => (
           <Group gap="xs" key={index} w="100%">
             <Checkbox
-              value={option.value}
+              // value={option.value}
               checked={option.checked}
               onChange={(e) => {
                 const newOptions = options;
@@ -78,7 +79,7 @@ export const Mcq = ({ dataTunnel, response, setResponse }: any) => {
               onFocus={() => handleFocus(index)} // Triggering select on focus
               onChange={(e) => {
                 const newOptions = options.map((opt) => {
-                  return { ...opt, value: opt.value === option.value ? e.target.value : opt.value };
+                  return { ...opt, value: opt === option ? e.target.value : opt.value };
                 });
                 setOptions(newOptions);
               }}
@@ -89,7 +90,7 @@ export const Mcq = ({ dataTunnel, response, setResponse }: any) => {
             <Button
               variant="subtle"
               onClick={() => {
-                const newOptions = options.filter((opt) => opt.value !== option.value);
+                const newOptions = options.filter((opt) => opt !== option);
                 setOptions(newOptions);
               }}
             >

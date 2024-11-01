@@ -3,13 +3,14 @@ import { Group, Paper, ScrollArea, Text } from '@mantine/core';
 import React, { useEffect } from 'react';
 import { AssistanceTabsView } from './tabsView';
 import QuestionViewWithModes from './question-view-category';
+import css from '@/pages/dashboard/everything.module.css';
 
-const QuestionDisplay = ({ props }) => {
+const QuestionDisplay = ({ props }: { props: any }) => {
   const { question, mode } = props;
 
   return (
     <>
-      <Page title="Quesiton" h="80vh" bg="blue">
+      <Page title="Question" h="80vh" bg="blue">
         <Group h="100%" gap="3px" grow>
           {question.data.assistanceColumn && (
             <Paper withBorder w="0%" p="sm" h="100%">
@@ -22,6 +23,7 @@ const QuestionDisplay = ({ props }) => {
                   <Text>
                     {question.data.assistanceColumn.assistanceData && (
                       <div
+                        className={css.htmlContentDisplay}
                         dangerouslySetInnerHTML={{
                           __html: question.data.assistanceColumn.assistanceData,
                         }}

@@ -1,11 +1,11 @@
 import React from 'react';
 import { Stack, Tabs, Text } from '@mantine/core';
-import './tables.css';
+import css from '@/pages/dashboard/everything.module.css';
 
 //let's create a type for the data that we will pass to the AssistanceTabs component
 type AssistanceTabData = {
   title: string;
-  content: React.ReactNode;
+  content: string;
 };
 
 export const AssistanceTabsView = ({ data }: { data: AssistanceTabData[] }) => {
@@ -23,7 +23,7 @@ export const AssistanceTabsView = ({ data }: { data: AssistanceTabData[] }) => {
         <Tabs.Panel value={item?.title} key={index}>
           <Stack>
             <div
-              className="html-content-display"
+              className={css.htmlContentDisplay}
               dangerouslySetInnerHTML={{ __html: item?.content }}
             />
           </Stack>

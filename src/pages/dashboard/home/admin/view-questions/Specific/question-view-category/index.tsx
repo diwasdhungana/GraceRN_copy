@@ -13,6 +13,7 @@ import {
 } from '@mantine/core';
 import { p } from 'msw/lib/core/GraphQLHandler-Cu4Xvg4S';
 import React, { useEffect, useRef, useState } from 'react';
+import css from '@/pages/dashboard/everything.module.css';
 
 const QuestionViewWithModes = ({ mode, data }) => {
   switch (data.kind) {
@@ -39,7 +40,7 @@ const SelectOnewithModes = ({ data, mode }) => {
   const [showExplanation, setShowExplanation] = useState(false);
   return (
     <Stack gap="lg">
-      <div dangerouslySetInnerHTML={{ __html: data.title }} />
+      <div dangerouslySetInnerHTML={{ __html: data.title }} className={css.htmlContentDisplay} />
 
       <Title order={3}>Options</Title>
 
@@ -47,7 +48,7 @@ const SelectOnewithModes = ({ data, mode }) => {
         {data.options.map((option, index) => {
           return (
             <Group>
-              <Checkbox checked={data.correct.includes(index)} /> <Text>{option.value}</Text>
+              <Radio checked={data.correct.includes(index)} /> <Text>{option.value}</Text>
             </Group>
           );
         })}
@@ -60,7 +61,10 @@ const SelectOnewithModes = ({ data, mode }) => {
       ) : (
         <Stack>
           <Title order={2}> Explanation</Title>
-          <div dangerouslySetInnerHTML={{ __html: data.explanation }} />
+          <div
+            dangerouslySetInnerHTML={{ __html: data.explanation }}
+            className={css.htmlContentDisplay}
+          />
         </Stack>
       )}
     </Stack>
@@ -143,7 +147,10 @@ const MatrixNGridwithModes = ({ data, mode }) => {
       ) : (
         <Stack>
           <Title order={2}> Explanation</Title>
-          <div dangerouslySetInnerHTML={{ __html: data.explanation }} />
+          <div
+            dangerouslySetInnerHTML={{ __html: data.explanation }}
+            className={css.htmlContentDisplay}
+          />
         </Stack>
       )}
     </Stack>
@@ -194,12 +201,17 @@ const HighlightwithModes = ({ data, mode }) => {
   // };
   return (
     <Stack gap="lg">
-      <div dangerouslySetInnerHTML={{ __html: data.title }} />
+      <div
+        dangerouslySetInnerHTML={{ __html: data.title }}
+        className={css.htmlContentDisplay}
+        className={css.htmlContentDisplay}
+      />
       <Group>
         <div
-          className="content"
+          // className="content"
           ref={contentRef}
           dangerouslySetInnerHTML={{ __html: data.options }}
+          // className={css.htmlContentDisplay}
         />
       </Group>
       {!showExplanation ? (
@@ -209,7 +221,10 @@ const HighlightwithModes = ({ data, mode }) => {
       ) : (
         <Stack>
           <Title order={2}> Explanation</Title>
-          <div dangerouslySetInnerHTML={{ __html: data.explanation }} />
+          <div
+            dangerouslySetInnerHTML={{ __html: data.explanation }}
+            className={css.htmlContentDisplay}
+          />
         </Stack>
       )}
     </Stack>
@@ -239,14 +254,18 @@ const ExtDropDownwithModes = ({ data, mode }) => {
 
   return (
     <Stack gap="lg">
-      <div dangerouslySetInnerHTML={{ __html: data.title }} />
+      <div dangerouslySetInnerHTML={{ __html: data.title }} className={css.htmlContentDisplay} />
       <Stack gap="sm">
         {groupedOptions.map((group, groupIndex) => (
           <Group key={groupIndex} gap="0px">
             {group.map((option) =>
               option.type === 'text' ? (
                 <>
-                  <div dangerouslySetInnerHTML={{ __html: option.value }} key={option.id} />
+                  <div
+                    dangerouslySetInnerHTML={{ __html: option.value }}
+                    key={option.id}
+                    className={css.htmlContentDisplay}
+                  />
                   &#160;
                 </>
               ) : option.type === 'dropdown' ? (
@@ -275,7 +294,10 @@ const ExtDropDownwithModes = ({ data, mode }) => {
       ) : (
         <Stack>
           <Title order={2}> Explanation</Title>
-          <div dangerouslySetInnerHTML={{ __html: data.explanation }} />
+          <div
+            dangerouslySetInnerHTML={{ __html: data.explanation }}
+            className={css.htmlContentDisplay}
+          />
         </Stack>
       )}
     </Stack>
@@ -353,7 +375,7 @@ const DragNDropwithModes = ({ data, mode }) => {
         <Text fw={500} size="lg" mb="xs">
           Question:
         </Text>
-        <div dangerouslySetInnerHTML={{ __html: data.title }} />
+        <div dangerouslySetInnerHTML={{ __html: data.title }} className={css.htmlContentDisplay} />
       </div>
 
       {/* Main Content with Answers */}
@@ -402,7 +424,10 @@ const DragNDropwithModes = ({ data, mode }) => {
       ) : (
         <Stack>
           <Title order={2}> Explanation</Title>
-          <div dangerouslySetInnerHTML={{ __html: data.explanation }} />
+          <div
+            dangerouslySetInnerHTML={{ __html: data.explanation }}
+            className={css.htmlContentDisplay}
+          />
         </Stack>
       )}
     </Stack>
@@ -423,7 +448,7 @@ const McqwithModes = ({ data, mode }) => {
 
   return (
     <Stack gap="lg">
-      <div dangerouslySetInnerHTML={{ __html: data.title }} />
+      <div dangerouslySetInnerHTML={{ __html: data.title }} className={css.htmlContentDisplay} />
 
       <Title order={3}>Options</Title>
 
@@ -443,7 +468,10 @@ const McqwithModes = ({ data, mode }) => {
       ) : (
         <Stack>
           <Title order={2}> Explanation</Title>
-          <div dangerouslySetInnerHTML={{ __html: data.explanation }} />
+          <div
+            dangerouslySetInnerHTML={{ __html: data.explanation }}
+            className={css.htmlContentDisplay}
+          />
         </Stack>
       )}
     </Stack>

@@ -106,6 +106,7 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
                       suppressContentEditableWarning={true}
                       ref={(el) => editorRefs.current.set(option.id, el)}
                       dangerouslySetInnerHTML={{ __html: option.value }}
+                      className={css.htmlContentDisplay}
                       onFocus={() => handleFocus(option.id)}
                       onInput={(event) => {
                         const input = event.currentTarget.innerHTML;

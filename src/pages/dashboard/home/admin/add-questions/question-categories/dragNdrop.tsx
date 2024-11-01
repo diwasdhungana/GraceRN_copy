@@ -13,6 +13,7 @@ import {
 import { RichTextEditorComponent } from './utils/RichTextEditorComponent';
 import { SubmitQuestion } from './utils/SubmitQuestion';
 import { generateId } from '@/utilities/uid';
+import css from '@/pages/dashboard/everything.module.css';
 
 export const DragNDrop = ({ dataTunnel, response, setResponse }) => {
   const inputRefs = useRef([]);
@@ -110,7 +111,13 @@ export const DragNDrop = ({ dataTunnel, response, setResponse }) => {
         {segments.map((segment, index) => {
           if (index % 2 === 0) {
             // Regular text segment
-            return <span key={index} dangerouslySetInnerHTML={{ __html: segment }} />;
+            return (
+              <span
+                key={index}
+                dangerouslySetInnerHTML={{ __html: segment }}
+                className={css.htmlContentDisplay}
+              />
+            );
           } else {
             // Drop zone
             const zone = dropZones.find((z) => z.id === segment);

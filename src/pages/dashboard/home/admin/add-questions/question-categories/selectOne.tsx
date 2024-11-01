@@ -4,6 +4,7 @@ import {
   InputLabel,
   NumberInput,
   Paper,
+  Radio,
   Space,
   Stack,
   Text,
@@ -61,15 +62,14 @@ export const SelectOne = ({ dataTunnel, response, setResponse }: any) => {
         <InputLabel required>Options :</InputLabel>
         {response.optionsError && <Text c="red">{response.optionsError}</Text>}
         {options.map((option, index) => (
-          <Group gap="xs" key={index} width="100%">
-            <input
-              type="radio"
+          <Group gap="xs" key={index} w="100%">
+            <Radio
               name="selectOne"
-              value={option.value}
+              // value={option.value}
               checked={option.checked}
               onChange={(e) => {
                 const newOptions = options.map((opt) => {
-                  return { ...opt, checked: opt.value === e.target.value };
+                  return { ...opt, checked: opt === option };
                 });
                 setOptions(newOptions);
               }}
@@ -80,7 +80,7 @@ export const SelectOne = ({ dataTunnel, response, setResponse }: any) => {
               onFocus={() => handleFocus(index)} // Triggering select on focus
               onChange={(e) => {
                 const newOptions = options.map((opt) => {
-                  return { ...opt, value: opt.value === option.value ? e.target.value : opt.value };
+                  return { ...opt, value: opt === option ? e.target.value : opt.value };
                 });
                 setOptions(newOptions);
               }}
@@ -91,7 +91,7 @@ export const SelectOne = ({ dataTunnel, response, setResponse }: any) => {
             <Button
               variant="subtle"
               onClick={() => {
-                const newOptions = options.filter((opt) => opt.value !== option.value);
+                const newOptions = options.filter((opt) => opt !== option);
                 setOptions(newOptions);
               }}
             >

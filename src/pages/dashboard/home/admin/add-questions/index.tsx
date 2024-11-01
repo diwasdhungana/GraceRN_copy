@@ -34,7 +34,7 @@ const addQuestions = () => {
   const navigate = useNavigate();
   const [selectedSubject, setSelectedSubject] = React.useState();
   const [selectedSystem, setSelectedSystem] = React.useState();
-  const [selectedGen, setSelectedGen] = React.useState('traditional');
+  const [selectedGen, setSelectedGen] = React.useState();
   const [selectedQuestionType, setSelectedQuestionType] = React.useState();
   const [response, setResponse] = React.useState({});
 
@@ -67,7 +67,7 @@ const addQuestions = () => {
                         value={gen.value}
                         label={gen.label}
                         checked={selectedGen === gen.value}
-                        disabled={gen.value === 'nextgen'}
+                        // disabled={gen.value === 'nextgen'}
                       />
                     );
                   })}

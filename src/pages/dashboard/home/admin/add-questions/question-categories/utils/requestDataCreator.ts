@@ -379,5 +379,81 @@ export const extDropDownRequestCreator = (data, setResponse) => {
 
   return variables;
 };
-export const dragNDropRequestCreator = (data, setResponse) => {};
+export const dragNDropRequestCreator = (data, setResponse) => {
+  const variables = {
+    title: data.title,
+    kind: 'Drag and Drop',
+    subject: data.selectedSubject,
+    system: data.selectedSystem,
+    points: data.points,
+    type: 'Next Gen',
+    explanation: data.explanation,
+    correct: data.correct,
+    options: data.options,
+  };
+  if (!data.title) {
+    setResponse({ titleError: 'Title is required' });
+    return { variables, valid: false };
+  }
+
+  if (data.options.values.length < 2) {
+    setResponse({ optionsError: 'At lease 2 options required.' });
+    return { variables, valid: false };
+  }
+
+  if (data.correct.length === 0) {
+    setResponse({ optionsError: 'Drag and drop atleast one Item.' });
+    return { variables, valid: false };
+  }
+
+  if (data.points < 1 || data.points > 20) {
+    setResponse({ pointsError: 'Points should be between 1 and 20' });
+    return { variables, valid: false };
+  }
+  if (data.explanation.length < 10) {
+    setResponse({ explanationError: 'Explanation should be at least 10 characters long' });
+    return { variables, valid: false };
+  }
+  if (data.hasAssistanceColumn) {
+    if (!data.assistanceTitle) {
+      setResponse({ assiatanceError: 'Assistance title is required' });
+      return { variables, valid: false };
+    }
+    variables.assistanceColumn = { title: data.assistanceTitle };
+    if (data.hasTabsInAssistance) {
+      variables.assistanceColumn.hasTabsInAssistance = true;
+      if (!data.tabsData.title.length) {
+        setResponse({ assiatanceError: 'At least one tab is required' });
+        return { variables, valid: false };
+      }
+      if (!data.tabsData.content.length) {
+        setResponse({ assiatanceError: 'At least one tab content is required' });
+        return { variables, valid: false };
+      }
+
+      variables.assistanceColumn.tabs = data.tabsData.title.map((title, index) => {
+        if (!title) {
+          setResponse({ assiatanceError: 'Tab title is required' });
+          return { variables, valid: false };
+        }
+        if (!data.tabsData.content[index]) {
+          setResponse({ assiatanceError: 'Tab content is required' });
+          return { variables, valid: false };
+        }
+        return {
+          title,
+          content: data.tabsData.content[index],
+        };
+      });
+    } else {
+      if (!data.assistanceData) {
+        setResponse({ assiatanceError: 'Assistance data is required' });
+        return { variables, valid: false };
+      }
+      variables.assistanceColumn.assistanceData = data.assistanceData;
+    }
+  }
+
+  return { variables, valid: true };
+};
 export const bowTieRequestCreator = (data, setResponse) => {};

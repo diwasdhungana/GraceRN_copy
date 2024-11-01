@@ -11,7 +11,9 @@ import { notifications } from '@mantine/notifications';
 export const useFileUpload = createPostMutationHook({
   endpoint: '/upload',
   rMutationParams: {
-    onSuccess: (data) => {},
+    onSuccess: (data) => {
+      notifications.show({ message: 'Image saved Uploaded' });
+    },
     onError: (error) => {
       notifications.show({ message: error.messages[0], color: 'red' });
     },

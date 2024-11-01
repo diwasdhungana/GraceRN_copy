@@ -12,8 +12,8 @@ import {
   useCombobox,
 } from '@mantine/core';
 import React, { useRef, useState, useLayoutEffect } from 'react';
-import { RichTextEditorComponent } from './utils/RichTextEditorComponent';
-import { SubmitQuestion } from './utils/SubmitQuestion';
+import { RichTextEditorComponent } from '../utils/RichTextEditorComponent';
+import { SubmitQuestion } from '../utils/SubmitQuestion';
 import css from '@/pages/dashboard/everything.module.css';
 import { generateId } from '@/utilities/uid';
 

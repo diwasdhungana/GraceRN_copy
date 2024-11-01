@@ -9,7 +9,6 @@ export const SubmitQuestion = ({ dataTunnel, response, setResponse }) => {
   const { mutate: postQuestion, isPending } = usePostQuestion();
   const [attempted, setAttempted] = React.useState(false);
   const handleSubmit = () => {
-    // console.log('submitting', dataTunnel());
     const { variables, valid } = requestDataCreator(dataTunnel, setResponse);
     setAttempted(true);
     console.log('variables', variables);

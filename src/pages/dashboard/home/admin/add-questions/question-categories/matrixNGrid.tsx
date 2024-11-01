@@ -16,8 +16,8 @@ import {
   Radio,
 } from '@mantine/core';
 import { useRef, useState } from 'react';
-import { RichTextEditorComponent } from './utils/RichTextEditorComponent';
-import { SubmitQuestion } from './utils/SubmitQuestion';
+import { RichTextEditorComponent } from '../utils/RichTextEditorComponent';
+import { SubmitQuestion } from '../utils/SubmitQuestion';
 export const MatrixNGrid = ({ dataTunnel, response, setResponse }: any) => {
   const inputRefs = useRef<any[]>([]); // To hold multiple refs
   const [options, setOptions] = useState([

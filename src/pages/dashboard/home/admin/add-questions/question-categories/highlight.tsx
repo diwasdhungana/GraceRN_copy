@@ -12,8 +12,8 @@ import {
   useMantineColorScheme,
 } from '@mantine/core';
 import { useEffect, useRef, useState } from 'react';
-import { RichTextEditorComponent } from './utils/RichTextEditorComponent';
-import { SubmitQuestion } from './utils/SubmitQuestion';
+import { RichTextEditorComponent } from '../utils/RichTextEditorComponent';
+import { SubmitQuestion } from '../utils/SubmitQuestion';
 import css from '@/pages/dashboard/everything.module.css';
 
 export const Highlight = ({ dataTunnel, response, setResponse }) => {
@@ -57,9 +57,9 @@ export const Highlight = ({ dataTunnel, response, setResponse }) => {
 
   const handleClick = (text, index) => {
     const newCorrect = correct;
-    const found = newCorrect.findIndex((item) => item.text === text);
+    const found = newCorrect.findIndex((item) => item.value === text);
     if (found === -1) {
-      newCorrect.push({ text, index });
+      newCorrect.push({ value: text, index });
     } else {
       newCorrect.splice(found, 1);
     }

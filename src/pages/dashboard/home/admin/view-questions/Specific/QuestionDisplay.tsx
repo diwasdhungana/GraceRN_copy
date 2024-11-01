@@ -10,7 +10,13 @@ const QuestionDisplay = ({ props }: { props: any }) => {
 
   return (
     <>
-      <Page title="Question" h="80vh" bg="blue">
+      <Page title="Question" h="80vh">
+        <Group gap="xl" justify="space-between">
+          <Text fw="600">Type: {question.data.kind}</Text>
+          <Text mx="lg" fw="600">
+            Points : {question.data.points}
+          </Text>
+        </Group>
         <Group h="100%" gap="3px" grow>
           {question.data.assistanceColumn && (
             <Paper withBorder w="0%" p="sm" h="100%">
@@ -41,7 +47,6 @@ const QuestionDisplay = ({ props }: { props: any }) => {
           </Paper>
         </Group>
       </Page>
-      {question.data.kind}
     </>
   );
 };

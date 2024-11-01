@@ -5,7 +5,7 @@ import css from '@/pages/dashboard/everything.module.css';
 import { useNavigate } from 'react-router-dom';
 import { paths } from '@/routes';
 
-import { Settings } from '@/pages/dashboard/home/admin/add-questions/question-categories/utils/settings';
+import { Settings } from '@/pages/dashboard/home/admin/add-questions/utils/settings';
 
 import { PiArrowLeft } from 'react-icons/pi';
 import { useGetSubjects, useGetSystems } from '@/hooks';
@@ -22,7 +22,6 @@ const questionTypewithlabelandValue = {
     { label: 'Select One', value: 'selectOne' },
 
     { label: 'Select All That Apply', value: 'mcq' },
-
   ],
 };
 const questionGen = [
@@ -70,6 +69,7 @@ const addQuestions = () => {
                         label={gen.label}
                         checked={selectedGen === gen.value}
                         disabled={gen.value === 'nextgen'}
+                        onChange={() => setSelectedQuestionType('')}
                       />
                     );
                   })}

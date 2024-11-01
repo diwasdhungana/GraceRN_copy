@@ -1,5 +1,4 @@
 export const app = {
-
   name: 'Grace RN',
 
   apiBaseUrl: 'https://dev-demo.all-attend.com/gracern-prod-api', //for production

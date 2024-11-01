@@ -11,6 +11,7 @@ import {
   Text,
   Title,
 } from '@mantine/core';
+import { p } from 'msw/lib/core/GraphQLHandler-Cu4Xvg4S';
 import React, { useEffect, useRef, useState } from 'react';
 
 const QuestionViewWithModes = ({ mode, data }) => {
@@ -23,7 +24,7 @@ const QuestionViewWithModes = ({ mode, data }) => {
       return <HighlightwithModes data={data} mode={mode} />;
     case 'Extended Dropdown':
       return <ExtDropDownwithModes data={data} mode={mode} />;
-    case 'dragNDrop':
+    case 'Drag and Drop':
       return <DragNDropwithModes data={data} mode={mode} />;
     case 'BowTie':
       return <BowTiewithModes data={data} mode={mode} />;
@@ -282,11 +283,129 @@ const ExtDropDownwithModes = ({ data, mode }) => {
 };
 
 const DragNDropwithModes = ({ data, mode }) => {
+  console.log(data);
+  // Function to render the content with answers in place
+  const [showExplanation, setShowExplanation] = useState(false);
+
+  const renderContent = () => {
+    if (!data.options?.text) return null;
+
+    // Create a temporary container to parse the HTML
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = data.options.text;
+
+    // Function to process nodes and replace drop-containers
+    const processNodes = (parentElement) => {
+      return Array.from(parentElement.childNodes).map((node, index) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          // Text node
+          return <span key={index}>{node.textContent}</span>;
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+          if (node.classList.contains('drop-container')) {
+            // Drop zone element
+            const containerId = node.getAttribute('data-id');
+            const correctAnswer = data.correct.find((answer) => answer.containerId === containerId);
+
+            return (
+              <div
+                key={index}
+                style={{
+                  border: '2px solid #4CAF50',
+                  display: 'inline',
+                  backgroundColor: '#E8F5E9',
+                  padding: '10px',
+                  width: '300px',
+                  minHeight: '40px',
+                  borderRadius: '5px',
+                  margin: '0 5px',
+                }}
+              >
+                {correctAnswer?.text || ''}
+              </div>
+            );
+          } else {
+            // Other HTML elements (like <p>)
+            return (
+              // <node.tagName.toLowerCase() key={index}>
+              //   {processNodes(node)}
+              // </node.tagName.toLowerCase()>
+              processNodes(node)
+            );
+          }
+        }
+        return null;
+      });
+    };
+
+    return <div>{processNodes(tempDiv)}</div>;
+  };
+
   return (
-    <div>
-      {data.title}
-      {mode}
-    </div>
+    <Stack gap="lg">
+      {/* Header */}
+      <Group justify="space-between" align="center">
+        <Title order={3}>Drag and Drop Question</Title>
+        <Text fw={500}>Points: {data.points}</Text>
+      </Group>
+
+      {/* Title/Question */}
+      <div>
+        <Text fw={500} size="lg" mb="xs">
+          Question:
+        </Text>
+        <div dangerouslySetInnerHTML={{ __html: data.title }} />
+      </div>
+
+      {/* Main Content with Answers */}
+
+      {renderContent()}
+
+      {/* All Options */}
+      <Stack w="350px" style={{ border: '1px solid #ccc', borderRadius: '10px' }} mt="50px">
+        <Group
+          justify="center"
+          className="bg-blue-100"
+          h="50px"
+          style={{ borderRadius: '10px 10px 0px 0px' }}
+        >
+          <Text fw={600}>All Options</Text>
+        </Group>
+
+        <Stack p="md" gap="sm">
+          {data.options?.values?.map((item) => (
+            <Group
+              key={item.id}
+              p="sm"
+              bg="gray.2"
+              style={{
+                borderRadius: '5px',
+                border: data.correct.some((c) => c.textId === item.id)
+                  ? '2px solid #4CAF50'
+                  : '1px solid #ddd',
+              }}
+            >
+              <Text>{item.text}</Text>
+              {data.correct.some((c) => c.textId === item.id) && (
+                <Text size="xl" c="green" ml="auto">
+                  ✓
+                </Text>
+              )}
+            </Group>
+          ))}
+        </Stack>
+      </Stack>
+
+      {!showExplanation ? (
+        <Group>
+          <Button onClick={() => setShowExplanation(!showExplanation)}>Submit</Button>
+        </Group>
+      ) : (
+        <Stack>
+          <Title order={2}> Explanation</Title>
+          <div dangerouslySetInnerHTML={{ __html: data.explanation }} />
+        </Stack>
+      )}
+    </Stack>
   );
 };
 

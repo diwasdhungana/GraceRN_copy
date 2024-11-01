@@ -148,7 +148,7 @@ export const DragNDrop = ({ dataTunnel, response, setResponse }) => {
     let content = processedText;
     dropZones.forEach((zone) => {
       const placeholder = `###DROP_ZONE_${zone.id}###`;
-      const replacement = `<div class="drop-container" data-id="${zone.id}">${zone.content}</div>`;
+      const replacement = `<div class="drop-container" data-id="${zone.id}"></div>`;
       content = content.replace(placeholder, replacement);
     });
     return content;

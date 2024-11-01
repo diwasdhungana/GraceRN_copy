@@ -113,9 +113,11 @@ export function RichTextEditorComponent({ content, setContent, index }) {
       if (!e.target.files?.length) return;
 
       const file = e.target.files[0];
+      console.log('file', file);
       const formData = new FormData();
-      formData.append('image', file);
-
+      formData.append('file', file);
+      for (let [key, value] of formData.entries()) {
+      }
       uploadImage(
         { variables: formData },
         {

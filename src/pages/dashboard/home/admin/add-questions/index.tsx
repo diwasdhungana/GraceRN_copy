@@ -20,7 +20,9 @@ const questionTypewithlabelandValue = {
   ],
   traditional: [
     { label: 'Select One', value: 'selectOne' },
+
     { label: 'Select All That Apply', value: 'mcq' },
+
   ],
 };
 const questionGen = [

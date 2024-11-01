@@ -33,7 +33,7 @@ const subjectAndSystems = () => {
     const subjects = subjectName
       .split(',')
       .filter(Boolean)
-      .map((name) => ({ name }));
+      .map((name) => ({ name: name.trim() }));
     postSubject(
       { variables: subjects },
       {
@@ -51,7 +51,7 @@ const subjectAndSystems = () => {
     const systems = systemName
       .split(',')
       .filter(Boolean)
-      .map((name) => ({ name }));
+      .map((name) => ({ name: name.trim() }));
     postSystem(
       { variables: systems },
       {

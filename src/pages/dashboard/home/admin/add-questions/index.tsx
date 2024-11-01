@@ -20,7 +20,7 @@ const questionTypewithlabelandValue = {
   ],
   traditional: [
     { label: 'Select One', value: 'selectOne' },
-    { label: 'Multiple Choice Question', value: 'mcq' },
+    { label: 'Select all That Apply', value: 'mcq' },
   ],
 };
 const questionGen = [
@@ -67,7 +67,7 @@ const addQuestions = () => {
                         value={gen.value}
                         label={gen.label}
                         checked={selectedGen === gen.value}
-                        // disabled={gen.value === 'nextgen'}
+                        disabled={gen.value === 'nextgen'}
                       />
                     );
                   })}

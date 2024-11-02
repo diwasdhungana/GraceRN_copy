@@ -29,8 +29,10 @@ const questionGen = [
   { label: 'Next Gen', value: 'nextgen' },
 ];
 const addQuestions = () => {
-  const { data: subjects, isError: subjectsError } = useGetSubjects();
-  const { data: systemsData, isError: systemsDataError } = useGetSystems();
+  const { data: subjects, isError: subjectsError } = useGetSubjects({ query: { getAll: true } });
+  const { data: systemsData, isError: systemsDataError } = useGetSystems({
+    query: { getAll: true },
+  });
 
   const navigate = useNavigate();
   const [selectedSubject, setSelectedSubject] = React.useState();

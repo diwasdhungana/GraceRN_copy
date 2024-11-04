@@ -215,7 +215,7 @@ const subjectAndSystems = () => {
                           setEditSubject(!editsubject);
                         }}
                       >
-                        {editsubject ? 'Cancle' : "Edit Subject's Name"}
+                        {editsubject ? 'Cancel' : "Edit Subject's Name"}
                       </Button>
                     </Group>
                   </Group>
@@ -262,7 +262,7 @@ const subjectAndSystems = () => {
                                   setSystemSubjectChangeTo(selectedSubject._id);
                                 }}
                               >
-                                {selectedSystem?._id === system._id ? 'Cancle' : 'Edit'}
+                                {selectedSystem?._id === system._id ? 'Cancel' : 'Edit'}
                               </Button>
                               {selectedSystem?._id === system._id && (
                                 <Group align="flex-end">

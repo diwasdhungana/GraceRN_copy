@@ -3,9 +3,11 @@ import {
   Checkbox,
   Group,
   InputLabel,
+  NumberInput,
   Paper,
   Space,
   Stack,
+  Text,
   Textarea,
   TextInput,
   Title,
@@ -85,17 +87,17 @@ export const Highlight = ({ dataTunnel, response, setResponse }) => {
         Type : Highlight
       </Title>
       <Group>
-        <TextInput
+        <NumberInput
           label="Points (1-20)"
-          type="number"
           value={points}
-          onChange={(e) => setPoints(parseInt(e.target.value))}
+          onChange={(e) => setPoints(Number(e))}
           placeholder="Points"
           min={1}
           max={20}
         />
       </Group>
       <InputLabel>Main Question (Title)</InputLabel>
+      {response.titleError && <Text c="red">{response.titleError}</Text>}
       <RichTextEditorComponent
         content={title}
         setContent={(item, index) => {
@@ -104,8 +106,10 @@ export const Highlight = ({ dataTunnel, response, setResponse }) => {
         index={0}
       />
       <Stack mt="md">
-        <Stack>
-          <InputLabel>Main Text to be highlighted.</InputLabel>
+        <Stack gap="0px">
+          <InputLabel>
+            Highlight all possible options (type this text completely before highlighting.)
+          </InputLabel>
           <RichTextEditorComponent
             content={mainText}
             setContent={(item) => {
@@ -114,7 +118,10 @@ export const Highlight = ({ dataTunnel, response, setResponse }) => {
             index={0}
           />
         </Stack>
-        <Space h="lg" />
+        {/* <Space h="sm" /> */}
+        {response.optionsError && <Text c="red">{response.optionsError}</Text>}
+
+        <Text c="green">Select the correct answers from options below.</Text>
         <Group>
           <div
             // className="content"
@@ -125,6 +132,8 @@ export const Highlight = ({ dataTunnel, response, setResponse }) => {
         </Group>
       </Stack>
       <InputLabel mt="lg">Explanation (Shown after Answer Submit.)</InputLabel>
+      {response.explanationError && <Text c="red">{response.explanationError}</Text>}
+
       <RichTextEditorComponent
         content={explanation}
         setContent={(item, index) => {

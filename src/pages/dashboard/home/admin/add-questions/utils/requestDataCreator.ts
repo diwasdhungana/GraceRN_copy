@@ -306,7 +306,6 @@ export const highlightRequestCreator = (data, setResponse) => {
   const variables = {
     title: data.title,
     kind: 'Highlight',
-
     subject: data.selectedSubject,
     system: data.selectedSystem,
     points: data.points,
@@ -315,6 +314,23 @@ export const highlightRequestCreator = (data, setResponse) => {
     correct: data.correct,
     options: data.options,
   };
+  if (!data.title) {
+    setResponse({ titleError: 'Title is required' });
+    return { variables, valid: false };
+  }
+  //data.options is a string and it must contain atlleast 2 'class="highlight"' in it.
+  if (data.options.split('class="highlight"').length < 3) {
+    setResponse({ optionsError: 'At lease 2 options required.' });
+    return { variables, valid: false };
+  }
+  if (data.correct.length == 0) {
+    setResponse({ optionsError: 'At lease 1 options must be highlighted as correct.' });
+    return { variables, valid: false };
+  }
+  if (data.explanation.length < 10) {
+    setResponse({ explanationError: 'Explanation should be at least 10 characters long' });
+    return { variables, valid: false };
+  }
   if (data.hasAssistanceColumn) {
     if (!data.assistanceTitle) {
       setResponse({ assiatanceError: 'Assistance title is required' });

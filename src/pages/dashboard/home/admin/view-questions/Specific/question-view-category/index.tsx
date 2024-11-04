@@ -160,7 +160,7 @@ const HighlightwithModes = ({ data, mode }) => {
   const contentRef = useRef<HTMLDivElement>(null); // To reference the content div
 
   useEffect(() => {
-    const elements = contentRef.current.querySelectorAll('.highlight');
+    const elements = contentRef?.current.querySelectorAll('.highlight');
     elements.forEach((element, index) => {
       // element.onclick = () => handleClick(element.innerText, index);
       element.style.backgroundColor = 'rgba(255, 255, 0, 0.2)';

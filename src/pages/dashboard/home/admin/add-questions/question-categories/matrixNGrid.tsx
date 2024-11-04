@@ -14,6 +14,7 @@ import {
   Select,
   Checkbox,
   Radio,
+  Text,
 } from '@mantine/core';
 import { useRef, useState } from 'react';
 import { RichTextEditorComponent } from '../utils/RichTextEditorComponent';
@@ -48,17 +49,17 @@ export const MatrixNGrid = ({ dataTunnel, response, setResponse }: any) => {
         Type : Matrix And Grid
       </Title>
       <Group>
-        <TextInput
+        <NumberInput
           label="Points (1-20)"
-          type="number"
           value={points}
-          onChange={(e) => setPoints(parseInt(e.target.value))}
+          onChange={(e) => setPoints(Number(e))}
           placeholder="Points"
           min={1}
           max={20}
         />
       </Group>
       <InputLabel>Main Question (Title)</InputLabel>
+      {response.titleError && <Text c="red">{response.titleError}</Text>}
       <RichTextEditorComponent
         content={title}
         setContent={(item, index) => {
@@ -138,85 +139,88 @@ export const MatrixNGrid = ({ dataTunnel, response, setResponse }: any) => {
           w="200px"
         />
       </Group>
-      <Stack mt="md">
-        <Table>
-          <thead>
-            <tr>
-              {Array.from({ length: gridColumns }).map((_, index) => (
-                <th key={index}>
-                  <Textarea
-                    value={options[0][index].value}
-                    ref={(el) => (inputRefs.current[index] = el)} // Assigning refs for each input
-                    onFocus={() => handleFocus(index)} // Triggering select on focus
-                    onChange={(e) => {
-                      const newOptions = options;
-                      newOptions[0][index].value = e.target.value;
-                      setOptions([...newOptions]);
-                    }}
-                    autosize
-                    minRows={2}
-                    w="90%"
-                  />
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {Array.from({ length: gridRows - 1 }).map((_, indexR) => (
-              <tr key={indexR}>
-                {Array.from({ length: gridColumns }).map((_, index) => (
-                  <td key={index}>
-                    {index === 0 ? (
-                      <Textarea
-                        value={options[indexR + 1][index].value}
-                        onChange={(e) => {
-                          const newOptions = options;
-                          newOptions[indexR + 1][index].value = e.target.value;
-                          setOptions([...newOptions]);
-                        }}
-                        autosize
-                        minRows={2}
-                        w="90%"
-                      />
-                    ) : selectionType === 'radio' ? (
-                      <Radio
-                        type="radio"
-                        name={`selectOptions${indexR}`}
-                        checked={options[indexR + 1][index].checked}
-                        onChange={(e) => {
-                          const newOptions = options;
-                          // uncheck all other options
-                          newOptions[indexR + 1].map((opt) => {
-                            opt.checked = false;
-                            return opt;
-                          });
-                          newOptions[indexR + 1][index].checked = true;
-                          setOptions([...newOptions]);
-                        }}
-                      />
-                    ) : (
-                      <Checkbox
-                        type="checkbox"
-                        name={`selectOptions${indexR}`}
-                        value={options[indexR + 1][index].value}
-                        checked={options[indexR + 1][index].checked}
-                        onChange={(e) => {
-                          const newOptions = options;
-                          newOptions[indexR + 1][index].checked =
-                            !newOptions[indexR + 1][index].checked;
-                          setOptions([...newOptions]);
-                        }}
-                      />
-                    )}
-                  </td>
-                ))}
-              </tr>
+      {response.optionsError && <Text c="red">{response.optionsError}</Text>}
+
+      <Table mt="lg">
+        <Table.Thead>
+          <Table.Tr>
+            {Array.from({ length: gridColumns }).map((_, index) => (
+              <Table.Th key={index}>
+                <Textarea
+                  variant="unstyled"
+                  value={options[0][index].value}
+                  ref={(el) => (inputRefs.current[index] = el)} // Assigning refs for each input
+                  onFocus={() => handleFocus(index)} // Triggering select on focus
+                  onChange={(e) => {
+                    const newOptions = options;
+                    newOptions[0][index].value = e.target.value;
+                    setOptions([...newOptions]);
+                  }}
+                  autosize
+                  minRows={2}
+                  w="90%"
+                />
+              </Table.Th>
             ))}
-          </tbody>
-        </Table>
-      </Stack>
+          </Table.Tr>
+        </Table.Thead>
+        <Table.Tbody>
+          {Array.from({ length: gridRows - 1 }).map((_, indexR) => (
+            <Table.Tr key={indexR}>
+              {Array.from({ length: gridColumns }).map((_, index) => (
+                <Table.Td key={index}>
+                  {index === 0 ? (
+                    <Textarea
+                      value={options[indexR + 1][index].value}
+                      onChange={(e) => {
+                        const newOptions = options;
+                        newOptions[indexR + 1][index].value = e.target.value;
+                        setOptions([...newOptions]);
+                      }}
+                      autosize
+                      minRows={2}
+                      w="100%"
+                    />
+                  ) : selectionType === 'radio' ? (
+                    <Radio
+                      type="radio"
+                      name={`selectOptions${indexR}`}
+                      checked={options[indexR + 1][index].checked}
+                      onChange={(e) => {
+                        const newOptions = options;
+                        // uncheck all other options
+                        newOptions[indexR + 1].map((opt) => {
+                          opt.checked = false;
+                          return opt;
+                        });
+                        newOptions[indexR + 1][index].checked = true;
+                        setOptions([...newOptions]);
+                      }}
+                    />
+                  ) : (
+                    <Checkbox
+                      type="checkbox"
+                      name={`selectOptions${indexR}`}
+                      value={options[indexR + 1][index].value}
+                      checked={options[indexR + 1][index].checked}
+                      onChange={(e) => {
+                        const newOptions = options;
+                        newOptions[indexR + 1][index].checked =
+                          !newOptions[indexR + 1][index].checked;
+                        setOptions([...newOptions]);
+                      }}
+                    />
+                  )}
+                </Table.Td>
+              ))}
+            </Table.Tr>
+          ))}
+        </Table.Tbody>
+      </Table>
 
       <InputLabel mt="lg">Explanation (Shown after Answer Submit.)</InputLabel>
+      {response.explanationError && <Text c="red">{response.explanationError}</Text>}
+
       <RichTextEditorComponent
         content={explanation}
         setContent={(item, index) => {
@@ -233,53 +237,3 @@ export const MatrixNGrid = ({ dataTunnel, response, setResponse }: any) => {
     </Paper>
   );
 };
-
-//         <InputLabel>Options :</InputLabel>
-// {options.map((option, index) => (
-//   <Group gap="xs" key={index} w="100%">
-//     <input
-//       type="radio"
-//       name="selectOptions"
-//       value={option.value}
-//       checked={option.checked}
-//       onChange={(e) => {
-//         const newOptions = options;
-//         newOptions[index].checked = !newOptions[index].checked;
-//         setOptions([...newOptions]);
-//       }}
-//     />
-//     <Textarea
-//       value={option.value}
-//       ref={(el) => (inputRefs.current[index] = el)} // Assigning refs for each input
-//       onFocus={() => handleFocus(index)} // Triggering select on focus
-//       onChange={(e) => {
-//         const newOptions = options.map((opt) => {
-//           return { ...opt, value: opt.value === option.value ? e.target.value : opt.value };
-//         });
-//         setOptions(newOptions);
-//       }}
-//       autosize
-//       minRows={2}
-//       w="90%"
-//     />
-//     <Button
-//       variant="subtle"
-//       onClick={() => {
-//         const newOptions = options.filter((opt) => opt.value !== option.value);
-//         setOptions(newOptions);
-//       }}
-//     >
-//       X
-//     </Button>
-//   </Group>
-// ))}
-// <Group>
-//   <Button
-//     size="sm"
-//     onClick={() => {
-//       setOptions([...options, { value: 'option ' + options.length, checked: false }]);
-//     }}
-//   >
-//     Add Option
-//   </Button>
-// </Group>

@@ -213,10 +213,39 @@ export const matrixNGridRequestCreator = (data, setResponse) => {
     type: 'Next Gen',
     explanation: data.explanation,
     radio: data.selectionType == 'radio' ? true : false,
-    options: data.options.map((opt) => {
-      return opt.map((op) => ({ ...op, checked: false }));
-    }),
+    options: {
+      head: data.options[0].map((column) => {
+        return column.value;
+      }),
+      rows: data.options.slice(1).map((row) => {
+        return row[0].value;
+      }),
+    },
   };
+  if (!data.title) {
+    setResponse({ titleError: 'Title is required' });
+    return { variables, valid: false };
+  }
+  // check if the variables.options.rows as empty values
+  if (variables.options.rows.filter((row) => !row).length > 0) {
+    setResponse({ optionsError: 'At least one row is empty' });
+    return { variables, valid: false };
+  }
+
+  if (variables.options.head.filter((column) => !column).length > 0) {
+    setResponse({ optionsError: 'At least one column is empty' });
+    return { variables, valid: false };
+  }
+
+  if (data.points < 1 || data.points > 20) {
+    setResponse({ pointsError: 'Points should be between 1 and 20' });
+    return { variables, valid: false };
+  }
+  if (data.explanation.length < 10) {
+    setResponse({ explanationError: 'Explanation should be at least 10 characters long' });
+    return { variables, valid: false };
+  }
+
   if (data.hasAssistanceColumn) {
     if (!data.assistanceTitle) {
       setResponse({ assiatanceError: 'Assistance title is required' });
@@ -257,18 +286,22 @@ export const matrixNGridRequestCreator = (data, setResponse) => {
     }
   }
 
-  //option is a 2D array of options, which has a checked property in each option
-  //correct is an array of indexes of correct options
-  variables.correct = data.options.map((row) => {
-    return row.reduce((acc, option, index) => {
-      if (option.checked) {
-        acc.push(index);
-      }
-      return acc;
-    }, []);
+  variables.correct = variables.options.rows.map((row, index) => {
+    return {
+      key: row,
+      values: data.options[index + 1]
+        .map((column, index) => (column.checked ? variables.options.head[index] : null))
+        .filter((n) => n),
+    };
   });
-  return variables;
+
+  if (variables.correct.filter((row) => row.values.length === 0).length > 0) {
+    setResponse({ optionsError: 'At least one correct answer is required in every row' });
+    return { variables, valid: false };
+  }
+  return { variables, valid: true };
 };
+
 export const highlightRequestCreator = (data, setResponse) => {
   const variables = {
     title: data.title,

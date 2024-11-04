@@ -13,11 +13,11 @@ import { s } from 'vite/dist/node/types.d-aGj9QkWt';
 
 const questionTypewithlabelandValue = {
   nextgen: [
-    { label: 'Extended Drop Down', value: 'extDropDown' },
+    // { label: 'Extended Drop Down', value: 'extDropDown' },
     { label: 'Highlight', value: 'highlight' },
     { label: 'Matrix and Grid', value: 'matrixNGrid' },
-    { label: 'Drag and Drop', value: 'dragNDrop' },
-    { label: 'Bow Tie', value: 'bowTie' },
+    // { label: 'Drag and Drop', value: 'dragNDrop' },
+    // { label: 'Bow Tie', value: 'bowTie' },
   ],
   traditional: [
     { label: 'Select One', value: 'selectOne' },
@@ -78,7 +78,7 @@ const addQuestions = () => {
                         value={gen.value}
                         label={gen.label}
                         checked={selectedGen === gen.value}
-                        disabled={gen.value === 'nextgen'}
+                        // disabled={gen.value === 'nextgen'}
                         onChange={() => setSelectedQuestionType('')}
                       />
                     );

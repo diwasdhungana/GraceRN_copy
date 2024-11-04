@@ -81,59 +81,57 @@ const MatrixNGridwithModes = ({ data, mode }) => {
         <Table verticalSpacing="lg">
           <Table.Thead>
             <Table.Tr ta="center">
-              {Array.from({ length: data.options[0].length }).map((_, index) => (
-                <th key={index} style={{ textAlign: 'center' }}>
-                  <Text>{data.options[0][index].value}</Text>
-                </th>
+              {data.options.head.map((head) => (
+                <Table.Td>
+                  <Text> {head}</Text>
+                </Table.Td>
               ))}
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
-            {Array.from({ length: data.options.length - 1 }).map((_, indexR) => (
-              <Table.Tr key={indexR}>
-                {Array.from({ length: data.options[0].length }).map((_, index) => (
-                  <Table.Td
-                    key={index}
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                  >
-                    {index === 0 ? (
-                      <Text>{data.options[indexR + 1][index].value}</Text>
-                    ) : data.radio === true ? (
-                      <Group justify="center">
-                        <Radio
-                          type="radio"
-                          name={`selectOptions${indexR}`}
-                          checked={
-                            mode == 'admin'
-                              ? //see if the data.correct [[],[2],[1,3]]
-                                data.correct[indexR + 1].includes(index)
-                                ? true
-                                : false
-                              : true
-                          }
-                        />
-                      </Group>
-                    ) : (
-                      <Group justify="center">
-                        <Checkbox
-                          type="checkbox"
-                          name={`selectOptions${indexR}`}
-                          checked={
-                            mode == 'admin'
-                              ? //see if the data.correct [[],[2],[1,3]]
-                                data.correct[indexR + 1].includes(index)
-                                ? true
-                                : false
-                              : true
-                          }
-                        />
-                      </Group>
-                    )}
-                  </Table.Td>
-                ))}
+            {data.options.rows.map((rowName, indexR) => (
+              <Table.Tr key={indexR} ta="center">
+                <Table.Td>
+                  <Text>{rowName}</Text>
+                </Table.Td>
+                {data.options.head.map(
+                  (head, index) =>
+                    index > 0 && (
+                      <Table.Td
+                        key={index}
+                        style={{
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                      >
+                        {data.radio === true ? (
+                          <Group justify="center">
+                            <Radio
+                              type="radio"
+                              name={`selectOptions${indexR}`}
+                              checked={
+                                data.correct.filter(
+                                  (n) => n.key == rowName && n.values.includes(head)
+                                ).length == 1
+                              }
+                            />
+                          </Group>
+                        ) : (
+                          <Group justify="center">
+                            <Checkbox
+                              type="checkbox"
+                              name={`selectOptions${indexR}`}
+                              checked={
+                                data.correct.filter(
+                                  (n) => n.key == rowName && n.values.includes(head)
+                                ).length == 1
+                              }
+                            />
+                          </Group>
+                        )}
+                      </Table.Td>
+                    )
+                )}
               </Table.Tr>
             ))}
           </Table.Tbody>

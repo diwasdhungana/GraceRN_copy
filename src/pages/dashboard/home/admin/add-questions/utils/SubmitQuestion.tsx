@@ -24,9 +24,9 @@ export const SubmitQuestion = ({ dataTunnel, response, setResponse }) => {
               title: 'Question Created',
               message: `New ${dataTunnel().selectedQuestionType} question created.`,
             });
-            setTimeout(() => {
-              window.location.reload();
-            }, 2000);
+            // setTimeout(() => {
+            //   window.location.reload();
+            // }, 2000);
           },
           onError: (error) => {
             console.log('error', error);

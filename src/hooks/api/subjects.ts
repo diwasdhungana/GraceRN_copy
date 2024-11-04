@@ -24,3 +24,15 @@ export const usePostSubject = createPostMutationHook({
     },
   },
 });
+
+export const usePutSubject = createPutMutationHook({
+  endpoint: '/subjects/:id',
+  rMutationParams: {
+    onSuccess: (data) => {
+      queryClient.invalidateQueries('subjects');
+    },
+    onError: (error) => {
+      notifications.show({ message: error.messages[0], color: 'red' });
+    },
+  },
+});

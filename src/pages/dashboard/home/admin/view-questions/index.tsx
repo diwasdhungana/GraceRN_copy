@@ -56,7 +56,7 @@ const ViewQuesitons = () => {
     });
   };
   return (
-    <Page title="Viiew Questions">
+    <Page title="View Questions">
       <Stack>
         <Group gap="xl">
           <Button variant="subtle" onClick={() => navigate(-1)}>
@@ -80,7 +80,7 @@ const ViewQuesitons = () => {
 
                           <div
                             className={css.htmlContentDisplay}
-                            dangerouslySetInnerHTML={{ __html: eeutaQuestion.title }}
+                            dangerouslySetInnerHTML={{ __html: eeutaQuestion?.title }}
                             onClick={() =>
                               navigate(paths.dashboard.admin.viewQuestions.root + eeutaQuestion._id)
                             }
@@ -101,13 +101,13 @@ const ViewQuesitons = () => {
                           </Group>
                           <Group>
                             <Badge color="red" variant="light">
-                              {eeutaQuestion.subject.name || 'subject'}
+                              {eeutaQuestion?.subject?.name || 'subject'}
                             </Badge>
                             <Badge color="orange" variant="light">
-                              {eeutaQuestion.system.name || 'system'}
+                              {eeutaQuestion?.system?.name || 'system'}
                             </Badge>
                             <Badge color="black" variant="light">
-                              points : {eeutaQuestion.points || 'system'}
+                              points : {eeutaQuestion?.points || 'system'}
                             </Badge>
                           </Group>
                         </Group>

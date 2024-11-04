@@ -9,6 +9,7 @@ import { Settings } from '@/pages/dashboard/home/admin/add-questions/utils/setti
 
 import { PiArrowLeft } from 'react-icons/pi';
 import { useGetSubjects, useGetSystems } from '@/hooks';
+import { s } from 'vite/dist/node/types.d-aGj9QkWt';
 
 const questionTypewithlabelandValue = {
   nextgen: [
@@ -29,17 +30,24 @@ const questionGen = [
   { label: 'Next Gen', value: 'nextgen' },
 ];
 const addQuestions = () => {
-  const { data: subjects, isError: subjectsError } = useGetSubjects({ query: { getAll: true } });
-  const { data: systemsData, isError: systemsDataError } = useGetSystems({
-    query: { getAll: true },
-  });
-
   const navigate = useNavigate();
   const [selectedSubject, setSelectedSubject] = React.useState();
   const [selectedSystem, setSelectedSystem] = React.useState();
   const [selectedGen, setSelectedGen] = React.useState();
   const [selectedQuestionType, setSelectedQuestionType] = React.useState();
   const [response, setResponse] = React.useState({});
+
+  const { data: subjects, isError: subjectsError } = useGetSubjects({ query: { getAll: true } });
+  const { data: systemsData, isError: systemsDataError } = useGetSystems({
+    query: {
+      getAll: true,
+      subjects: [selectedSubject ? selectedSubject : ''],
+    },
+  });
+  useEffect(() => {
+    if (selectedSubject) {
+    }
+  }, [selectedSubject]);
 
   return (
     <Page title="Home" className={css.root}>
@@ -83,7 +91,7 @@ const addQuestions = () => {
                 {subjectsError && <Text c="red">Error fetching subjects</Text>}
                 <Select
                   label={<Text fw="600">Choose a Subject</Text>}
-                  placeholder={'Select Subjects'}
+                  placeholder={'Select Subject'}
                   data={subjects?.data?.docs?.map((subject) => {
                     return { value: subject._id, label: subject.name };
                   })}
@@ -100,25 +108,26 @@ const addQuestions = () => {
                 {systemsDataError && <Text c="red">Error fetching systems</Text>}
 
                 <Select
+                  disabled={!selectedSubject}
                   label={<Text fw="600">Choose a System</Text>}
-                  placeholder={'Select Subjects'}
+                  placeholder={'Select System'}
                   data={systemsData?.data?.docs?.map((subject) => {
                     return { value: subject._id, label: subject.name };
                   })}
                   onChange={(value) => setSelectedSystem(value)}
                   value={selectedSystem}
                   allowDeselect={false}
-                  searchable
-                  nothingFoundMessage="No such systems."
                   maxDropdownHeight={200}
+                  nothingFoundMessage="no systems available for this subject"
                   comboboxProps={{ withinPortal: false }}
                 />
               </Stack>
             </Group>
             <Group>
               <Select
+                disabled={!selectedGen}
                 data={questionTypewithlabelandValue[selectedGen]}
-                placeholder="select a question type"
+                placeholder="Select Question Type"
                 label={<Text fw="600">Choose a Question Type</Text>}
                 onChange={(value) => setSelectedQuestionType(value)}
                 allowDeselect={false}

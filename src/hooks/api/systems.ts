@@ -24,3 +24,15 @@ export const usePostSystem = createPostMutationHook({
     },
   },
 });
+
+export const usePutSystem = createPutMutationHook({
+  endpoint: '/systems/:id',
+  rMutationParams: {
+    onSuccess: (data) => {
+      queryClient.invalidateQueries('systems');
+    },
+    onError: (error) => {
+      notifications.show({ message: error.messages[0], color: 'red' });
+    },
+  },
+});

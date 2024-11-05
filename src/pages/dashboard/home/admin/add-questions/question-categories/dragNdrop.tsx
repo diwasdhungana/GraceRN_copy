@@ -300,15 +300,15 @@ export const DragNDrop = ({ dataTunnel, response, setResponse }) => {
         dataTunnel={() => ({
           ...dataTunnel,
           options: {
-            text: getFinalContent(),
-            values: dragables.map((item) => ({ text: item.text, id: item.id })),
+            title: getFinalContent(),
+            dragables: dragables.map((item) => ({ value: item.text, id: item.id })),
           },
           title,
           points,
           explanation,
           correct: dropZones
             .map((zone) => ({
-              text: zone.content,
+              value: zone.content,
               textId: zone.contentId,
               containerId: zone.id,
             }))

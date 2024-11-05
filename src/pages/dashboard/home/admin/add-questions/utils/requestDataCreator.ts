@@ -472,8 +472,24 @@ export const dragNDropRequestCreator = (data, setResponse) => {
     return { variables, valid: false };
   }
 
-  if (data.options.values.length < 2) {
-    setResponse({ optionsError: 'At lease 2 options required.' });
+  if (data.options.dragables.length < 2) {
+    setResponse({ optionsError: 'At lease 2 word choices required.' });
+    return { variables, valid: false };
+  }
+
+  if (
+    data.options.dragables.length <
+    data.options.title.split('class="drop-container"').length - 1
+  ) {
+    setResponse({
+      optionsError: 'Number of Word choices must be equal or greater than number of drop zones.',
+    });
+    return { variables, valid: false };
+  }
+  if (data.correct.length < data.options.title.split('class="drop-container"').length - 1) {
+    console.log(data.options.title.split('class="drop-container"').length - 1);
+    console.log(data.correct.length);
+    setResponse({ optionsError: 'All dropzones must be assigned a value.' });
     return { variables, valid: false };
   }
 
@@ -490,6 +506,7 @@ export const dragNDropRequestCreator = (data, setResponse) => {
     setResponse({ explanationError: 'Explanation should be at least 10 characters long' });
     return { variables, valid: false };
   }
+  // console.log(data.explanation.length);
   if (data.hasAssistanceColumn) {
     if (!data.assistanceTitle) {
       setResponse({ assiatanceError: 'Assistance title is required' });

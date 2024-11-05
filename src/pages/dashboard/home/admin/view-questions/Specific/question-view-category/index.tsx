@@ -304,11 +304,11 @@ const DragNDropwithModes = ({ data, mode }) => {
   const [showExplanation, setShowExplanation] = useState(false);
 
   const renderContent = () => {
-    if (!data.options?.text) return null;
+    if (!data.options?.title) return null;
 
     // Create a temporary container to parse the HTML
     const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = data.options.text;
+    tempDiv.innerHTML = data.options.title;
 
     // Function to process nodes and replace drop-containers
     const processNodes = (parentElement) => {
@@ -320,6 +320,7 @@ const DragNDropwithModes = ({ data, mode }) => {
           if (node.classList.contains('drop-container')) {
             // Drop zone element
             const containerId = node.getAttribute('data-id');
+
             const correctAnswer = data.correct.find((answer) => answer.containerId === containerId);
 
             return (
@@ -336,7 +337,7 @@ const DragNDropwithModes = ({ data, mode }) => {
                   margin: '0 5px',
                 }}
               >
-                {correctAnswer?.text || ''}
+                {correctAnswer?.value || 'notfound'}
               </div>
             );
           } else {
@@ -358,19 +359,7 @@ const DragNDropwithModes = ({ data, mode }) => {
 
   return (
     <Stack gap="lg">
-      {/* Header */}
-      <Group justify="space-between" align="center">
-        <Title order={3}>Drag and Drop Question</Title>
-        <Text fw={500}>Points: {data.points}</Text>
-      </Group>
-
-      {/* Title/Question */}
-      <div>
-        <Text fw={500} size="lg" mb="xs">
-          Question:
-        </Text>
-        <div dangerouslySetInnerHTML={{ __html: data.title }} className={css.htmlContentDisplay} />
-      </div>
+      <div dangerouslySetInnerHTML={{ __html: data.title }} className={css.htmlContentDisplay} />
 
       {/* Main Content with Answers */}
 
@@ -388,7 +377,7 @@ const DragNDropwithModes = ({ data, mode }) => {
         </Group>
 
         <Stack p="md" gap="sm">
-          {data.options?.values?.map((item) => (
+          {data.options?.dragables?.map((item) => (
             <Group
               key={item.id}
               p="sm"
@@ -400,7 +389,7 @@ const DragNDropwithModes = ({ data, mode }) => {
                   : '1px solid #ddd',
               }}
             >
-              <Text>{item.text}</Text>
+              <Text>{item.value}</Text>
               {data.correct.some((c) => c.textId === item.id) && (
                 <Text size="xl" c="green" ml="auto">
                   ✓

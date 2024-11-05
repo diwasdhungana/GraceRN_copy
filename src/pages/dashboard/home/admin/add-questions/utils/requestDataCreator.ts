@@ -374,7 +374,6 @@ export const highlightRequestCreator = (data, setResponse) => {
   return { variables, valid: true };
 };
 export const extDropDownRequestCreator = (data, setResponse) => {
-  console.log('reached to the extDropDownRequestCreator');
   const variables = {
     title: data.title,
     kind: 'Extended Dropdown',
@@ -386,6 +385,34 @@ export const extDropDownRequestCreator = (data, setResponse) => {
     correct: data.correctAnswer,
     options: data.options,
   };
+  if (!data.title) {
+    setResponse({ titleError: 'Title is required' });
+    return { variables, valid: false };
+  }
+  // options will have an array of objects with type either text or dropdown
+  //atleast one dropdown is required
+  if (data.options.filter((opt) => opt.type === 'dropdown').length === 0) {
+    setResponse({ optionsError: 'At lease 1 dropdown required.' });
+    return { variables, valid: false };
+  }
+
+  //each type of dropdown should have atleast 2 options in values
+  if (data.options.filter((opt) => opt.type === 'dropdown' && opt?.value?.length < 2).length > 0) {
+    setResponse({ optionsError: 'Each dropdown should have at least 2 options' });
+    return { variables, valid: false };
+  }
+
+  // atlease one text type is required
+  if (data.options.filter((opt) => opt.type === 'text').length === 0) {
+    setResponse({ optionsError: 'At lease 1 text type required.' });
+    return { variables, valid: false };
+  }
+
+  if (data.explanation.length < 10) {
+    setResponse({ explanationError: 'Explanation should be at least 10 characters long' });
+    return { variables, valid: false };
+  }
+
   if (data.hasAssistanceColumn) {
     if (!data.assistanceTitle) {
       setResponse({ assiatanceError: 'Assistance title is required' });
@@ -426,7 +453,7 @@ export const extDropDownRequestCreator = (data, setResponse) => {
     }
   }
 
-  return variables;
+  return { variables, valid: true };
 };
 export const dragNDropRequestCreator = (data, setResponse) => {
   const variables = {

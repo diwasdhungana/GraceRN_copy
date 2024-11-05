@@ -13,7 +13,7 @@ import { s } from 'vite/dist/node/types.d-aGj9QkWt';
 
 const questionTypewithlabelandValue = {
   nextgen: [
-    // { label: 'Extended Drop Down', value: 'extDropDown' },
+    { label: 'Extended Drop Down', value: 'extDropDown' },
     { label: 'Highlight', value: 'highlight' },
     { label: 'Matrix and Grid', value: 'matrixNGrid' },
     // { label: 'Drag and Drop', value: 'dragNDrop' },

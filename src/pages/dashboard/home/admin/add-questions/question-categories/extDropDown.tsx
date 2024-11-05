@@ -10,12 +10,14 @@ import {
   TextInput,
   Title,
   useCombobox,
+  Text,
 } from '@mantine/core';
 import React, { useRef, useState, useLayoutEffect } from 'react';
 import { RichTextEditorComponent } from '../utils/RichTextEditorComponent';
 import { SubmitQuestion } from '../utils/SubmitQuestion';
 import css from '@/pages/dashboard/everything.module.css';
 import { generateId } from '@/utilities/uid';
+import { set } from 'date-fns';
 
 export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
   const editorRefs = useRef(new Map());
@@ -89,7 +91,8 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
         />
       </Group>
       <InputLabel>Main Question (Title)</InputLabel>
-      <RichTextEditorComponent content={title} setContent={(item) => setTitle(item)} />
+      {response.titleError && <Text c="red">{response.titleError}</Text>}
+      <RichTextEditorComponent content={title} setContent={(item) => setTitle(item)} index={0} />
       <Stack mt="md">
         <InputLabel>Text with dropdown</InputLabel>
         <Stack>
@@ -134,7 +137,7 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
             </Group>
           ))}
         </Stack>
-
+        {response.optionsError && <Text c="red">{response.optionsError}</Text>}
         <Group justify="space-between" mt="md">
           <Group>
             <Button
@@ -161,6 +164,7 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
                   { type: 'dropdown', value: [], name: `dropdown ${counter}`, id: generateId() },
                 ]);
                 setCounter(counter + 1);
+                setFocusedId('');
               }}
             >
               Add Dropdown
@@ -174,6 +178,7 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
                   ...options,
                   { type: 'next-line', id: generateId(), value: 'next-line' },
                 ]);
+                setFocusedId('');
               }}
             >
               &#9166; New Line
@@ -183,6 +188,14 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
             <Button
               bg="red"
               onClick={() => {
+                if (options.findLast((opt) => opt.type === 'dropdown') && options.length > 1) {
+                  // Remove the correct answer from the correctAnswer array
+                  setCorrectAnswer((prevCorrectAnswers) =>
+                    prevCorrectAnswers.filter(
+                      (answer) => answer.id !== options[options.length - 1].id
+                    )
+                  );
+                }
                 setOptions(options.slice(0, options.length - 1));
                 setCounter(counter + 1);
               }}
@@ -194,7 +207,12 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
       </Stack>
 
       <InputLabel mt="lg">Explanation (Shown after Answer Submit.)</InputLabel>
-      <RichTextEditorComponent content={explanation} setContent={(item) => setExplanation(item)} />
+      {response.explanationError && <Text c="red">{response.explanationError}</Text>}
+      <RichTextEditorComponent
+        index={0}
+        content={explanation}
+        setContent={(item) => setExplanation(item)}
+      />
       <Space h="lg" />
 
       <SubmitQuestion

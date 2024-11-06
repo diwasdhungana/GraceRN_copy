@@ -3,6 +3,7 @@ import {
   Button,
   Group,
   InputLabel,
+  NumberInput,
   Paper,
   Space,
   Stack,
@@ -168,11 +169,10 @@ export const DragNDrop = ({ dataTunnel, response, setResponse }) => {
       </Title>
 
       <Group>
-        <TextInput
+        <NumberInput
           label="Points (1-20)"
-          type="number"
           value={points}
-          onChange={(e) => setPoints(parseInt(e.target.value))}
+          onChange={(e) => setPoints(Number(e))}
           placeholder="Points"
           min={1}
           max={20}

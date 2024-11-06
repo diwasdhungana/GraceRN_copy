@@ -17,7 +17,7 @@ const questionTypewithlabelandValue = {
     { label: 'Highlight', value: 'highlight' },
     { label: 'Matrix and Grid', value: 'matrixNGrid' },
     { label: 'Drag and Drop', value: 'dragNDrop' },
-    // { label: 'Bow Tie', value: 'bowTie' },
+    { label: 'Bow Tie', value: 'bowTie' },
   ],
   traditional: [
     { label: 'Select One', value: 'selectOne' },

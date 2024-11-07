@@ -1,3 +1,4 @@
+// @ts-nocheck
 export const requestDataCreator = (dataTunnel, setResponse) => {
   const data = dataTunnel();
   const { selectedQuestionType } = data;
@@ -70,7 +71,7 @@ export const selectOneRequestCreator = (data, setResponse) => {
     }
     variables.assistanceColumn = { title: data.assistanceTitle };
     if (data.hasTabsInAssistance) {
-      variables.assistanceColumn.hasTabsInAssistance = true;
+      //
       if (!data.tabsData.title.length) {
         setResponse({ assiatanceError: 'At least one tab is required' });
         return { variables, valid: false };
@@ -155,7 +156,6 @@ export const mcqRequestCreator = (data, setResponse) => {
     }
     variables.assistanceColumn = { title: data.assistanceTitle };
     if (data.hasTabsInAssistance) {
-      variables.assistanceColumn.hasTabsInAssistance = true;
       if (!data.tabsData.title.length) {
         setResponse({ assiatanceError: 'At least one tab is required' });
         return { variables, valid: false };
@@ -253,7 +253,6 @@ export const matrixNGridRequestCreator = (data, setResponse) => {
     }
     variables.assistanceColumn = { title: data.assistanceTitle };
     if (data.hasTabsInAssistance) {
-      variables.assistanceColumn.hasTabsInAssistance = true;
       if (!data.tabsData.title.length) {
         setResponse({ assiatanceError: 'At least one tab is required' });
         return { variables, valid: false };
@@ -338,7 +337,6 @@ export const highlightRequestCreator = (data, setResponse) => {
     }
     variables.assistanceColumn = { title: data.assistanceTitle };
     if (data.hasTabsInAssistance) {
-      variables.assistanceColumn.hasTabsInAssistance = true;
       if (!data.tabsData.title.length) {
         setResponse({ assiatanceError: 'At least one tab is required' });
         return { variables, valid: false };
@@ -420,7 +418,6 @@ export const extDropDownRequestCreator = (data, setResponse) => {
     }
     variables.assistanceColumn = { title: data.assistanceTitle };
     if (data.hasTabsInAssistance) {
-      variables.assistanceColumn.hasTabsInAssistance = true;
       if (!data.tabsData.title.length) {
         setResponse({ assiatanceError: 'At least one tab is required' });
         return { variables, valid: false };
@@ -514,7 +511,6 @@ export const dragNDropRequestCreator = (data, setResponse) => {
     }
     variables.assistanceColumn = { title: data.assistanceTitle };
     if (data.hasTabsInAssistance) {
-      variables.assistanceColumn.hasTabsInAssistance = true;
       if (!data.tabsData.title.length) {
         setResponse({ assiatanceError: 'At least one tab is required' });
         return { variables, valid: false };
@@ -549,4 +545,96 @@ export const dragNDropRequestCreator = (data, setResponse) => {
 
   return { variables, valid: true };
 };
-export const bowTieRequestCreator = (data, setResponse) => {};
+export const bowTieRequestCreator = (data, setResponse) => {
+  const variables = {
+    title: data.title,
+    kind: 'Bowtie',
+    subject: data.selectedSubject,
+    system: data.selectedSystem,
+    points: data.points,
+    type: 'Next Gen',
+    explanation: data.explanation,
+    correct: data.correct,
+    options: data.options,
+  };
+  //title is required
+  if (!data.title) {
+    setResponse({ titleError: 'Title is required' });
+    return { variables, valid: false };
+  }
+  //explanation is required
+  if (data.explanation.length < 10) {
+    setResponse({ explanationError: 'Explanation should be at least 10 characters long' });
+    return { variables, valid: false };
+  }
+  // options.left and options.right should have atleast 3 options
+  if (data.options.left.length < 3 || data.options.right.length < 3) {
+    setResponse({ optionsError: 'At least 3 options required in left and right side' });
+    return { variables, valid: false };
+  }
+  //option.center should have atleast 2 options
+  if (data.options.center.length < 2) {
+    setResponse({ optionsError: 'At least 2 options required in center' });
+    return { variables, valid: false };
+  }
+  //option.preDropText.right/left/center must not be empty
+  if (
+    !data.options.preDropText?.left ||
+    !data.options.preDropText?.right ||
+    !data.options.preDropText?.center
+  ) {
+    setResponse({ optionsError: 'All Pre drop text is required' });
+    return { variables, valid: false };
+  }
+  console.log('we are here.');
+  //option.columnTitle.right/left/center must not be empty
+  if (
+    !data.options.columnTitles?.left ||
+    !data.options.columnTitles?.right ||
+    !data.options.columnTitles?.center
+  ) {
+    setResponse({ optionsError: 'All Column Heading is required' });
+    return { variables, valid: false };
+  }
+  if (data.hasAssistanceColumn) {
+    if (!data.assistanceTitle) {
+      setResponse({ assiatanceError: 'Assistance title is required' });
+      return { variables, valid: false };
+    }
+    variables.assistanceColumn = { title: data.assistanceTitle };
+    if (data.hasTabsInAssistance) {
+      //
+      if (!data.tabsData.title.length) {
+        setResponse({ assiatanceError: 'At least one tab is required' });
+        return { variables, valid: false };
+      }
+      if (!data.tabsData.content.length) {
+        setResponse({ assiatanceError: 'At least one tab content is required' });
+        return { variables, valid: false };
+      }
+
+      variables.assistanceColumn.tabs = data.tabsData.title.map((title, index) => {
+        if (!title) {
+          setResponse({ assiatanceError: 'Tab title is required' });
+          return { variables, valid: false };
+        }
+        if (!data.tabsData.content[index]) {
+          setResponse({ assiatanceError: 'Tab content is required' });
+          return { variables, valid: false };
+        }
+        return {
+          title,
+          content: data.tabsData.content[index],
+        };
+      });
+    } else {
+      if (!data.assistanceData) {
+        setResponse({ assiatanceError: 'Assistance data is required' });
+        return { variables, valid: false };
+      }
+      variables.assistanceColumn.assistanceData = data.assistanceData;
+    }
+  }
+
+  return { variables, valid: true };
+};

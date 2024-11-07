@@ -7,7 +7,7 @@ import css from '@/pages/dashboard/everything.module.css';
 
 const QuestionDisplay = ({ props }: { props: any }) => {
   const { question, mode } = props;
-
+  console.log(question);
   return (
     <>
       <Page title="Question" h="80vh">

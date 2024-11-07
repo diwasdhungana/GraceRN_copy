@@ -3,6 +3,7 @@ import {
   Checkbox,
   Group,
   OptionsDropdown,
+  Paper,
   Radio,
   Select,
   Space,
@@ -27,7 +28,7 @@ const QuestionViewWithModes = ({ mode, data }) => {
       return <ExtDropDownwithModes data={data} mode={mode} />;
     case 'Drag and Drop':
       return <DragNDropwithModes data={data} mode={mode} />;
-    case 'BowTie':
+    case 'Bowtie':
       return <BowTiewithModes data={data} mode={mode} />;
     case 'Select all that apply':
       return <McqwithModes data={data} mode={mode} />;
@@ -35,6 +36,7 @@ const QuestionViewWithModes = ({ mode, data }) => {
       return null;
   }
 };
+export default QuestionViewWithModes;
 
 const SelectOnewithModes = ({ data, mode }) => {
   const [showExplanation, setShowExplanation] = useState(false);
@@ -298,6 +300,41 @@ const ExtDropDownwithModes = ({ data, mode }) => {
   );
 };
 
+const McqwithModes = ({ data, mode }) => {
+  const [showExplanation, setShowExplanation] = useState(false);
+
+  return (
+    <Stack gap="lg">
+      <div dangerouslySetInnerHTML={{ __html: data.title }} className={css.htmlContentDisplay} />
+
+      <Title order={3}>Options</Title>
+
+      <Stack gap="sm">
+        {data.options.map((option, index) => {
+          return (
+            <Group>
+              <Checkbox checked={data.correct.includes(index)} /> <Text>{option.value}</Text>
+            </Group>
+          );
+        })}
+      </Stack>
+      {!showExplanation ? (
+        <Group>
+          <Button onClick={() => setShowExplanation(!showExplanation)}>Submit</Button>
+        </Group>
+      ) : (
+        <Stack>
+          <Title order={2}> Explanation</Title>
+          <div
+            dangerouslySetInnerHTML={{ __html: data.explanation }}
+            className={css.htmlContentDisplay}
+          />
+        </Stack>
+      )}
+    </Stack>
+  );
+};
+
 const DragNDropwithModes = ({ data, mode }) => {
   console.log(data);
   // Function to render the content with answers in place
@@ -328,13 +365,13 @@ const DragNDropwithModes = ({ data, mode }) => {
                 key={index}
                 style={{
                   border: '2px solid #4CAF50',
-                  display: 'inline',
+                  display: 'inline-block',
                   backgroundColor: '#E8F5E9',
                   padding: '10px',
                   width: '300px',
                   minHeight: '40px',
                   borderRadius: '5px',
-                  margin: '0 5px',
+                  margin: '2px 5px',
                 }}
               >
                 {correctAnswer?.value || 'notfound'}
@@ -391,7 +428,7 @@ const DragNDropwithModes = ({ data, mode }) => {
             >
               <Text>{item.value}</Text>
               {data.correct.some((c) => c.textId === item.id) && (
-                <Text size="xl" c="green" ml="auto">
+                <Text size="25px" c="green" ml="auto">
                   ✓
                 </Text>
               )}
@@ -418,32 +455,228 @@ const DragNDropwithModes = ({ data, mode }) => {
 };
 
 const BowTiewithModes = ({ data, mode }) => {
-  return (
-    <div>
-      {data.title}
-      {mode}
-    </div>
-  );
-};
-
-const McqwithModes = ({ data, mode }) => {
+  console.log(data);
   const [showExplanation, setShowExplanation] = useState(false);
 
+  const DropZone = ({ id, content, preText }) => (
+    <Paper
+      bg={id.includes('Right') ? 'grape.1' : id.includes('Left') ? 'blue.1' : 'gray.1'}
+      w="100%"
+      h="100%"
+      style={{ cursor: 'pointer' }}
+    >
+      <Group justify="center" align="center" h="100%">
+        {content ? (
+          <Paper
+            w="90%"
+            h="80%"
+            bg={id.includes('Right') ? 'grape.5' : id.includes('Left') ? 'blue.5' : 'gray.4'}
+            p="sm"
+            radius="md"
+          >
+            <Stack align="center" justify="center" h="100%">
+              <Text size="md" ta="center" c={id.includes('center') ? 'black' : 'white'} fw={500}>
+                {content}
+              </Text>
+            </Stack>
+          </Paper>
+        ) : (
+          <Stack align="center" justify="center" h="100%" p="sm">
+            <Text size="sm" ta="center">
+              {preText}
+            </Text>
+          </Stack>
+        )}
+      </Group>
+    </Paper>
+  );
+
+  const DraggableItem = ({ item, columnType }) => (
+    <Paper
+      draggable
+      onDragStart={(e) => {
+        e.dataTransfer.setData('object', JSON.stringify(item));
+        e.dataTransfer.setData('columnType', columnType);
+      }}
+      bg={
+        columnType.includes('right') ? 'grape.5' : columnType.includes('left') ? 'blue.5' : 'gray.4'
+      }
+      p="sm"
+      mb="xs"
+      withBorder={
+        columnType === 'center'
+          ? data.correct.center.id === item.id
+            ? true
+            : false
+          : data.correct[columnType].find((c) => c.id === item.id)
+            ? true
+            : false
+      }
+      style={{ cursor: 'move', borderWidth: '3px', borderColor: 'green' }}
+    >
+      <Group justify="space-between">
+        <Text size="sm" c={columnType.includes('center') ? 'black' : 'white'} fw={500}>
+          {item.value}
+        </Text>
+        {columnType === 'center' ? (
+          data.correct.center.id === item.id ? (
+            <Text size="25px" c="black">
+              ✓
+            </Text>
+          ) : (
+            false
+          )
+        ) : data.correct[columnType].find((c) => c.id === item.id) ? (
+          <Text size="25px" c="white">
+            ✓
+          </Text>
+        ) : (
+          false
+        )}
+        {/* {item.lifted ? (
+          <Text size="sm" c="red">
+            ✗
+          </Text>
+        ) : (
+          <Text size="sm" c="green">
+            ✓
+          </Text>
+        )} */}
+      </Group>
+    </Paper>
+  );
+
+  const WordChoices = ({ title, items, columnType }) => (
+    <Paper shadow="xs" p="md" w={210} radius="md">
+      <Group justify="center" mb="sm">
+        <Title order={5}>{title}</Title>
+      </Group>
+      <Stack gap="xs">
+        {items
+          .filter((item) => !item.lifted)
+          .map((item) => (
+            <DraggableItem key={item.id} item={item} columnType={columnType} />
+          ))}
+      </Stack>
+    </Paper>
+  );
   return (
     <Stack gap="lg">
       <div dangerouslySetInnerHTML={{ __html: data.title }} className={css.htmlContentDisplay} />
 
-      <Title order={3}>Options</Title>
+      <Group justify="center" mt="xl">
+        <Stack>
+          <Paper pos="relative" w="45vw" h="40vh" p="xl" withBorder>
+            <div
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '30%',
+                width: '3px',
+                height: '40%',
+                backgroundColor: '#339af0',
+                transform: 'translate(-50%, -100%) rotate(-45deg)',
+                zIndex: 0,
+              }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                top: '50%',
+                right: '30%',
+                width: '3px',
+                height: '40%',
+                backgroundColor: '#cc5de8',
+                transform: 'translate(-50%, -100%) rotate(45deg)',
+                zIndex: 0,
+              }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '30%',
+                width: '3px',
+                height: '40%',
+                backgroundColor: '#339af0',
+                transform: 'translate(-50%, 0%) rotate(45deg)',
+                zIndex: 0,
+              }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                top: '50%',
+                right: '30%',
+                width: '3px',
+                height: '40%',
+                backgroundColor: '#cc5de8',
+                transform: 'translate(-50%, 0%) rotate(-45deg)',
+                zIndex: 0,
+              }}
+            />
+            <Paper pos="absolute" top={15} left={15} w="35%" h="20%">
+              <DropZone
+                id="topLeft"
+                content={data.correct.left[0].value}
+                preText={data.options.preDropText.left}
+              />
+            </Paper>
+            <Paper pos="absolute" bottom={15} left={15} w="35%" h="20%">
+              <DropZone
+                id="bottomLeft"
+                content={data.correct.left[1].value}
+                preText={data.options.preDropText.left}
+              />
+            </Paper>
+            <Paper
+              pos="absolute"
+              style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
+              w="35%"
+              h="20%"
+            >
+              <DropZone
+                id="center"
+                content={data.correct.center.value}
+                preText={data.options.preDropText.center}
+              />
+            </Paper>
+            <Paper pos="absolute" top={15} right={15} w="35%" h="20%">
+              <DropZone
+                id="topRight"
+                content={data.correct.right[0].value}
+                preText={data.options.preDropText.right}
+              />
+            </Paper>
+            <Paper pos="absolute" bottom={15} right={15} w="35%" h="20%">
+              <DropZone
+                id="bottomRight"
+                content={data.correct.right[1].value}
+                preText={data.options.preDropText.right}
+              />
+            </Paper>
+          </Paper>
+          <Group align="flex-start" justify="space-between" gap="xl">
+            <WordChoices
+              title={data.options.columnTitles.left}
+              items={data.options.left}
+              columnType="left"
+            />
 
-      <Stack gap="sm">
-        {data.options.map((option, index) => {
-          return (
-            <Group>
-              <Checkbox checked={data.correct.includes(index)} /> <Text>{option.value}</Text>
-            </Group>
-          );
-        })}
-      </Stack>
+            <WordChoices
+              title={data.options.columnTitles.center}
+              items={data.options.center}
+              columnType="center"
+            />
+
+            <WordChoices
+              title={data.options.columnTitles.right}
+              items={data.options.right}
+              columnType="right"
+            />
+          </Group>
+        </Stack>
+      </Group>
       {!showExplanation ? (
         <Group>
           <Button onClick={() => setShowExplanation(!showExplanation)}>Submit</Button>
@@ -460,5 +693,3 @@ const McqwithModes = ({ data, mode }) => {
     </Stack>
   );
 };
-
-export default QuestionViewWithModes;

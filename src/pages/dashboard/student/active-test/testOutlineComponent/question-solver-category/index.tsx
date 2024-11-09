@@ -245,18 +245,21 @@ const MatrixNGridwithModes = ({ data, mode }: { data: any; mode: any }) => {
 const HighlightwithModes = ({ data, mode }: { data: any; mode: any }) => {
   const [showExplanation, setShowExplanation] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null); // To reference the content div
-  const [answers, setAnswers] = useState([]);
+  const [answers, setAnswers] = useState<{ text: string; index: number }[]>([]);
   const { colorScheme } = useMantineColorScheme();
 
   useEffect(() => {
-    const elements = contentRef?.current.querySelectorAll('.highlight');
-    elements.forEach((element, index) => {
-      element.onmouseover = () => handleMouseOver(element.innerText, index);
-      element.onmouseout = () => handleMouseOut(element.innerText, index);
-      element.onclick = () => handleClick(element.innerText, index);
+    const elements = contentRef?.current?.querySelectorAll('.highlight');
+    elements?.forEach((element, index) => {
+      (element as HTMLElement).onmouseover = () =>
+        handleMouseOver((element as HTMLElement).innerText, index);
+      (element as HTMLElement).onmouseout = () =>
+        handleMouseOut((element as HTMLElement).innerText, index);
+      (element as HTMLElement).onclick = () =>
+        handleClick((element as HTMLElement).innerText, index);
       // element.style.backgroundColor = 'rgba(255, 255, 0, 0.2)';
-      element.style.display = 'inline';
-      element.style.cursor = 'pointer';
+      (element as HTMLElement).style.display = 'inline';
+      (element as HTMLElement).style.cursor = 'pointer';
       // const found = data.correct.findIndex((item) => item.value === element.innerText);
       // if (found !== -1) {
       //   element.style.backgroundColor = 'yellow';
@@ -265,26 +268,32 @@ const HighlightwithModes = ({ data, mode }: { data: any; mode: any }) => {
     });
   });
 
-  const handleMouseOver = (text, index) => {
+  const handleMouseOver = (text: string, index: number) => {
     const newCorrect = answers;
-    const elements = contentRef.current.querySelectorAll('.highlight');
-    elements.forEach((element, i) => {
-      if (newCorrect.findIndex((item) => item.index === i) === -1 && element.innerHTML === text) {
-        element.style.backgroundColor = 'rgba(255, 255, 0, 0.2)';
+    const elements = contentRef?.current?.querySelectorAll('.highlight');
+    elements?.forEach((element, i) => {
+      if (
+        newCorrect.findIndex((item) => item?.index === i) === -1 &&
+        (element as HTMLElement).innerHTML === text
+      ) {
+        (element as HTMLElement).style.backgroundColor = 'rgba(255, 255, 0, 0.2)';
       }
     });
   };
-  const handleMouseOut = (text, index) => {
+  const handleMouseOut = (text: string, index: number) => {
     const newCorrect = answers;
-    const elements = contentRef.current.querySelectorAll('.highlight');
-    elements.forEach((element, i) => {
-      if (newCorrect.findIndex((item) => item.index === i) === -1 && element.innerHTML === text) {
-        element.style.backgroundColor = 'transparent';
+    const elements = contentRef?.current?.querySelectorAll('.highlight');
+    elements?.forEach((element, i) => {
+      if (
+        newCorrect.findIndex((item) => item.index === i) === -1 &&
+        (element as HTMLElement).innerHTML === text
+      ) {
+        (element as HTMLElement).style.backgroundColor = 'transparent';
       }
     });
   };
 
-  const handleClick = (text, index) => {
+  const handleClick = (text: string, index: number) => {
     const newCorrect = answers;
     const found = newCorrect.findIndex((item) => item.text === text);
     if (found === -1) {
@@ -294,15 +303,15 @@ const HighlightwithModes = ({ data, mode }: { data: any; mode: any }) => {
     }
     setAnswers(newCorrect);
 
-    const elements = contentRef.current.querySelectorAll('.highlight');
-    elements.forEach((element, i) => {
+    const elements = contentRef?.current?.querySelectorAll('.highlight');
+    elements?.forEach((element, i) => {
       if (newCorrect.findIndex((item) => item.index === i) !== -1) {
-        element.style.backgroundColor = 'yellow';
-        element.style.color = 'black';
+        (element as HTMLElement).style.backgroundColor = 'yellow';
+        (element as HTMLElement).style.color = 'black';
       } else {
         // translucent yellow
-        element.style.backgroundColor = 'transparent';
-        element.style.color =
+        (element as HTMLElement).style.backgroundColor = 'transparent';
+        (element as HTMLElement).style.color =
           colorScheme === 'light' ? 'rgba(0, 0, 0, 0.85)' : 'rgba(255, 255, 255, 0.85)';
       }
     });
@@ -338,9 +347,19 @@ const HighlightwithModes = ({ data, mode }: { data: any; mode: any }) => {
 const ExtDropDownwithModes = ({ data, mode }: { data: any; mode: any }) => {
   const [showExplanation, setShowExplanation] = useState(false);
 
-  const groupOptions = (options) => {
+  const groupOptions = (
+    options: {
+      id: string;
+      type: string;
+      value: [];
+    }[]
+  ) => {
     const groups = [];
-    let currentGroup = [];
+    let currentGroup: {
+      id: string;
+      type: string;
+      value: [];
+    }[] = [];
 
     options.forEach((option) => {
       if (option.type === 'next-line') {
@@ -375,13 +394,16 @@ const ExtDropDownwithModes = ({ data, mode }: { data: any; mode: any }) => {
               ) : option.type === 'dropdown' ? (
                 <>
                   <Select
-                    data={option.value.map((o) => ({
+                    data={option?.value?.map((o) => ({
                       value: o,
                       label: o,
                       disabled: mode == 'admin' ? true : false,
                     }))}
                     key={option.id}
-                    defaultValue={data.correct.find((c) => c.id === option.id).value}
+                    defaultValue={
+                      data.correct.find((o: { id: string; value: string }) => o.id === option.id)
+                        .value
+                    }
                   />
                   &#160;&#160;
                 </>
@@ -418,13 +440,20 @@ const McqwithModes = ({ data, mode }: { data: any; mode: any }) => {
       <Title order={3}>Options</Title>
 
       <Stack gap="sm">
-        {data.options.map((option, index) => {
-          return (
-            <Group>
-              <Checkbox checked={data.correct.includes(index)} /> <Text>{option.value}</Text>
-            </Group>
-          );
-        })}
+        {data.options.map(
+          (
+            option: {
+              value: string;
+            },
+            index: number
+          ) => {
+            return (
+              <Group>
+                <Checkbox checked={data.correct.includes(index)} /> <Text>{option.value}</Text>
+              </Group>
+            );
+          }
+        )}
       </Stack>
       {!showExplanation ? (
         <Group>
@@ -456,17 +485,19 @@ const DragNDropwithModes = ({ data, mode }: { data: any; mode: any }) => {
     tempDiv.innerHTML = data.options.title;
 
     // Function to process nodes and replace drop-containers
-    const processNodes = (parentElement) => {
-      return Array.from(parentElement.childNodes).map((node, index) => {
+    const processNodes = (parentElement: HTMLElement): any => {
+      return Array.from(parentElement.childNodes).map((node, index: number) => {
         if (node.nodeType === Node.TEXT_NODE) {
           // Text node
           return <span key={index}>{node.textContent}</span>;
         } else if (node.nodeType === Node.ELEMENT_NODE) {
-          if (node.classList.contains('drop-container')) {
+          if ((node as HTMLElement)?.classList.contains('drop-container')) {
             // Drop zone element
-            const containerId = node.getAttribute('data-id');
+            const containerId = (node as HTMLElement)?.getAttribute('data-id');
 
-            const correctAnswer = data.correct.find((answer) => answer.containerId === containerId);
+            const correctAnswer = data.correct.find(
+              (answer: { containerId: string }) => answer.containerId === containerId
+            );
 
             return (
               <div
@@ -491,7 +522,7 @@ const DragNDropwithModes = ({ data, mode }: { data: any; mode: any }) => {
               // <node.tagName.toLowerCase() key={index}>
               //   {processNodes(node)}
               // </node.tagName.toLowerCase()>
-              processNodes(node)
+              processNodes(node as HTMLElement)
             );
           }
         }
@@ -522,20 +553,20 @@ const DragNDropwithModes = ({ data, mode }: { data: any; mode: any }) => {
         </Group>
 
         <Stack p="md" gap="sm">
-          {data.options?.dragables?.map((item) => (
+          {data.options?.dragables?.map((item: { id: string; value: string }) => (
             <Group
               key={item.id}
               p="sm"
               bg="gray.2"
               style={{
                 borderRadius: '5px',
-                border: data.correct.some((c) => c.textId === item.id)
+                border: data.correct.some((c: any) => c.textId === item.id)
                   ? '2px solid #4CAF50'
                   : '1px solid #ddd',
               }}
             >
               <Text>{item.value}</Text>
-              {data.correct.some((c) => c.textId === item.id) && (
+              {data.correct.some((c: any) => c.textId === item.id) && (
                 <Text size="25px" c="green" ml="auto">
                   ✓
                 </Text>
@@ -566,7 +597,7 @@ const BowTiewithModes = ({ data, mode }: { data: any; mode: any }) => {
   console.log(data);
   const [showExplanation, setShowExplanation] = useState(false);
 
-  const DropZone = ({ id, content, preText }) => (
+  const DropZone = ({ id, content, preText }: { id: string; content: string; preText: string }) => (
     <Paper
       bg={id.includes('Right') ? 'grape.1' : id.includes('Left') ? 'blue.1' : 'gray.1'}
       w="100%"
@@ -599,7 +630,7 @@ const BowTiewithModes = ({ data, mode }: { data: any; mode: any }) => {
     </Paper>
   );
 
-  const DraggableItem = ({ item, columnType }) => (
+  const DraggableItem = ({ item, columnType }: { item: any; columnType: string }) => (
     <Paper
       draggable
       onDragStart={(e) => {
@@ -616,7 +647,7 @@ const BowTiewithModes = ({ data, mode }: { data: any; mode: any }) => {
           ? data.correct.center.id === item.id
             ? true
             : false
-          : data.correct[columnType].find((c) => c.id === item.id)
+          : data.correct[columnType].find((c: any) => c.id === item.id)
             ? true
             : false
       }
@@ -634,7 +665,7 @@ const BowTiewithModes = ({ data, mode }: { data: any; mode: any }) => {
           ) : (
             false
           )
-        ) : data.correct[columnType].find((c) => c.id === item.id) ? (
+        ) : data.correct[columnType].find((c: any) => c.id === item.id) ? (
           <Text size="25px" c="white">
             ✓
           </Text>
@@ -654,15 +685,23 @@ const BowTiewithModes = ({ data, mode }: { data: any; mode: any }) => {
     </Paper>
   );
 
-  const WordChoices = ({ title, items, columnType }) => (
+  const WordChoices = ({
+    title,
+    items,
+    columnType,
+  }: {
+    title: string;
+    items: any;
+    columnType: string;
+  }) => (
     <Paper shadow="xs" p="md" w={210} radius="md">
       <Group justify="center" mb="sm">
         <Title order={5}>{title}</Title>
       </Group>
       <Stack gap="xs">
         {items
-          .filter((item) => !item.lifted)
-          .map((item) => (
+          .filter((item: { lifted: boolean }) => !item.lifted)
+          .map((item: { id: string }) => (
             <DraggableItem key={item.id} item={item} columnType={columnType} />
           ))}
       </Stack>

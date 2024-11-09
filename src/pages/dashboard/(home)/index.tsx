@@ -12,7 +12,13 @@ export default function HomePage() {
   const handleGotoAdminPanel = () => {
     navigate(paths.dashboard.admin.root);
   };
-  const user = useSelector((state) => state.provider.user);
+  const user = useSelector(
+    (state: {
+      provider: {
+        user: any;
+      };
+    }) => state.provider.user
+  );
   useEffect(() => {
     if (user) {
       console.log(user);

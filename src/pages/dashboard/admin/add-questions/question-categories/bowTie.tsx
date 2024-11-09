@@ -53,10 +53,10 @@ export const BowTie = ({ dataTunnel, response, setResponse }: any) => {
     bottomRight: { id: 'bottomRight', content: '', contentId: null, allowedColumn: 'right' },
   });
 
-  const handleDrop = (e, zoneId) => {
+  const handleDrop = (e: any, zoneId: keyof typeof dropZones) => {
     e.preventDefault();
     const draggedItem = JSON.parse(e.dataTransfer.getData('object'));
-    const columnType = e.dataTransfer.getData('columnType');
+    const columnType: 'left' | 'center' | 'right' = e.dataTransfer.getData('columnType');
 
     if (dropZones[zoneId].allowedColumn !== columnType) {
       return;
@@ -95,7 +95,7 @@ export const BowTie = ({ dataTunnel, response, setResponse }: any) => {
     );
   };
 
-  const handleClear = (zoneId) => {
+  const handleClear = (zoneId: keyof typeof dropZones) => {
     const zone = dropZones[zoneId];
     if (!zone.contentId) return;
 
@@ -105,21 +105,21 @@ export const BowTie = ({ dataTunnel, response, setResponse }: any) => {
       right: setRightItems,
     };
 
-    setterMap[zone.allowedColumn]((items) =>
-      items.map((item) => (item.id === zone.contentId ? { ...item, lifted: false } : item))
+    setterMap[zone.allowedColumn as 'left' | 'center' | 'right']((items: any) =>
+      items.map((item: any) => (item.id === zone.contentId ? { ...item, lifted: false } : item))
     );
 
-    setDropZones((prev) => ({
+    setDropZones((prev: any) => ({
       ...prev,
       [zoneId]: { ...prev[zoneId], content: '', contentId: null },
     }));
   };
 
-  const DropZone = ({ id, content, preText }) => (
+  const DropZone = ({ id, content, preText }: { id: string; content: string; preText: string }) => (
     <Paper
       onDragOver={(e) => e.preventDefault()}
-      onDrop={(e) => handleDrop(e, id)}
-      onClick={() => handleClear(id)}
+      onDrop={(e) => handleDrop(e, id as any)}
+      onClick={() => handleClear(id as any)}
       bg={id.includes('Right') ? 'grape.1' : id.includes('Left') ? 'blue.1' : 'gray.1'}
       w="100%"
       h="100%"
@@ -151,7 +151,15 @@ export const BowTie = ({ dataTunnel, response, setResponse }: any) => {
     </Paper>
   );
 
-  const DraggableItem = ({ item, columnType, setItems }) => (
+  const DraggableItem = ({
+    item,
+    columnType,
+    setItems,
+  }: {
+    item: { id: string; text: string; lifted: boolean };
+    columnType: string;
+    setItems: any;
+  }) => (
     <Paper
       draggable
       onDragStart={(e) => {
@@ -172,7 +180,22 @@ export const BowTie = ({ dataTunnel, response, setResponse }: any) => {
     </Paper>
   );
 
-  const WordChoices = ({ title, items, setItems, columnType }) => (
+  const WordChoices = ({
+    title,
+    items,
+    setItems,
+    columnType,
+  }: {
+    title: string;
+    items: {
+      id: string;
+      text: string;
+      lifted: boolean;
+    }[];
+
+    setItems: any;
+    columnType: string;
+  }) => (
     <Paper shadow="xs" p="md" w={210} radius="md">
       {/* <Group justify="center" mb="sm">{title}</Group> */}
       <Stack gap="xs">
@@ -193,7 +216,7 @@ export const BowTie = ({ dataTunnel, response, setResponse }: any) => {
                 w="10%"
                 mb="sm"
                 onClick={() => {
-                  setItems((prev) => prev.filter((i) => i.id !== item.id));
+                  setItems((prev: any) => prev.filter((i: any) => i.id !== item.id));
                 }}
               >
                 {' '}
@@ -215,7 +238,7 @@ export const BowTie = ({ dataTunnel, response, setResponse }: any) => {
         <NumberInput
           label="Points (1-20)"
           value={points}
-          onChange={(val) => setPoints(val)}
+          onChange={(val) => setPoints(val as number)}
           min={1}
           max={20}
         />

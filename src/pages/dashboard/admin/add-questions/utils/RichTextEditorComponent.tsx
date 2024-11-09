@@ -30,7 +30,15 @@ import {
 } from 'react-icons/tb';
 import { notifications } from '@mantine/notifications';
 
-export function RichTextEditorComponent({ content, setContent, index }) {
+export function RichTextEditorComponent({
+  content,
+  setContent,
+  index,
+}: {
+  content: string;
+  setContent: (item: any, index: number) => void;
+  index: number;
+}): JSX.Element {
   const { mutate: uploadImage, isPending: uploadImagePending } = useFileUpload();
   const editor = useEditor({
     extensions: [
@@ -62,7 +70,7 @@ export function RichTextEditorComponent({ content, setContent, index }) {
     ],
     content,
     onUpdate: ({ editor }) => {
-      setContent(editor.getHTML(), index);
+      setContent(editor.getHTML(), index ? index : 0);
     },
   });
 
@@ -110,9 +118,10 @@ export function RichTextEditorComponent({ content, setContent, index }) {
     input.accept = 'image/*';
 
     input.onchange = async (e) => {
-      if (!e.target.files?.length) return;
+      const target = e.target as HTMLInputElement;
+      if (!target?.files?.length) return;
 
-      const file = e.target.files[0];
+      const file = target.files[0];
       console.log('file', file);
       const formData = new FormData();
       formData.append('file', file);
@@ -134,30 +143,11 @@ export function RichTextEditorComponent({ content, setContent, index }) {
           },
         }
       );
-
-      // try {
-      //   // Replace this with your actual image upload API endpoint
-      //   const response = await fetch('/api/upload-image', {
-      //     method: 'POST',
-      //     body: formData,
-      //   });
-
-      //   if (!response.ok) throw new Error('Upload failed');
-
-      //   const data = await response.json();
-      //   // Insert the image URL returned from your server
-      //   editor?.chain().focus().setImage({ src: data.imageUrl }).run();
-      // } catch (error) {
-      //   console.error('Image upload failed:', error);
-      //   // Handle error (show notification, etc.)
-      // }
+      input.click();
     };
-
-    input.click();
   };
-
   return (
-    <>
+    <div>
       <RichTextEditor editor={editor} aria-disabled={uploadImagePending}>
         <RichTextEditor.Toolbar sticky stickyOffset={60}>
           {/* Existing control groups */}
@@ -269,49 +259,6 @@ export function RichTextEditorComponent({ content, setContent, index }) {
         </RichTextEditor.Toolbar>
         <RichTextEditor.Content />
       </RichTextEditor>
-    </>
+    </div>
   );
 }
-
-// pages/api/upload-image.js
-// import formidable from 'formidable';
-// import { v4 as uuidv4 } from 'uuid';
-// import path from 'path';
-// import fs from 'fs';
-
-// export const config = {
-//   api: {
-//     bodyParser: false,
-//   },
-// };
-
-// export default async function handler(req, res) {
-//   if (req.method !== 'POST') {
-//     return res.status(405).json({ message: 'Method not allowed' });
-//   }
-
-//   try {
-//     const form = new formidable.IncomingForm();
-//     form.uploadDir = path.join(process.cwd(), 'public/uploads');
-//     form.keepExtensions = true;
-
-//     form.parse(req, (err, fields, files) => {
-//       if (err) {
-//         return res.status(500).json({ message: 'Upload failed' });
-//       }
-
-//       const file = files.image;
-//       const fileName = `${uuidv4()}${path.extname(file.originalFilename)}`;
-//       const newPath = path.join(form.uploadDir, fileName);
-
-//       fs.renameSync(file.filepath, newPath);
-
-//       res.status(200).json({
-//         imageUrl: `/uploads/${fileName}`,
-//       });
-//     });
-//   } catch (error) {
-//     console.error('Upload error:', error);
-//     res.status(500).json({ message: 'Upload failed' });
-//   }
-// }

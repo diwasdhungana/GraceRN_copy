@@ -42,7 +42,7 @@ const ViewQuesitons = () => {
     },
   });
   const totalPages = Questions ? Math.ceil(Questions.data.totalDocs / limit) : 0;
-  const deleteQuestion = (id, name) => {
+  const deleteQuestion = (id: string, name: string) => {
     modals.openConfirmModal({
       title: 'Delete selected Question?',
       centered: true,
@@ -70,63 +70,79 @@ const ViewQuesitons = () => {
         <Paper radius="lg">
           <Stack px="md">
             {Questions &&
-              Questions?.data?.docs?.map((eeutaQuestion, index) => {
-                return (
-                  <Paper key={index} px="xl" radius="sm" shadow="none" withBorder>
-                    <Group justify="space-between">
-                      <Stack w="95%">
-                        <Group>
-                          <Text>{Questions.data.totalDocs - index - (page - 1) * limit}.</Text>
+              Questions?.data?.docs?.map(
+                (
+                  eeutaQuestion: {
+                    _id: string;
+                    title: string;
+                    number: number;
+                    type: string;
+                    kind: string;
+                    subject: { name: string };
+                    system: { name: string };
+                    points: number;
+                  },
+                  index: number
+                ) => {
+                  return (
+                    <Paper key={index} px="xl" radius="sm" shadow="none" withBorder>
+                      <Group justify="space-between">
+                        <Stack w="95%">
+                          <Group>
+                            <Text>{Questions.data.totalDocs - index - (page - 1) * limit}.</Text>
 
-                          <div
-                            className={css.htmlContentDisplay}
-                            dangerouslySetInnerHTML={{ __html: eeutaQuestion?.title }}
-                            onClick={() =>
-                              navigate(paths.dashboard.admin.viewQuestions.root + eeutaQuestion._id)
-                            }
-                            style={{ cursor: 'pointer' }}
-                          />
-                        </Group>
-                        <Group mb="xs" justify="space-between" w="100%">
-                          <Group>
-                            <Badge color="purple" variant="light">
-                              {eeutaQuestion.number?.toString() || 'Question number'}
-                            </Badge>
-                            <Badge color="blue" variant="light">
-                              {eeutaQuestion.type}
-                            </Badge>
-                            <Badge color="green" variant="light">
-                              {eeutaQuestion.kind}
-                            </Badge>
+                            <div
+                              className={css.htmlContentDisplay}
+                              dangerouslySetInnerHTML={{ __html: eeutaQuestion?.title }}
+                              onClick={() =>
+                                navigate(
+                                  paths.dashboard.admin.viewQuestions.root + eeutaQuestion._id
+                                )
+                              }
+                              style={{ cursor: 'pointer' }}
+                            />
                           </Group>
-                          <Group>
-                            <Badge color="red" variant="light">
-                              {eeutaQuestion?.subject?.name || 'subject'}
-                            </Badge>
-                            <Badge color="orange" variant="light">
-                              {eeutaQuestion?.system?.name || 'system'}
-                            </Badge>
-                            <Badge color="black" variant="light">
-                              points : {eeutaQuestion?.points || 'system'}
-                            </Badge>
+                          <Group mb="xs" justify="space-between" w="100%">
+                            <Group>
+                              <Badge color="purple" variant="light">
+                                {eeutaQuestion.number?.toString() || 'Question number'}
+                              </Badge>
+                              <Badge color="blue" variant="light">
+                                {eeutaQuestion.type}
+                              </Badge>
+                              <Badge color="green" variant="light">
+                                {eeutaQuestion.kind}
+                              </Badge>
+                            </Group>
+                            <Group>
+                              <Badge color="red" variant="light">
+                                {eeutaQuestion?.subject?.name || 'subject'}
+                              </Badge>
+                              <Badge color="orange" variant="light">
+                                {eeutaQuestion?.system?.name || 'system'}
+                              </Badge>
+                              <Badge color="black" variant="light">
+                                points : {eeutaQuestion?.points || 'system'}
+                              </Badge>
+                            </Group>
                           </Group>
-                        </Group>
-                      </Stack>
-                      <Button
-                        variant="subtle"
-                        bg="none"
-                        size="xs"
-                        radius="10"
-                        onClick={() => {
-                          deleteQuestion(eeutaQuestion._id, eeutaQuestion.title);
-                        }}
-                      >
-                        <PiTrashBold size="30px" color="red" style={{ margin: '5px' }} />
-                      </Button>
-                    </Group>
-                  </Paper>
-                );
-              })}
+                        </Stack>
+                        <Button
+                          variant="subtle"
+                          bg="none"
+                          size="xs"
+                          radius="10"
+                          onClick={() => {
+                            deleteQuestion(eeutaQuestion._id, eeutaQuestion.title);
+                          }}
+                        >
+                          <PiTrashBold size="30px" color="red" style={{ margin: '5px' }} />
+                        </Button>
+                      </Group>
+                    </Paper>
+                  );
+                }
+              )}
           </Stack>
           <Group justify="center">
             <Pagination

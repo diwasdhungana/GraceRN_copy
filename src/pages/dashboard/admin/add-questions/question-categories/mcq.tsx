@@ -54,7 +54,7 @@ export const Mcq = ({ dataTunnel, response, setResponse }: any) => {
       <RichTextEditorComponent
         content={title}
         setContent={(item, index) => {
-          setTitle(item, index);
+          setTitle(item);
         }}
         index={0}
       />
@@ -118,7 +118,7 @@ export const Mcq = ({ dataTunnel, response, setResponse }: any) => {
       <RichTextEditorComponent
         content={explanation}
         setContent={(item, index) => {
-          setExplanation(item, index);
+          setExplanation(item);
         }}
         index={0}
       />

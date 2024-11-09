@@ -157,91 +157,6 @@ const SelectOnewithModes = ({ data, mode }: { data: any; mode: any }) => {
     </Stack>
   );
 };
-
-const MatrixNGridwithModes = ({ data, mode }: { data: any; mode: any }) => {
-  const [showExplanation, setShowExplanation] = useState(false);
-  return (
-    <Stack gap="lg">
-      <div dangerouslySetInnerHTML={{ __html: data.title }} />
-
-      <Stack gap="sm" mt="md">
-        <Table verticalSpacing="lg">
-          <Table.Thead>
-            <Table.Tr ta="center">
-              {data.options.head.map((head: string) => (
-                <Table.Td>
-                  <Text> {head}</Text>
-                </Table.Td>
-              ))}
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>
-            {data.options.rows.map((rowName: string, indexR: number) => (
-              <Table.Tr key={indexR} ta="center">
-                <Table.Td>
-                  <Text>{rowName}</Text>
-                </Table.Td>
-                {data.options.head.map(
-                  (head: string, index: number) =>
-                    index > 0 && (
-                      <Table.Td
-                        key={index}
-                        style={{
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}
-                      >
-                        {data.radio === true ? (
-                          <Group justify="center">
-                            <Radio
-                              type="radio"
-                              name={`selectOptions${indexR}`}
-                              checked={
-                                data.correct.filter(
-                                  (n: any) => n.key == rowName && n.values.includes(head)
-                                ).length == 1
-                              }
-                            />
-                          </Group>
-                        ) : (
-                          <Group justify="center">
-                            <Checkbox
-                              type="checkbox"
-                              name={`selectOptions${indexR}`}
-                              checked={
-                                data.correct.filter(
-                                  (n: any) => n.key == rowName && n.values.includes(head)
-                                ).length == 1
-                              }
-                            />
-                          </Group>
-                        )}
-                      </Table.Td>
-                    )
-                )}
-              </Table.Tr>
-            ))}
-          </Table.Tbody>
-        </Table>
-      </Stack>
-
-      {!showExplanation ? (
-        <Group>
-          <Button onClick={() => setShowExplanation(!showExplanation)}>Submit</Button>
-        </Group>
-      ) : (
-        <Stack>
-          <Title order={2}> Explanation</Title>
-          <div
-            dangerouslySetInnerHTML={{ __html: data.explanation }}
-            className={css.htmlContentDisplay}
-          />
-        </Stack>
-      )}
-    </Stack>
-  );
-};
-
 const HighlightwithModes = ({ data, mode }: { data: any; mode: any }) => {
   const [showExplanation, setShowExplanation] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null); // To reference the content div
@@ -327,6 +242,90 @@ const HighlightwithModes = ({ data, mode }: { data: any; mode: any }) => {
           // className={css.htmlContentDisplay}
         />
       </Group>
+      {!showExplanation ? (
+        <Group>
+          <Button onClick={() => setShowExplanation(!showExplanation)}>Submit</Button>
+        </Group>
+      ) : (
+        <Stack>
+          <Title order={2}> Explanation</Title>
+          <div
+            dangerouslySetInnerHTML={{ __html: data.explanation }}
+            className={css.htmlContentDisplay}
+          />
+        </Stack>
+      )}
+    </Stack>
+  );
+};
+
+const MatrixNGridwithModes = ({ data, mode }: { data: any; mode: any }) => {
+  const [showExplanation, setShowExplanation] = useState(false);
+  return (
+    <Stack gap="lg">
+      <div dangerouslySetInnerHTML={{ __html: data.title }} />
+
+      <Stack gap="sm" mt="md">
+        <Table verticalSpacing="lg">
+          <Table.Thead>
+            <Table.Tr ta="center">
+              {data.options.head.map((head: string) => (
+                <Table.Td>
+                  <Text> {head}</Text>
+                </Table.Td>
+              ))}
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>
+            {data.options.rows.map((rowName: string, indexR: number) => (
+              <Table.Tr key={indexR} ta="center">
+                <Table.Td>
+                  <Text>{rowName}</Text>
+                </Table.Td>
+                {data.options.head.map(
+                  (head: string, index: number) =>
+                    index > 0 && (
+                      <Table.Td
+                        key={index}
+                        style={{
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                      >
+                        {data.radio === true ? (
+                          <Group justify="center">
+                            <Radio
+                              type="radio"
+                              name={`selectOptions${indexR}`}
+                              checked={
+                                data.correct.filter(
+                                  (n: any) => n.key == rowName && n.values.includes(head)
+                                ).length == 1
+                              }
+                            />
+                          </Group>
+                        ) : (
+                          <Group justify="center">
+                            <Checkbox
+                              type="checkbox"
+                              name={`selectOptions${indexR}`}
+                              checked={
+                                data.correct.filter(
+                                  (n: any) => n.key == rowName && n.values.includes(head)
+                                ).length == 1
+                              }
+                            />
+                          </Group>
+                        )}
+                      </Table.Td>
+                    )
+                )}
+              </Table.Tr>
+            ))}
+          </Table.Tbody>
+        </Table>
+      </Stack>
+
       {!showExplanation ? (
         <Group>
           <Button onClick={() => setShowExplanation(!showExplanation)}>Submit</Button>

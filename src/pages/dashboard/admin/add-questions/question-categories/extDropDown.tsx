@@ -29,14 +29,15 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }: any) => {
   const [title, setTitle] = useState('');
   const [explanation, setExplanation] = useState('');
   const [points, setPoints] = useState(5);
-  const [correctAnswer, setCorrectAnswer] = useState([]); // eg [{id:"sfdsidflsk", value : "option 1" }]
-  const [focusedId, setFocusedId] = useState(null); // Now using focusedId instead of index
+  const [correctAnswer, setCorrectAnswer] = useState<{ id: string; value: string }[]>(); // eg [{id:"sfdsidflsk", value : "option 1" }]
 
-  const handleFocus = (id) => {
+  const [focusedId, setFocusedId] = useState<null | string>(null); // Now using focusedId instead of index
+
+  const handleFocus = (id: string) => {
     setFocusedId(id); // Update focused option by id on focus
   };
 
-  const moveCaretToEnd = (id) => {
+  const moveCaretToEnd = (id: string) => {
     const selection = window.getSelection();
     const range = document.createRange();
     const editorElement = editorRefs.current.get(id);
@@ -44,8 +45,8 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }: any) => {
     if (editorElement) {
       range.selectNodeContents(editorElement);
       range.collapse(false); // Move caret to the end
-      selection.removeAllRanges();
-      selection.addRange(range);
+      selection?.removeAllRanges();
+      selection?.addRange(range);
     }
   };
 
@@ -55,9 +56,21 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }: any) => {
     }
   }, [options, focusedId]);
 
-  const groupOptions = (options) => {
+  const groupOptions = (
+    options: {
+      type: string;
+      value: string | string[];
+      name: string;
+      id: string;
+    }[]
+  ) => {
     const groups = [];
-    let currentGroup = [];
+    let currentGroup: {
+      id: string;
+      type: string;
+      value: string | string[];
+      name: string;
+    }[] = [];
 
     options.forEach((option) => {
       if (option.type === 'next-line') {
@@ -113,7 +126,7 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }: any) => {
                       onFocus={() => handleFocus(option.id)}
                       onInput={(event) => {
                         const input = event.currentTarget.innerHTML;
-                        setFocusedId(option.id); // Update the focused id
+                        setFocusedId(option?.id); // Update the focused id
                         setOptions((prevOptions) =>
                           prevOptions.map((opt) =>
                             opt.id === option.id ? { ...opt, value: input } : opt
@@ -124,12 +137,12 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }: any) => {
                   </Group>
                 ) : option.type === 'dropdown' ? (
                   <ComboBoxComponent
-                    option={option}
-                    setOptions={setOptions}
-                    options={options}
+                    option={option as any}
+                    setOptions={setOptions as any}
+                    options={options as any}
                     id={option.id}
-                    correctAnswer={correctAnswer}
-                    setCorrectAnswer={setCorrectAnswer}
+                    correctAnswer={correctAnswer as any}
+                    setCorrectAnswer={setCorrectAnswer as any}
                     key={option.id}
                   />
                 ) : null
@@ -176,7 +189,7 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }: any) => {
                 if (options[options.length - 1].type === 'next-line') return;
                 setOptions([
                   ...options,
-                  { type: 'next-line', id: generateId(), value: 'next-line' },
+                  { type: 'next-line', id: generateId(), value: 'next-line', name: 'next-line' },
                 ]);
                 setFocusedId('');
               }}
@@ -191,7 +204,7 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }: any) => {
                 if (options.findLast((opt) => opt.type === 'dropdown') && options.length > 1) {
                   // Remove the correct answer from the correctAnswer array
                   setCorrectAnswer((prevCorrectAnswers) =>
-                    prevCorrectAnswers.filter(
+                    prevCorrectAnswers?.filter(
                       (answer) => answer.id !== options[options.length - 1].id
                     )
                   );
@@ -225,12 +238,12 @@ export const ExtDropDown = ({ dataTunnel, response, setResponse }: any) => {
 };
 
 const ComboBoxComponent = ({
-  option,
-  setOptions,
-  options,
-  correctAnswer,
-  setCorrectAnswer,
-  id,
+  option = { value: [], name: '' },
+  setOptions = ({}) => {},
+  options = [],
+  correctAnswer = [],
+  setCorrectAnswer = ({}) => {},
+  id = generateId(),
 }) => {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -240,11 +253,13 @@ const ComboBoxComponent = ({
   const exactOptionMatch = option.value.some((item) => item === search);
   const filteredOptions = exactOptionMatch
     ? option.value
-    : option.value.filter((item) => item.toLowerCase().includes(search.toLowerCase().trim()));
+    : option.value.filter((item: string) =>
+        item.toLowerCase().includes(search.toLowerCase().trim())
+      );
 
-  const handleOptionSubmit = (val) => {
+  const handleOptionSubmit = (val: string) => {
     if (val === '$create') {
-      const newOptions = options.map((opt) =>
+      const newOptions = options.map((opt: any) =>
         opt.id === id ? { ...opt, value: [...opt.value, search] } : opt
       );
       setOptions(newOptions);
@@ -253,9 +268,9 @@ const ComboBoxComponent = ({
       setSearch(val);
 
       // Update the correctAnswer array with the selected value
-      setCorrectAnswer((prevCorrectAnswers) => {
+      setCorrectAnswer((prevCorrectAnswers: any) => {
         // Check if this id already exists in correctAnswer
-        const existingAnswerIndex = prevCorrectAnswers.findIndex((answer) => answer.id === id);
+        const existingAnswerIndex = prevCorrectAnswers.findIndex((answer: any) => answer.id === id);
 
         if (existingAnswerIndex >= 0) {
           // If it exists, update the value

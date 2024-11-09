@@ -27,7 +27,7 @@ export const Highlight = ({ dataTunnel, response, setResponse }: any) => {
   const [explanation, setExplanation] = useState('');
   const [points, setPoints] = useState(5);
   const [toSend, setToSend] = useState({});
-  const [correct, setCorrect] = useState([]);
+  const [correct, setCorrect] = useState<{ value: string; index: number }[]>([]);
 
   const handleFocus = (index: number) => {
     // Select the text inside the input on focus
@@ -47,17 +47,18 @@ export const Highlight = ({ dataTunnel, response, setResponse }: any) => {
   }, [mainText]);
 
   useEffect(() => {
-    const elements = contentRef.current.querySelectorAll('.highlight');
-    elements.forEach((element, index) => {
-      element.onclick = () => handleClick(element.innerText, index);
-      element.style.backgroundColor = 'rgba(255, 255, 0, 0.2)';
-      element.style.display = 'inline';
+    const elements = contentRef?.current?.querySelectorAll('.highlight');
+    elements?.forEach((element, index) => {
+      (element as HTMLElement).onclick = () =>
+        handleClick((element as HTMLElement).innerText, index);
+      (element as HTMLElement).style.backgroundColor = 'rgba(255, 255, 0, 0.2)';
+      (element as HTMLElement).style.display = 'inline';
       // set cursor to pointer on hover
-      element.style.cursor = 'pointer';
+      (element as HTMLElement).style.cursor = 'pointer';
     });
   }, [toSend]);
 
-  const handleClick = (text, index) => {
+  const handleClick = (text: string, index: number) => {
     const newCorrect = correct;
     const found = newCorrect.findIndex((item) => item.value === text);
     if (found === -1) {
@@ -67,15 +68,15 @@ export const Highlight = ({ dataTunnel, response, setResponse }: any) => {
     }
     setCorrect(newCorrect);
 
-    const elements = contentRef.current.querySelectorAll('.highlight');
-    elements.forEach((element, i) => {
+    const elements = contentRef?.current?.querySelectorAll('.highlight');
+    elements?.forEach((element, i) => {
       if (newCorrect.findIndex((item) => item.index === i) !== -1) {
-        element.style.backgroundColor = 'yellow';
-        element.style.color = 'black';
+        (element as HTMLElement).style.backgroundColor = 'yellow';
+        (element as HTMLElement).style.color = 'black';
       } else {
         // translucent yellow
-        element.style.backgroundColor = 'rgba(255, 255, 0, 0.2)';
-        element.style.color =
+        (element as HTMLElement).style.backgroundColor = 'rgba(255, 255, 0, 0.2)';
+        (element as HTMLElement).style.color =
           colorScheme === 'light' ? 'rgba(0, 0, 0, 0.85)' : 'rgba(255, 255, 255, 0.85)';
       }
     });
@@ -137,7 +138,7 @@ export const Highlight = ({ dataTunnel, response, setResponse }: any) => {
       <RichTextEditorComponent
         content={explanation}
         setContent={(item, index) => {
-          setExplanation(item, index);
+          setExplanation(item);
         }}
         index={0}
       />

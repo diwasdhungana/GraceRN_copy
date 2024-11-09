@@ -5,13 +5,22 @@ import { usePostQuestion } from '@/hooks/api/questions';
 import { notifications } from '@mantine/notifications';
 import { set } from 'date-fns';
 
-export const SubmitQuestion = ({ dataTunnel, response, setResponse }) => {
+export const SubmitQuestion = ({
+  dataTunnel,
+  response,
+  setResponse,
+}: {
+  dataTunnel: any;
+  response: any;
+  setResponse: any;
+}) => {
   const { mutate: postQuestion, isPending } = usePostQuestion();
   const [attempted, setAttempted] = React.useState(false);
   const handleSubmit = () => {
-    const { variables, valid } = requestDataCreator(dataTunnel, setResponse);
+    const requestData = requestDataCreator(dataTunnel, setResponse);
+    const variables = requestData?.variables;
+    const valid = requestData?.valid;
     setAttempted(true);
-    console.log('variables', variables);
     valid &&
       postQuestion(
         { variables },

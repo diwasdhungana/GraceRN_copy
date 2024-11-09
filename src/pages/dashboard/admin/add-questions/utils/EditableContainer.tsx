@@ -2,10 +2,33 @@ import React from 'react';
 //import settings from '../settings.js'
 import Field from './FieldStyle';
 
-export default class EditableContainer extends React.Component {
+interface EditableContainerPropsll {
+  children: React.ReactNode;
+
+  doubleClick: boolean;
+
+  handleEnter: (text: any) => void;
+
+  style: React.CSSProperties;
+}
+
+interface EditableContainerState {
+  edit: boolean;
+  value: string;
+}
+
+export default class EditableContainer extends React.Component<
+  EditableContainerPropsll,
+  EditableContainerState
+> {
+  count: number;
+  timeout: NodeJS.Timeout | null;
+
   constructor(props: EditableContainerProps) {
-    super(props);
-    // init counter
+    super(props as EditableContainerPropsll);
+    this.timeout = null;
+
+    // init state
     this.count = 0;
 
     // init state
@@ -14,7 +37,13 @@ export default class EditableContainer extends React.Component {
       value: '',
     };
   }
-  static getDerivedStateFromProps(props, state) {
+  static getDerivedStateFromProps(
+    props: {
+      edit: boolean;
+      //lists: any;
+    },
+    state: any
+  ) {
     //console.log(props.lists);
     if (props.edit) {
       return { edit: props.edit };
@@ -27,7 +56,7 @@ export default class EditableContainer extends React.Component {
     if (this.timeout) clearTimeout(this.timeout);
   }
 
-  handleDoubleClick(e) {
+  handleDoubleClick(e: any) {
     // cancel previous callback
     if (this.timeout) clearTimeout(this.timeout);
 
@@ -51,13 +80,13 @@ export default class EditableContainer extends React.Component {
     //}, settings.timeBetweenClicks) // 250 ms
   }
 
-  handleSingleClick(e) {
+  handleSingleClick(e: any) {
     this.setState({
       edit: true,
     });
   }
 
-  handleBlur(e) {
+  handleBlur(e: any) {
     // handle saving here
 
     // close edit mode
@@ -66,7 +95,7 @@ export default class EditableContainer extends React.Component {
       value: e.target.value,
     });
   }
-  handleEnter(e) {
+  handleEnter(e: any) {
     if (e.code === 'Enter' || e.charCode === 13 || e.which === 13) {
       this.props.handleEnter(e.target.value);
 
@@ -79,7 +108,12 @@ export default class EditableContainer extends React.Component {
 
   render() {
     const { doubleClick, handleEnter, children, ...rest } = this.props;
-    const { edit, value } = this.state;
+    const newState: {
+      edit: boolean;
+      value: string;
+    } = this.state;
+    const edit = newState.edit;
+    const value = newState.value;
     if (edit) {
       // edit mode
       return (

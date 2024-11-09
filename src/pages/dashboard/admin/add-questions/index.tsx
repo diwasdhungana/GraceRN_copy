@@ -27,10 +27,10 @@ const questionGen = [
 ];
 const addQuestions = () => {
   const navigate = useNavigate();
-  const [selectedSubject, setSelectedSubject] = React.useState();
-  const [selectedSystem, setSelectedSystem] = React.useState();
-  const [selectedGen, setSelectedGen] = React.useState();
-  const [selectedQuestionType, setSelectedQuestionType] = React.useState();
+  const [selectedSubject, setSelectedSubject] = React.useState<null | string>();
+  const [selectedSystem, setSelectedSystem] = React.useState<null | string>();
+  const [selectedGen, setSelectedGen] = React.useState<null | 'traditional' | 'nextgen'>();
+  const [selectedQuestionType, setSelectedQuestionType] = React.useState<null | string>();
   const [response, setResponse] = React.useState({});
 
   const { data: subjects, isError: subjectsError } = useGetSubjects({ query: { getAll: true } });
@@ -40,6 +40,14 @@ const addQuestions = () => {
       subjects: [selectedSubject ? selectedSubject : ''],
     },
   });
+  type Subject = {
+    _id: string;
+    name: string;
+  };
+  type System = {
+    _id: string;
+    name: string;
+  };
 
   return (
     <Page title="Home" className={css.root}>
@@ -55,12 +63,12 @@ const addQuestions = () => {
         <Paper shadow="xs" p="lg" radius="lg">
           <Stack ml="md">
             <Title order={2}>Create a Question.</Title>
-            {response && response.name}
+
             <Group mt="xl">
               <Radio.Group
                 name="Question Generation"
                 label={<Text fw="600">Select Question Generation</Text>}
-                onChange={(value) => setSelectedGen(value)}
+                onChange={(value) => setSelectedGen(value as 'traditional' | 'nextgen')}
               >
                 <Group mt="xs">
                   {questionGen.map((gen) => {
@@ -84,7 +92,7 @@ const addQuestions = () => {
                 <Select
                   label={<Text fw="600">Choose a Subject</Text>}
                   placeholder={'Select Subject'}
-                  data={subjects?.data?.docs?.map((subject) => {
+                  data={subjects?.data?.docs?.map((subject: Subject) => {
                     return { value: subject._id, label: subject.name };
                   })}
                   onChange={(value) => setSelectedSubject(value)}
@@ -103,7 +111,7 @@ const addQuestions = () => {
                   disabled={!selectedSubject}
                   label={<Text fw="600">Choose a System</Text>}
                   placeholder={'Select System'}
-                  data={systemsData?.data?.docs?.map((subject) => {
+                  data={systemsData?.data?.docs?.map((subject: Subject) => {
                     return { value: subject._id, label: subject.name };
                   })}
                   onChange={(value) => setSelectedSystem(value)}
@@ -118,7 +126,11 @@ const addQuestions = () => {
             <Group>
               <Select
                 disabled={!selectedGen}
-                data={questionTypewithlabelandValue[selectedGen]}
+                data={
+                  selectedGen
+                    ? questionTypewithlabelandValue[selectedGen]
+                    : ([] as { label: string; value: string }[])
+                }
                 placeholder="Select Question Type"
                 label={<Text fw="600">Choose a Question Type</Text>}
                 onChange={(value) => setSelectedQuestionType(value)}

@@ -63,7 +63,7 @@ export const MatrixNGrid = ({ dataTunnel, response, setResponse }: any) => {
       <RichTextEditorComponent
         content={title}
         setContent={(item, index) => {
-          setTitle(item, index);
+          setTitle(item);
         }}
         index={0}
       />
@@ -132,7 +132,7 @@ export const MatrixNGrid = ({ dataTunnel, response, setResponse }: any) => {
               return opt.map((op) => ({ ...op, checked: false }));
             });
             setOptions(newOptions);
-            setSelectionType(value);
+            setSelectionType(value as string);
           }}
           placeholder="Selection Type"
           allowDeselect={false}
@@ -224,7 +224,7 @@ export const MatrixNGrid = ({ dataTunnel, response, setResponse }: any) => {
       <RichTextEditorComponent
         content={explanation}
         setContent={(item, index) => {
-          setExplanation(item, index);
+          setExplanation(item);
         }}
         index={0}
       />

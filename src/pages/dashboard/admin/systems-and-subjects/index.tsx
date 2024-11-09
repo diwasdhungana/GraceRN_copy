@@ -34,8 +34,19 @@ const subjectAndSystems = () => {
   const { data: subjectsData, isError: subjectsDataError } = useGetSubjects({
     query: { getAll: true },
   });
-  const [selectedSubject, setSelectedSubject] = React.useState();
-  const [selectedSystem, setSelectedSystem] = React.useState();
+  interface Subject {
+    _id: string;
+    name: string;
+  }
+
+  interface System {
+    _id: string;
+    name: string;
+    subject: string;
+  }
+
+  const [selectedSubject, setSelectedSubject] = React.useState<null | Subject>(null);
+  const [selectedSystem, setSelectedSystem] = React.useState<null | System>(null);
   const [subjectName, setSubjectName] = React.useState('');
   const [systemName, setSystemName] = React.useState('');
   const [systemNameEdit, setSystemNameEdit] = React.useState('');
@@ -86,7 +97,7 @@ const subjectAndSystems = () => {
       }
     );
   };
-  const handleSystemEdit = (systemId) => {
+  const handleSystemEdit = (systemId: string) => {
     putSystem(
       {
         variables: { name: systemNameEdit, subject: systemSubjectChangeTo },
@@ -108,7 +119,7 @@ const subjectAndSystems = () => {
     putSubject(
       {
         variables: { name: subjectNameEdit },
-        route: { id: selectedSubject._id },
+        route: { id: selectedSubject?._id },
       },
       {
         onSuccess: () => {
@@ -165,7 +176,7 @@ const subjectAndSystems = () => {
                       </Button>
                     </Group>
 
-                    {subjectsData?.data?.docs?.map((subject) => (
+                    {subjectsData?.data?.docs?.map((subject: Subject) => (
                       <Button
                         key={subject._id}
                         variant={selectedSubject?._id === subject._id ? 'filled' : 'subtle'}
@@ -245,7 +256,7 @@ const subjectAndSystems = () => {
                         <Title order={3}>Available Systems</Title>
                       )}
                       <List size="lg">
-                        {systemsData?.data?.docs?.map((system) => (
+                        {systemsData?.data?.docs?.map((system: System) => (
                           <ListItem key={system._id}>
                             <Group align="flex-end">
                               <Text>{system.name}</Text>
@@ -273,13 +284,13 @@ const subjectAndSystems = () => {
                                     onChange={(e) => setSystemNameEdit(e.currentTarget.value)}
                                   />
                                   <Select
-                                    data={subjectsData?.data?.docs?.map((subject) => {
+                                    data={subjectsData?.data?.docs?.map((subject: Subject) => {
                                       return { value: subject._id, label: subject.name };
                                     })}
                                     label="sent this system to another subject"
                                     placeholder="Select new subject"
                                     value={systemSubjectChangeTo}
-                                    onChange={(value) => setSystemSubjectChangeTo(value)}
+                                    onChange={(value) => setSystemSubjectChangeTo(value as string)}
                                     allowDeselect={false}
                                   />
                                   <Button

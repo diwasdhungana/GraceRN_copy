@@ -1,7 +1,14 @@
 import { TextInput } from '@mantine/core';
 import React from 'react';
 
-export default class FieldStyle extends React.Component {
+interface FieldStyleProps {
+  autoFocus?: boolean;
+  [key: string]: any;
+}
+
+export default class FieldStyle extends React.Component<FieldStyleProps> {
+  private ref: any;
+
   componentDidMount() {
     this.ref && this.ref.focus();
   }
@@ -11,7 +18,7 @@ export default class FieldStyle extends React.Component {
 
     // auto focus
     const ref = autoFocus
-      ? (ref) => {
+      ? (ref: any) => {
           this.ref = ref;
         }
       : null;

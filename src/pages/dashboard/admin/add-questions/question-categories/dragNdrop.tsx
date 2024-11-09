@@ -17,7 +17,7 @@ import { generateId } from '@/utilities/uid';
 import css from '@/pages/dashboard/everything.module.css';
 
 export const DragNDrop = ({ dataTunnel, response, setResponse }: any) => {
-  const inputRefs = useRef([]);
+  const inputRefs = useRef<any[]>([]);
   const contentRef = useRef(null);
 
   const [mainText, setMainText] = useState('');
@@ -25,7 +25,9 @@ export const DragNDrop = ({ dataTunnel, response, setResponse }: any) => {
   const [title, setTitle] = useState('');
   const [explanation, setExplanation] = useState('');
   const [points, setPoints] = useState(5);
-  const [dropZones, setDropZones] = useState([]);
+  const [dropZones, setDropZones] = useState<
+    { id: string; contentId: string | null; content: string }[]
+  >([]);
   const [inputDone, setInputDone] = useState(false);
   const [dragables, setDragables] = useState([
     { id: generateId(), text: 'opt 1', lifted: false },
@@ -38,7 +40,11 @@ export const DragNDrop = ({ dataTunnel, response, setResponse }: any) => {
     if (inputDone) {
       const processText = () => {
         let newText = mainText;
-        const newDropZones = [];
+        const newDropZones: {
+          id: string;
+          contentId: string | null;
+          content: string;
+        }[] = [];
 
         // Replace marked text with drop zone placeholders
         newText = newText.replace(/<mark>(.*?)<\/mark>/g, () => {
@@ -59,12 +65,12 @@ export const DragNDrop = ({ dataTunnel, response, setResponse }: any) => {
     }
   }, [inputDone, mainText]);
 
-  const handleDrop = (e, dropZoneId) => {
+  const handleDrop = (e: DragEvent, dropZoneId: string) => {
     e.preventDefault();
-    const draggedItem = JSON.parse(e.dataTransfer.getData('object'));
+    const draggedItem = JSON.parse(e?.dataTransfer?.getData('object') || '{}');
 
     setDropZones((zones) =>
-      zones.map((zone) => {
+      zones.map((zone: any) => {
         if (zone.id === dropZoneId) {
           if (zone.contentId) {
             setDragables((prev) =>
@@ -73,8 +79,8 @@ export const DragNDrop = ({ dataTunnel, response, setResponse }: any) => {
           }
           return {
             ...zone,
-            contentId: draggedItem.id,
-            content: draggedItem.text,
+            contentId: draggedItem?.id,
+            content: draggedItem?.text,
           };
         }
         return zone;
@@ -84,9 +90,9 @@ export const DragNDrop = ({ dataTunnel, response, setResponse }: any) => {
     setDragables((prev) => prev.map((d) => (d.id === draggedItem.id ? { ...d, lifted: true } : d)));
   };
 
-  const handleClear = (dropZoneId) => {
+  const handleClear = (dropZoneId: any) => {
     setDropZones((zones) =>
-      zones.map((zone) => {
+      zones.map((zone: any) => {
         if (zone.id === dropZoneId && zone.contentId) {
           setDragables((prev) =>
             prev.map((d) => (d.id === zone.contentId ? { ...d, lifted: false } : d))
@@ -121,13 +127,13 @@ export const DragNDrop = ({ dataTunnel, response, setResponse }: any) => {
             );
           } else {
             // Drop zone
-            const zone = dropZones.find((z) => z.id === segment);
+            const zone = dropZones.find((z: any) => z.id === segment);
             return (
               <div
                 key={segment}
                 className="drop-container"
                 onDragOver={(e) => e.preventDefault()}
-                onDrop={(e) => handleDrop(e, segment)}
+                onDrop={(e) => handleDrop(e as any, segment)}
                 onClick={() => handleClear(segment)}
                 style={{
                   border: '1px solid black',
@@ -228,7 +234,11 @@ export const DragNDrop = ({ dataTunnel, response, setResponse }: any) => {
                           w="80%"
                         >
                           <TextInput
-                            ref={(el) => (inputRefs.current[index] = el)}
+                            ref={(el) => {
+                              if (inputRefs.current) {
+                                inputRefs.current[index] = el;
+                              }
+                            }}
                             // onFocus={() => handleFocus(index)}
                             value={item.text}
                             onChange={(e) => {

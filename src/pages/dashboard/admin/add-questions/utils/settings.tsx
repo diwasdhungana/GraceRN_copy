@@ -27,21 +27,24 @@ import css from '@/pages/dashboard/everything.module.css';
 export const Settings = ({ dataTunnel, response, setResponse }: any) => {
   const [hasAssistanceColumn, setHasAssistanceColumn] = React.useState(false);
   const [hasTabsInAssistance, setHasTabsinAssistance] = React.useState(false);
-  const [tabsData, setTabsData] = React.useState({ title: [], content: [] });
+  const [tabsData, setTabsData] = React.useState<{
+    title: string[];
+    content: string[];
+  }>({ title: [], content: [] });
   const [assistanceData, setAssistanceData] = React.useState('');
   const [assistanceTitle, setAssistanceTitle] = React.useState('');
 
-  const handleDoubleTap = (text, index) => {
+  const handleDoubleTap = (text: string, index: number) => {
     const newTitle = [...tabsData.title];
     newTitle[index] = text;
     setTabsData({ title: newTitle, content: tabsData.content });
   };
-  const handleRichContentChange = (item, index) => {
+  const handleRichContentChange = (item: string, index: number) => {
     const newContent = [...tabsData.content];
     newContent[index] = item;
     setTabsData({ title: tabsData.title, content: newContent });
   };
-  const staticAssistanceDataHandleRichContentChange = (item, index) => {
+  const staticAssistanceDataHandleRichContentChange = (item: string, index: number) => {
     setAssistanceData(item);
   };
 
@@ -63,7 +66,7 @@ export const Settings = ({ dataTunnel, response, setResponse }: any) => {
                 <InputLabel fw={600}>Assistance Column Title</InputLabel>
                 <RichTextEditorComponent
                   content={assistanceTitle}
-                  setContent={(item, index) => {
+                  setContent={(item: string, index: number) => {
                     setAssistanceTitle(item);
                   }}
                   index={0}
@@ -163,7 +166,7 @@ export const Settings = ({ dataTunnel, response, setResponse }: any) => {
                   >
                     <RichTextEditorComponent
                       content={item}
-                      setContent={(item, index) => {
+                      setContent={(item: any, index: number) => {
                         handleRichContentChange(item, index);
                       }}
                       index={index}
@@ -190,7 +193,7 @@ export const Settings = ({ dataTunnel, response, setResponse }: any) => {
             <Title order={4}>Add Assistance Page Data</Title>
             <RichTextEditorComponent
               content={assistanceData}
-              setContent={(item, index) => {
+              setContent={(item: any, index: number) => {
                 staticAssistanceDataHandleRichContentChange(item, index);
               }}
               index={0}
@@ -215,14 +218,21 @@ export const Settings = ({ dataTunnel, response, setResponse }: any) => {
 };
 
 const renderQuestionType = (
-  dataTunnel,
-  hasAssistanceColumn,
-  hasTabsInAssistance,
-  tabsData,
-  assistanceData,
-  assistanceTitle,
-  response,
-  setResponse
+  dataTunnel = {
+    selectedQuestionType: '',
+    hasAssistanceColumn: false,
+    hasTabsInAssistance: false,
+    tabsData: {},
+    assistanceData: '',
+    assistanceTitle: '',
+  },
+  hasAssistanceColumn = false,
+  hasTabsInAssistance = false,
+  tabsData = {},
+  assistanceData = '',
+  assistanceTitle = '',
+  response = {},
+  setResponse = (response: { assiatanceError: string; questionError: string }) => {}
 ) => {
   dataTunnel = {
     ...dataTunnel,

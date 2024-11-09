@@ -23,7 +23,7 @@ export function CurrentUser(props: CurrentUserProps) {
   const handleLogout = () => {
     setIsAuthenticated(false);
     removeClientAccessToken();
-    loadUserid(null, {}, dispatch);
+    loadUserid({}, dispatch);
   };
 
   const user = useSelector((state: any) => state.provider.user);

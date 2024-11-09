@@ -16,7 +16,7 @@ import { p } from 'msw/lib/core/GraphQLHandler-Cu4Xvg4S';
 import React, { useEffect, useRef, useState } from 'react';
 import css from '@/pages/dashboard/everything.module.css';
 
-const QuestionViewWithModes = ({ mode, data }) => {
+const QuestionViewWithModes = ({ mode, data }: { mode: string; data: any }) => {
   switch (data.kind) {
     case 'Select One':
       return <SelectOnewithModes data={data} mode={mode} />;
@@ -38,7 +38,7 @@ const QuestionViewWithModes = ({ mode, data }) => {
 };
 export default QuestionViewWithModes;
 
-const SelectOnewithModes = ({ data, mode }) => {
+const SelectOnewithModes = ({ data, mode }: { data: any; mode: any }) => {
   const [showExplanation, setShowExplanation] = useState(false);
   return (
     <Stack gap="lg">
@@ -47,13 +47,20 @@ const SelectOnewithModes = ({ data, mode }) => {
       <Title order={3}>Options</Title>
 
       <Stack gap="sm">
-        {data.options.map((option, index) => {
-          return (
-            <Group>
-              <Radio checked={data.correct.includes(index)} /> <Text>{option.value}</Text>
-            </Group>
-          );
-        })}
+        {data.options.map(
+          (
+            option: {
+              value: string;
+            },
+            index: number
+          ) => {
+            return (
+              <Group>
+                <Radio checked={data.correct.includes(index)} /> <Text>{option.value}</Text>
+              </Group>
+            );
+          }
+        )}
       </Stack>
 
       {!showExplanation ? (
@@ -73,105 +80,23 @@ const SelectOnewithModes = ({ data, mode }) => {
   );
 };
 
-const MatrixNGridwithModes = ({ data, mode }) => {
-  const [showExplanation, setShowExplanation] = useState(false);
-  return (
-    <Stack gap="lg">
-      <div dangerouslySetInnerHTML={{ __html: data.title }} />
-
-      <Stack gap="sm" mt="md">
-        <Table verticalSpacing="lg">
-          <Table.Thead>
-            <Table.Tr ta="center">
-              {data.options.head.map((head) => (
-                <Table.Td>
-                  <Text> {head}</Text>
-                </Table.Td>
-              ))}
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>
-            {data.options.rows.map((rowName, indexR) => (
-              <Table.Tr key={indexR} ta="center">
-                <Table.Td>
-                  <Text>{rowName}</Text>
-                </Table.Td>
-                {data.options.head.map(
-                  (head, index) =>
-                    index > 0 && (
-                      <Table.Td
-                        key={index}
-                        style={{
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}
-                      >
-                        {data.radio === true ? (
-                          <Group justify="center">
-                            <Radio
-                              type="radio"
-                              name={`selectOptions${indexR}`}
-                              checked={
-                                data.correct.filter(
-                                  (n) => n.key == rowName && n.values.includes(head)
-                                ).length == 1
-                              }
-                            />
-                          </Group>
-                        ) : (
-                          <Group justify="center">
-                            <Checkbox
-                              type="checkbox"
-                              name={`selectOptions${indexR}`}
-                              checked={
-                                data.correct.filter(
-                                  (n) => n.key == rowName && n.values.includes(head)
-                                ).length == 1
-                              }
-                            />
-                          </Group>
-                        )}
-                      </Table.Td>
-                    )
-                )}
-              </Table.Tr>
-            ))}
-          </Table.Tbody>
-        </Table>
-      </Stack>
-
-      {!showExplanation ? (
-        <Group>
-          <Button onClick={() => setShowExplanation(!showExplanation)}>Submit</Button>
-        </Group>
-      ) : (
-        <Stack>
-          <Title order={2}> Explanation</Title>
-          <div
-            dangerouslySetInnerHTML={{ __html: data.explanation }}
-            className={css.htmlContentDisplay}
-          />
-        </Stack>
-      )}
-    </Stack>
-  );
-};
-
-const HighlightwithModes = ({ data, mode }) => {
+const HighlightwithModes = ({ data, mode }: { data: any; mode: any }) => {
   const [showExplanation, setShowExplanation] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null); // To reference the content div
 
   useEffect(() => {
-    const elements = contentRef?.current.querySelectorAll('.highlight');
-    elements.forEach((element, index) => {
+    const elements = contentRef?.current?.querySelectorAll('.highlight');
+    elements?.forEach((element, index) => {
       // element.onclick = () => handleClick(element.innerText, index);
-      element.style.backgroundColor = 'rgba(255, 255, 0, 0.2)';
-      element.style.display = 'inline';
-      element.style.cursor = 'pointer';
-      const found = data.correct.findIndex((item) => item.value === element.innerText);
+      (element as HTMLElement).style.backgroundColor = 'rgba(255, 255, 0, 0.2)';
+      (element as HTMLElement).style.display = 'inline';
+      (element as HTMLElement).style.cursor = 'pointer';
+      const found = data.correct.findIndex(
+        (item: { value: string }) => item.value === (element as HTMLElement).innerText
+      );
       if (found !== -1) {
-        element.style.backgroundColor = 'yellow';
-        element.style.color = 'black';
+        (element as HTMLElement).style.backgroundColor = 'yellow';
+        (element as HTMLElement).style.color = 'black';
       }
     });
   });
@@ -227,12 +152,106 @@ const HighlightwithModes = ({ data, mode }) => {
   );
 };
 
-const ExtDropDownwithModes = ({ data, mode }) => {
+const MatrixNGridwithModes = ({ data, mode }: { data: any; mode: any }) => {
+  const [showExplanation, setShowExplanation] = useState(false);
+  return (
+    <Stack gap="lg">
+      <div dangerouslySetInnerHTML={{ __html: data.title }} />
+
+      <Stack gap="sm" mt="md">
+        <Table verticalSpacing="lg">
+          <Table.Thead>
+            <Table.Tr ta="center">
+              {data.options.head.map((head: string) => (
+                <Table.Td>
+                  <Text> {head}</Text>
+                </Table.Td>
+              ))}
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>
+            {data.options.rows.map((rowName: string, indexR: number) => (
+              <Table.Tr key={indexR} ta="center">
+                <Table.Td>
+                  <Text>{rowName}</Text>
+                </Table.Td>
+                {data.options.head.map(
+                  (head: string, index: number) =>
+                    index > 0 && (
+                      <Table.Td
+                        key={index}
+                        style={{
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                      >
+                        {data.radio === true ? (
+                          <Group justify="center">
+                            <Radio
+                              type="radio"
+                              name={`selectOptions${indexR}`}
+                              checked={
+                                data.correct.filter(
+                                  (n: any) => n.key == rowName && n.values.includes(head)
+                                ).length == 1
+                              }
+                            />
+                          </Group>
+                        ) : (
+                          <Group justify="center">
+                            <Checkbox
+                              type="checkbox"
+                              name={`selectOptions${indexR}`}
+                              checked={
+                                data.correct.filter(
+                                  (n: any) => n.key == rowName && n.values.includes(head)
+                                ).length == 1
+                              }
+                            />
+                          </Group>
+                        )}
+                      </Table.Td>
+                    )
+                )}
+              </Table.Tr>
+            ))}
+          </Table.Tbody>
+        </Table>
+      </Stack>
+
+      {!showExplanation ? (
+        <Group>
+          <Button onClick={() => setShowExplanation(!showExplanation)}>Submit</Button>
+        </Group>
+      ) : (
+        <Stack>
+          <Title order={2}> Explanation</Title>
+          <div
+            dangerouslySetInnerHTML={{ __html: data.explanation }}
+            className={css.htmlContentDisplay}
+          />
+        </Stack>
+      )}
+    </Stack>
+  );
+};
+
+const ExtDropDownwithModes = ({ data, mode }: { data: any; mode: any }) => {
   const [showExplanation, setShowExplanation] = useState(false);
 
-  const groupOptions = (options) => {
+  const groupOptions = (
+    options: {
+      id: string;
+      type: string;
+      value: [];
+    }[]
+  ) => {
     const groups = [];
-    let currentGroup = [];
+    let currentGroup: {
+      id: string;
+      type: string;
+      value: [];
+    }[] = [];
 
     options.forEach((option) => {
       if (option.type === 'next-line') {
@@ -267,13 +286,16 @@ const ExtDropDownwithModes = ({ data, mode }) => {
               ) : option.type === 'dropdown' ? (
                 <>
                   <Select
-                    data={option.value.map((o) => ({
+                    data={option?.value?.map((o) => ({
                       value: o,
                       label: o,
                       disabled: mode == 'admin' ? true : false,
                     }))}
                     key={option.id}
-                    defaultValue={data.correct.find((c) => c.id === option.id).value}
+                    defaultValue={
+                      data.correct.find((o: { id: string; value: string }) => o.id === option.id)
+                        .value
+                    }
                   />
                   &#160;&#160;
                 </>
@@ -300,7 +322,7 @@ const ExtDropDownwithModes = ({ data, mode }) => {
   );
 };
 
-const McqwithModes = ({ data, mode }) => {
+const McqwithModes = ({ data, mode }: { data: any; mode: any }) => {
   const [showExplanation, setShowExplanation] = useState(false);
 
   return (
@@ -310,13 +332,20 @@ const McqwithModes = ({ data, mode }) => {
       <Title order={3}>Options</Title>
 
       <Stack gap="sm">
-        {data.options.map((option, index) => {
-          return (
-            <Group>
-              <Checkbox checked={data.correct.includes(index)} /> <Text>{option.value}</Text>
-            </Group>
-          );
-        })}
+        {data.options.map(
+          (
+            option: {
+              value: string;
+            },
+            index: number
+          ) => {
+            return (
+              <Group>
+                <Checkbox checked={data.correct.includes(index)} /> <Text>{option.value}</Text>
+              </Group>
+            );
+          }
+        )}
       </Stack>
       {!showExplanation ? (
         <Group>
@@ -335,7 +364,7 @@ const McqwithModes = ({ data, mode }) => {
   );
 };
 
-const DragNDropwithModes = ({ data, mode }) => {
+const DragNDropwithModes = ({ data, mode }: { data: any; mode: any }) => {
   console.log(data);
   // Function to render the content with answers in place
   const [showExplanation, setShowExplanation] = useState(false);
@@ -348,17 +377,19 @@ const DragNDropwithModes = ({ data, mode }) => {
     tempDiv.innerHTML = data.options.title;
 
     // Function to process nodes and replace drop-containers
-    const processNodes = (parentElement) => {
-      return Array.from(parentElement.childNodes).map((node, index) => {
+    const processNodes = (parentElement: HTMLElement): any => {
+      return Array.from(parentElement.childNodes).map((node, index: number) => {
         if (node.nodeType === Node.TEXT_NODE) {
           // Text node
           return <span key={index}>{node.textContent}</span>;
         } else if (node.nodeType === Node.ELEMENT_NODE) {
-          if (node.classList.contains('drop-container')) {
+          if ((node as HTMLElement)?.classList.contains('drop-container')) {
             // Drop zone element
-            const containerId = node.getAttribute('data-id');
+            const containerId = (node as HTMLElement)?.getAttribute('data-id');
 
-            const correctAnswer = data.correct.find((answer) => answer.containerId === containerId);
+            const correctAnswer = data.correct.find(
+              (answer: { containerId: string }) => answer.containerId === containerId
+            );
 
             return (
               <div
@@ -383,7 +414,7 @@ const DragNDropwithModes = ({ data, mode }) => {
               // <node.tagName.toLowerCase() key={index}>
               //   {processNodes(node)}
               // </node.tagName.toLowerCase()>
-              processNodes(node)
+              processNodes(node as HTMLElement)
             );
           }
         }
@@ -414,20 +445,20 @@ const DragNDropwithModes = ({ data, mode }) => {
         </Group>
 
         <Stack p="md" gap="sm">
-          {data.options?.dragables?.map((item) => (
+          {data.options?.dragables?.map((item: { id: string; value: string }) => (
             <Group
               key={item.id}
               p="sm"
               bg="gray.2"
               style={{
                 borderRadius: '5px',
-                border: data.correct.some((c) => c.textId === item.id)
+                border: data.correct.some((c: any) => c.textId === item.id)
                   ? '2px solid #4CAF50'
                   : '1px solid #ddd',
               }}
             >
               <Text>{item.value}</Text>
-              {data.correct.some((c) => c.textId === item.id) && (
+              {data.correct.some((c: any) => c.textId === item.id) && (
                 <Text size="25px" c="green" ml="auto">
                   ✓
                 </Text>
@@ -454,11 +485,11 @@ const DragNDropwithModes = ({ data, mode }) => {
   );
 };
 
-const BowTiewithModes = ({ data, mode }) => {
+const BowTiewithModes = ({ data, mode }: { data: any; mode: any }) => {
   console.log(data);
   const [showExplanation, setShowExplanation] = useState(false);
 
-  const DropZone = ({ id, content, preText }) => (
+  const DropZone = ({ id, content, preText }: { id: string; content: string; preText: string }) => (
     <Paper
       bg={id.includes('Right') ? 'grape.1' : id.includes('Left') ? 'blue.1' : 'gray.1'}
       w="100%"
@@ -491,7 +522,7 @@ const BowTiewithModes = ({ data, mode }) => {
     </Paper>
   );
 
-  const DraggableItem = ({ item, columnType }) => (
+  const DraggableItem = ({ item, columnType }: { item: any; columnType: string }) => (
     <Paper
       draggable
       onDragStart={(e) => {
@@ -508,7 +539,7 @@ const BowTiewithModes = ({ data, mode }) => {
           ? data.correct.center.id === item.id
             ? true
             : false
-          : data.correct[columnType].find((c) => c.id === item.id)
+          : data.correct[columnType].find((c: any) => c.id === item.id)
             ? true
             : false
       }
@@ -526,7 +557,7 @@ const BowTiewithModes = ({ data, mode }) => {
           ) : (
             false
           )
-        ) : data.correct[columnType].find((c) => c.id === item.id) ? (
+        ) : data.correct[columnType].find((c: any) => c.id === item.id) ? (
           <Text size="25px" c="white">
             ✓
           </Text>
@@ -546,15 +577,23 @@ const BowTiewithModes = ({ data, mode }) => {
     </Paper>
   );
 
-  const WordChoices = ({ title, items, columnType }) => (
+  const WordChoices = ({
+    title,
+    items,
+    columnType,
+  }: {
+    title: string;
+    items: any;
+    columnType: string;
+  }) => (
     <Paper shadow="xs" p="md" w={210} radius="md">
       <Group justify="center" mb="sm">
         <Title order={5}>{title}</Title>
       </Group>
       <Stack gap="xs">
         {items
-          .filter((item) => !item.lifted)
-          .map((item) => (
+          .filter((item: { lifted: boolean }) => !item.lifted)
+          .map((item: { id: string }) => (
             <DraggableItem key={item.id} item={item} columnType={columnType} />
           ))}
       </Stack>

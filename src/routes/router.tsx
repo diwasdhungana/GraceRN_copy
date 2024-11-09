@@ -5,6 +5,7 @@ import { AuthLayout } from '@/layouts/auth';
 import { DashboardLayout } from '@/layouts/dashboard';
 import { LazyPage } from './lazy-page';
 import { paths } from './paths';
+import index from '@/pages/dashboard/admin/index';
 
 const router = createBrowserRouter([
   {
@@ -69,7 +70,7 @@ const router = createBrowserRouter([
       },
       {
         path: paths.dashboard.home,
-        element: LazyPage(() => import('@/pages/dashboard/home')),
+        element: LazyPage(() => import('@/pages/dashboard/(home)')),
       },
       /* ---------------------------------- ADMIN ---------------------------------- */
       {
@@ -78,7 +79,7 @@ const router = createBrowserRouter([
           {
             index: true,
             path: paths.dashboard.admin.root,
-            element: LazyPage(() => import('@/pages/dashboard/home/admin/index')),
+            element: LazyPage(() => import('@/pages/dashboard/admin/index')),
           },
           {
             path: paths.dashboard.admin.addQuestions.root,
@@ -86,7 +87,7 @@ const router = createBrowserRouter([
               {
                 index: true,
                 path: paths.dashboard.admin.addQuestions.root,
-                element: LazyPage(() => import('@/pages/dashboard/home/admin/add-questions/index')),
+                element: LazyPage(() => import('@/pages/dashboard/admin/add-questions/index')),
               },
             ],
           },
@@ -97,7 +98,7 @@ const router = createBrowserRouter([
                 index: true,
                 path: paths.dashboard.admin.viewSubjectSystem.root,
                 element: LazyPage(
-                  () => import('@/pages/dashboard/home/admin/systems-and-subjects/index')
+                  () => import('@/pages/dashboard/admin/systems-and-subjects/index')
                 ),
               },
             ],
@@ -108,18 +109,62 @@ const router = createBrowserRouter([
               {
                 index: true,
                 path: paths.dashboard.admin.viewQuestions.root,
-                element: LazyPage(
-                  () => import('@/pages/dashboard/home/admin/view-questions/index')
-                ),
+                element: LazyPage(() => import('@/pages/dashboard/admin/view-questions/index')),
               },
               {
                 index: true,
                 path: paths.dashboard.admin.viewQuestions.viewSpecificQuestions,
                 element: LazyPage(
-                  () => import('@/pages/dashboard/home/admin/view-questions/Specific/index')
+                  () => import('@/pages/dashboard/admin/view-questions/Specific/index')
                 ),
               },
             ],
+          },
+        ],
+      },
+      // student: {
+      //   root: '/dashboard/student',
+      //   createTest: {
+      //     root: '/dashboard/student/create-test',
+      //   },
+      //   attemptTest: {
+      //     root: '/dashboard/student/test/:testId',
+      //   },
+      //   viewResults: {
+      //     root: '/dashboard/student/view-results',
+      //     viewSpecificResults: '/dashboard/student/view-results/:resultId',
+      //   },
+      // },
+      {
+        path: paths.dashboard.student.root,
+
+        children: [
+          {
+            index: true,
+            path: paths.dashboard.student.root,
+            element: LazyPage(() => import('@/pages/dashboard/student/index')),
+          },
+          {
+            index: true,
+            path: paths.dashboard.student.createTest.root,
+            element: LazyPage(() => import('@/pages/dashboard/student/create-text')),
+          },
+          {
+            index: true,
+            path: paths.dashboard.student.attemptTest.root,
+            element: LazyPage(() => import('@/pages/dashboard/student/active-test')),
+          },
+          {
+            index: true,
+            path: paths.dashboard.student.viewResults.root,
+            element: LazyPage(() => import('@/pages/dashboard/student/view-results/index')),
+          },
+          {
+            index: true,
+            path: paths.dashboard.student.viewResults.viewSpecificResults,
+            element: LazyPage(
+              () => import('@/pages/dashboard/student/view-results/specific/index')
+            ),
           },
         ],
       },

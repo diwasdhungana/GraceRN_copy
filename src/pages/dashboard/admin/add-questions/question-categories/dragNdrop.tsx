@@ -16,7 +16,7 @@ import { SubmitQuestion } from '../utils/SubmitQuestion';
 import { generateId } from '@/utilities/uid';
 import css from '@/pages/dashboard/everything.module.css';
 
-export const DragNDrop = ({ dataTunnel, response, setResponse }) => {
+export const DragNDrop = ({ dataTunnel, response, setResponse }: any) => {
   const inputRefs = useRef([]);
   const contentRef = useRef(null);
 

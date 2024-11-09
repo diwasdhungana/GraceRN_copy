@@ -3,13 +3,9 @@ import { Button, Group, Paper, Radio, Select, Stack, Text, Title } from '@mantin
 import React, { useEffect } from 'react';
 import css from '@/pages/dashboard/everything.module.css';
 import { useNavigate } from 'react-router-dom';
-import { paths } from '@/routes';
-
-import { Settings } from '@/pages/dashboard/home/admin/add-questions/utils/settings';
-
+import { Settings } from '@/pages/dashboard/admin/add-questions/utils/settings';
 import { PiArrowLeft } from 'react-icons/pi';
 import { useGetSubjects, useGetSystems } from '@/hooks';
-import { s } from 'vite/dist/node/types.d-aGj9QkWt';
 
 const questionTypewithlabelandValue = {
   nextgen: [
@@ -44,10 +40,6 @@ const addQuestions = () => {
       subjects: [selectedSubject ? selectedSubject : ''],
     },
   });
-  useEffect(() => {
-    if (selectedSubject) {
-    }
-  }, [selectedSubject]);
 
   return (
     <Page title="Home" className={css.root}>

@@ -18,7 +18,7 @@ import { RichTextEditorComponent } from '../utils/RichTextEditorComponent';
 import { SubmitQuestion } from '../utils/SubmitQuestion';
 import css from '@/pages/dashboard/everything.module.css';
 
-export const Highlight = ({ dataTunnel, response, setResponse }) => {
+export const Highlight = ({ dataTunnel, response, setResponse }: any) => {
   const { colorScheme } = useMantineColorScheme();
   const inputRefs = useRef<any[]>([]); // To hold multiple refs
   const contentRef = useRef<HTMLDivElement>(null); // To reference the content div

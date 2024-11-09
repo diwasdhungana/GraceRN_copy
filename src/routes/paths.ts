@@ -26,5 +26,18 @@ export const paths = {
         root: '/dashboard/admin/subjects-systems',
       },
     },
+    student: {
+      root: '/dashboard/student',
+      createTest: {
+        root: '/dashboard/student/create-test',
+      },
+      attemptTest: {
+        root: '/dashboard/student/test',
+      },
+      viewResults: {
+        root: '/dashboard/student/view-results',
+        viewSpecificResults: '/dashboard/student/view-results/:resultId',
+      },
+    },
   },
 };

@@ -19,7 +19,7 @@ import css from '@/pages/dashboard/everything.module.css';
 import { generateId } from '@/utilities/uid';
 import { set } from 'date-fns';
 
-export const ExtDropDown = ({ dataTunnel, response, setResponse }) => {
+export const ExtDropDown = ({ dataTunnel, response, setResponse }: any) => {
   const editorRefs = useRef(new Map());
   const [counter, setCounter] = useState(1);
   const [options, setOptions] = useState([

@@ -8,16 +8,12 @@ import {
 import { queryClient } from '@/api/query-client';
 import { notifications } from '@mantine/notifications';
 
-export const useGetSystems = createGetQueryHook({
-  endpoint: '/systems',
-  rQueryParams: { queryKey: ['systems'] },
-});
-
-export const usePostSystem = createPostMutationHook({
-  endpoint: '/systems',
+export const useCreateTest = createPostMutationHook({
+  endpoint: '/tests/new',
   rMutationParams: {
     onSuccess: (data) => {
-      queryClient.invalidateQueries(['systems'] as any);
+      notifications.show({ message: 'Test created successfully', color: 'green' });
+      queryClient.invalidateQueries(['tests'] as any);
     },
     onError: (error) => {
       notifications.show({ message: error.messages[0], color: 'red' });
@@ -25,11 +21,22 @@ export const usePostSystem = createPostMutationHook({
   },
 });
 
-export const usePutSystem = createPutMutationHook({
-  endpoint: '/systems/:id',
+export const useGetMyTests = createGetQueryHook({
+  endpoint: '/tests/mine',
+  rQueryParams: {
+    queryKey: ['mytests'],
+  },
+});
+
+export const usePostAnswer = createPostMutationHook({
+  endpoint: 'tests/answer/:testId',
   rMutationParams: {
     onSuccess: (data) => {
-      queryClient.invalidateQueries(['systems'] as any);
+      notifications.show({
+        message: 'Answer Submitted',
+        color: 'green',
+      });
+      // queryClient.invalidateQueries(['mytests'] as any);
     },
     onError: (error) => {
       notifications.show({ message: error.messages[0], color: 'red' });

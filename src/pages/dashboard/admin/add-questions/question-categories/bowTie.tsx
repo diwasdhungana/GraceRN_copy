@@ -15,7 +15,7 @@ import { RichTextEditorComponent } from '../utils/RichTextEditorComponent';
 import { generateId } from '@/utilities/uid';
 import { SubmitQuestion } from '../utils/SubmitQuestion';
 
-export const BowTie = ({ dataTunnel, response, setResponse }) => {
+export const BowTie = ({ dataTunnel, response, setResponse }: any) => {
   const [title, setTitle] = useState('');
   const [explanation, setExplanation] = useState('');
   const [points, setPoints] = useState(5);

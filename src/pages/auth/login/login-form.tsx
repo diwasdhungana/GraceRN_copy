@@ -1,7 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { Anchor, Button, Group, Stack, StackProps } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
-import { LoginRequestSchema } from '@/api/dtos';
 import { Checkbox } from '@/components/forms/checkbox';
 import { FormProvider } from '@/components/forms/form-provider';
 import { PasswordInput } from '@/components/forms/password-input';
@@ -9,7 +8,7 @@ import { TextInput } from '@/components/forms/text-input';
 import { useAuth, useLogin } from '@/hooks';
 import { paths } from '@/routes';
 import { handleFormErrors } from '@/utilities/form';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { loadUserid } from '@/store/interactions';
 
 interface LoginFormProps extends Omit<StackProps, 'children'> {
@@ -20,13 +19,11 @@ import { Text } from '@mantine/core';
 
 export function LoginForm({ onSuccess, ...props }: LoginFormProps) {
   const dispatch = useDispatch();
-  const provider = useSelector((state) => state.provider.user);
   const { setIsAuthenticated } = useAuth();
   const { mutate: login, isPending } = useLogin();
 
   const form = useForm({
     mode: 'uncontrolled',
-    validate: zodResolver(LoginRequestSchema),
     initialValues: { phoneNumber: '', password: '' },
   });
 
@@ -35,7 +32,7 @@ export function LoginForm({ onSuccess, ...props }: LoginFormProps) {
       { variables },
       {
         onSuccess: (data) => {
-          loadUserid(provider, data.user, dispatch);
+          loadUserid(data.user, dispatch);
           setIsAuthenticated(true);
         },
         onError: (error) => {

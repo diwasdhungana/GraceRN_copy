@@ -15,7 +15,7 @@ const persistConfig = {
 const rootReducer = combineReducers({ provider });
 
 // Create a persisted reducer using redux-persist
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+const persistedReducer = persistReducer(persistConfig, rootReducer as any);
 
 // Middleware setup
 const middleware = [thunk];
@@ -27,6 +27,11 @@ const store = createStore(persistedReducer, composeWithDevTools(applyMiddleware(
 const persistor = persistStore(store);
 
 // Optional: Expose the store on the window object for debugging
+declare global {
+  interface Window {
+    store: typeof store;
+  }
+}
 window.store = store;
 
 export { store, persistor };

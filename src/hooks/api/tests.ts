@@ -7,13 +7,14 @@ import {
 } from '@/api/helpers';
 import { queryClient } from '@/api/query-client';
 import { notifications } from '@mantine/notifications';
+import { InvalidateQueryFilters } from '@tanstack/react-query';
 
 export const useCreateTest = createPostMutationHook({
   endpoint: '/tests/new',
   rMutationParams: {
     onSuccess: (data) => {
       notifications.show({ message: 'Test created successfully', color: 'green' });
-      queryClient.invalidateQueries(['tests'] as any);
+      queryClient.invalidateQueries(['tests'] as InvalidateQueryFilters);
     },
     onError: (error) => {
       notifications.show({ message: error.messages[0], color: 'red' });

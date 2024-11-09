@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { notifications } from '@mantine/notifications';
 import { removeClientAccessToken, setClientAccessToken } from '@/api/axios';
-import { LoginRequestSchema, LoginResponseSchema } from '@/api/dtos';
+
 import { createPostMutationHook } from '@/api/helpers';
 
 export const useLogin = createPostMutationHook({
@@ -20,8 +20,6 @@ export const useLogin = createPostMutationHook({
 
 export const useLogout = createPostMutationHook({
   endpoint: 'auth/logout',
-  bodySchema: z.null(),
-  responseSchema: z.any(),
   rMutationParams: {
     onSuccess: () => {
       removeClientAccessToken();

@@ -7,6 +7,7 @@ import {
 } from '@/api/helpers';
 import { queryClient } from '@/api/query-client';
 import { notifications } from '@mantine/notifications';
+import { InvalidateQueryFilters } from '@tanstack/react-query';
 
 export const useGetQuestions = createGetQueryHook({
   endpoint: '/questions',
@@ -23,7 +24,7 @@ export const useDeleteManyQuestions = createDeleteManyMutationHook({
   endpoint: '/questions',
   rMutationParams: {
     onSuccess: (data) => {
-      queryClient.invalidateQueries('getQuestions');
+      queryClient.invalidateQueries(['getQuestions'] as InvalidateQueryFilters);
       notifications.show({ message: 'Question deleted successfully', color: 'green' });
     },
     onError: (error) => {
@@ -36,7 +37,7 @@ export const usePostQuestion = createPostMutationHook({
   endpoint: '/questions',
   rMutationParams: {
     onSuccess: (data) => {
-      queryClient.invalidateQueries('getQuestions');
+      queryClient.invalidateQueries(['getQuestions'] as InvalidateQueryFilters);
     },
     onError: (error) => {
       notifications.show({ message: error.messages[0], color: 'red' });

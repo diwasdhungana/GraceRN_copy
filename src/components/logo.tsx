@@ -1,4 +1,4 @@
-import { Box, BoxProps, ElementProps } from '@mantine/core';
+import { Box, BoxProps, ElementProps, Image } from '@mantine/core';
 
 interface LogoProps
   extends Omit<BoxProps, 'children' | 'ref'>,
@@ -37,5 +37,17 @@ export function Logo({ size, style, ...props }: LogoProps) {
       <path d="M17 17l3 0" opacity=".5" />
       <path d="M20 17l0 3" opacity=".5" />
     </Box>
+  );
+}
+
+export function LogoImage({ ...props }) {
+  return (
+    <Image
+      src="https://s3.ap-south-1.amazonaws.com/gracern/regular/a61d82a7-2eef-4217-b806-72b155b62028"
+      alt="Grance RN logo"
+      height={64}
+      style={{ cursor: 'pointer' }}
+      {...props}
+    />
   );
 }

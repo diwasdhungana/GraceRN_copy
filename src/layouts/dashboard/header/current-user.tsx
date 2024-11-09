@@ -26,7 +26,7 @@ export function CurrentUser(props: CurrentUserProps) {
     loadUserid(null, {}, dispatch);
   };
 
-  const user = useSelector((state) => state.provider.user);
+  const user = useSelector((state: any) => state.provider.user);
 
   return (
     <Menu>

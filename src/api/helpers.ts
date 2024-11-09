@@ -135,8 +135,8 @@ export function createGetQueryHook<
   ) => {
     // Ensure that the queryKey is always an array
     const queryKey = Array.isArray(rQueryParams?.queryKey)
-      ? rQueryParams.queryKey
-      : [rQueryParams?.queryKey || endpoint]; // Use endpoint if queryKey is not provided
+      ? (rQueryParams?.queryKey as QueryKey)
+      : ([rQueryParams?.queryKey || endpoint] as QueryKey); // Use endpoint if queryKey is not provided
 
     // Get the final query key including the route and query params
     const finalQueryKey = getQueryKey(queryKey, params?.route, params?.query);
@@ -264,11 +264,10 @@ export function createPutMutationHook<
       ...rMutationParams,
       mutationFn, // Use the mutation function we just defined
       onSuccess: (data, variables, context) =>
-        rMutationParams?.onSuccess?.(data, variables, context, queryClient),
-      onError: (error, variables, context) =>
-        rMutationParams?.onError?.(error, variables, context, queryClient),
+        rMutationParams?.onSuccess?.(data, variables, context),
+      onError: (error, variables, context) => rMutationParams?.onError?.(error, variables, context),
       onSettled: (data, error, variables, context) =>
-        rMutationParams?.onSettled?.(data, error, variables, context, queryClient),
+        rMutationParams?.onSettled?.(data, error, variables, context),
     });
   };
 }
@@ -350,11 +349,10 @@ export function createDeleteMutationHook<
       ...rMutationParams, // Default mutation options
       mutationFn, // Mutation function
       onSuccess: (data, variables, context) =>
-        rMutationParams?.onSuccess?.(data, variables, context, queryClient),
-      onError: (error, variables, context) =>
-        rMutationParams?.onError?.(error, variables, context, queryClient),
+        rMutationParams?.onSuccess?.(data, variables, context),
+      onError: (error, variables, context) => rMutationParams?.onError?.(error, variables, context),
       onSettled: (data, error, variables, context) =>
-        rMutationParams?.onSettled?.(data, error, variables, context, queryClient),
+        rMutationParams?.onSettled?.(data, error, variables, context),
     });
   };
 }
@@ -445,8 +443,8 @@ export function createPaginationQueryHook<
 
     // Ensure that the queryKey is properly constructed
     const queryKey = Array.isArray(rQueryParams?.queryKey)
-      ? rQueryParams.queryKey
-      : [rQueryParams?.queryKey || endpoint]; // Default to endpoint if queryKey is not provided
+      ? (rQueryParams.queryKey as QueryKey)
+      : ([rQueryParams?.queryKey || endpoint] as QueryKey); // Default to endpoint if queryKey is not provided
 
     // Build the query key with the current route and query parameters
     const finalQueryKey = getQueryKey(queryKey, route, query);
